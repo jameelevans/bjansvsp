@@ -1,6 +1,6 @@
-# OVC HTC Wordpress Theme w/ Gulp, Webpack and SASS
+# BJA NSVSP Wordpress Theme w/ Gulp, Webpack and SASS
 
-OVC HTC custom Wordpress theme
+BJA NSVSP custom Wordpress theme
 
 ### Built With
 
@@ -11,6 +11,4 @@ OVC HTC custom Wordpress theme
 
 ### Authors
 
-- **Eduardo Minaya** - _Associate Creative Director_
-- **Jameel Evans** - _Development_
-- **Laura Myers** - _Design_
+- **Jameel Evans** - _Design & Development_
