@@ -1,0 +1,370 @@
+@use 'base/typography' as typography;
+@use 'abstracts/mixins' as mixins;
+
+#front-page,
+#single-page {
+  display: grid;
+  grid-template-columns: auto;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 144rem;
+  padding: 2rem 2rem;
+  width: 100%;
+  gap: 1rem;
+
+  @include mixins.respond(smlmd) {
+    grid-template-columns: 4fr 2fr;
+    gap: 2.5rem;
+  }
+
+  @include mixins.respond(medium) {
+    grid-template-columns: 3fr 1fr;
+    gap: 5rem;
+    padding: 65px 20px;
+  }
+}
+
+.main-content,
+.single-resource,
+.search {
+  // Take Survey Section
+  #take-survey {
+    margin-bottom: 3rem;
+
+    @include mixins.respond(smlmd) {
+      margin-bottom: 8rem;
+    }
+  }
+
+  // Resources Section
+  #resources {
+    margin-bottom: 4rem;
+
+    @include mixins.respond(smallest) {
+      margin-bottom: 8rem;
+    }
+
+    // Resources Wrapper
+    .resources__container {
+      display: grid;
+      grid-template-columns: auto;
+      gap: 1rem;
+      padding-top: 2rem;
+
+      @include mixins.respond(smallest) {
+        grid-template-columns: repeat(2, 1fr);
+        padding-top: 4.5rem;
+      }
+
+      @include mixins.respond(medium) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      @include mixins.respond(medlg) {
+        gap: 3rem;
+      }
+
+      // Individual Resource
+      .resource {
+        border: 1px solid var(--color-grey);
+        border-radius: 2px;
+        padding: 2.5rem;
+
+        &__category {
+          font-weight: 300;
+          font-size: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+
+        &__description {
+          font-size: 1.9rem;
+          line-height: 1.3;
+          margin-bottom: 1.5rem;
+
+          @include mixins.respond(smlmd) {
+            font-size: 1.6rem;
+          }
+        }
+
+        &__btn {
+          display: block;
+          overflow: hidden;
+          font-family: typography.$font-primary;
+          cursor: pointer;
+          text-align: center;
+          border-radius: 0.3rem;
+          transition: all 0.3s ease-in-out;
+          padding: 1.4rem 2.4rem;
+          text-decoration: none;
+          font-size: 1.4rem;
+          font-weight: 300;
+          margin-top: 2rem;
+          background-color: var(--color-purple);
+          color: var(--color-white);
+
+          &:hover {
+            filter: brightness(0.7); // makes it about 15% darker
+            transition: all 0.3s ease-in-out;
+          }
+        }
+      }
+    }
+
+    .resources__container[aria-busy='true'] {
+      transition: opacity 0.2s ease;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  }
+
+  // Dictionary Section
+  #dictionary {
+    .dict__letters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1rem 0 2rem;
+    }
+    .dict__letter {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 1.6rem 1.9rem;
+      border: 1px solid var(--color-purple);
+      border-radius: 4px;
+      font-size: 1.6rem;
+      text-decoration: none;
+      color: var(--color-purple);
+
+      @include mixins.respond(smlmd) {
+        padding: 0.6rem 0.9rem;
+        font-size: 1.4rem;
+      }
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.04);
+      }
+      &.is-empty {
+        opacity: 0.45;
+        pointer-events: none;
+      }
+    }
+    .dict__count {
+      opacity: 0.7;
+      font-size: 1.2rem;
+    }
+    .dict__group {
+      margin: 3rem 0 4rem;
+    }
+    .dict__group-title {
+      font-size: 2rem;
+      margin: 0 0 1.2rem;
+    }
+    .dict__item {
+      margin: 2rem 0;
+    }
+    .dict__term {
+      margin: 0 0 0.8rem;
+    }
+    .dict__chip {
+      color: #fff;
+    }
+    .dict__desc {
+      font-size: 1.9rem;
+      line-height: 1.4;
+
+      @include mixins.respond(smlmd) {
+        font-size: 1.6rem;
+      }
+    }
+  }
+
+  #faqs {
+    .related-faqs__empty {
+      font-size: 1.8rem;
+      line-height: 1.5;
+    }
+
+    .faqs__accordion {
+      display: grid;
+      gap: 1.6rem;
+      margin-top: 1.6rem;
+    }
+
+    .faq {
+      border: 1px solid var(--color-grey);
+      border-radius: 2px;
+      background: #fff;
+    }
+
+    .faq__question {
+      list-style: none; /* hides the default marker in some browsers */
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.8rem 1.6rem;
+      background: var(--color-teal); /* adjust to your palette */
+      background-image: url(assets/img/section-bg.png); /* dots on top */
+      background-repeat: no-repeat;
+      background-position: right 0.8rem top; /* leave room for the +/- icon */
+      background-size: 110px auto; /* tweak to taste */
+      background-origin: padding-box; /* respect padding edge */
+      color: #fff;
+      font-weight: 400;
+      font-size: 1.5rem;
+    }
+
+    .faq__question::-webkit-details-marker {
+      display: none;
+    } /* hide default arrow */
+
+    .faq__q-text {
+      font-size: 1.8rem;
+      line-height: 1.4;
+      margin-right: 5rem;
+    }
+
+    .faq__answer {
+      padding: 1.6rem;
+      color: var(--color-black);
+      font-size: 1.8rem;
+      line-height: 1.5;
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-4px);
+      overflow: hidden;
+      transition: max-height 0.35s ease, opacity 0.25s ease,
+        transform 0.35s ease;
+      will-change: max-height, opacity, transform;
+
+      @include mixins.respond(smlmd) {
+        font-size: 1.6rem;
+      }
+    }
+
+    /* Optional +/- icon using CSS only */
+    .faq__icon::before {
+      content: '+';
+      font-size: 2rem;
+    }
+    /* when <details> is open, reveal with animation */
+    details[open] .faq__answer {
+      /* use a “big enough” max-height to accommodate content */
+      max-height: 60rem; /* adjust if your answers are longer */
+      opacity: 1;
+      transform: translateY(0);
+    }
+    details[open] .faq__icon::before {
+      content: '–';
+    }
+  }
+}
+
+// Side Navigation Section
+.side-nav,
+.downloads {
+  background-color: var(--color-pale-aqua);
+  padding: 2rem;
+  position: sticky; /* stick within the right column */
+  top: calc(64px + 20px); /* header/nav height + spacing */
+  align-self: start; /* ensure the grid row starts at the top */
+  height: fit-content; /* you already have this */
+  max-height: calc(100vh - (64px + 20px)); /* keep it in viewport */
+  overflow: auto; /* scroll the panel if it gets taller than viewport */
+  display: none;
+  /* Optional: turn off sticky on small screens */
+  @include mixins.respond(smlmd) {
+    display: block;
+  }
+  @include mixins.respond(medium) {
+    padding: 4rem;
+  }
+
+  &__list {
+    list-style-type: none;
+  }
+
+  &__item {
+    margin-bottom: 0.5rem;
+    border-left: 5px solid transparent;
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-left-color: var(--color-black);
+    }
+  }
+
+  &__link {
+    display: block; // make the link fill its parent
+    width: 100%; // ensure it stretches full width
+    height: 100%; // ensures full clickable area
+    text-decoration: none;
+    color: var(--color-black);
+    font-size: 1.7rem;
+    font-weight: 300;
+    padding: 1rem 1.4rem; // move padding from the li to the link
+    transition: background-color 0.3s ease;
+
+    &:hover,
+    &:focus,
+    &.is-active {
+      background-color: rgba(0, 0, 0, 0.05); // optional hover highlight
+    }
+  }
+
+  &__item:has(.side-nav__link.is-active) {
+    border-left-color: var(--color-black);
+  }
+  .aside-search {
+    color: var(--color-black);
+    font-family: typography.$font-primary;
+    font-size: 1.7rem;
+    font-weight: 300;
+  }
+
+  .aside-search input {
+    height: 100%;
+    border: none;
+    padding: 1rem 1.4rem;
+    font-family: typography.$font-primary;
+    font-size: 1.7rem;
+    outline: none;
+    font-weight: 300;
+
+    background: transparent;
+    border-left: 5px solid transparent; // invisible by default
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-left-color: #000; // black when focused
+      outline: none;
+    }
+
+    &:focus,
+    &:not(:placeholder-shown) {
+      background-color: rgba(
+        0,
+        0,
+        0,
+        0.05
+      ); // subtle background on focus/typing
+    }
+  }
+
+  .aside-search input::placeholder {
+    color: var(--color-black);
+    font-family: typography.$font-primary;
+    font-weight: 300;
+  }
+
+  .aside-search button {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background: none;
+    border: none;
+    padding: 0 1rem;
+    cursor: pointer;
+  }
+}

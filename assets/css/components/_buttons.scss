@@ -1,0 +1,31 @@
+@use 'abstracts/mixins' as mixins;
+@use 'abstracts/variables' as variables;
+@use 'base/typography' as typography;
+
+//* Overall button styles
+.btn {
+  display: inline-block;
+  overflow: hidden;
+  font-family: typography.$font-primary;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 0.3rem;
+  transition: all 0.3s ease-in-out;
+  padding: 1.4rem 2.4rem;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-top: 2rem;
+  background-color: var(--color-purple);
+  color: var(--color-white);
+
+  &:hover {
+    filter: brightness(0.7); // makes it about 15% darker
+    transition: all 0.3s ease-in-out;
+  }
+}
+
+//* Show button only on mobile
+.only-on-mobile {
+  display: none;
+}

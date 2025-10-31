@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+# Builds / artifacts (adjust if you DO want to commit compiled files)
+build/
+.bundle/
+.cache/
+*.map
+
+# Env / secrets
+.env
+.env.*.local
+
+# Local by Flywheel miscellaneous
+logs/

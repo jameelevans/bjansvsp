@@ -1,0 +1,174 @@
+/**
+*
+* * Everything that controls typography can be found in this file all in one place
+* TODO: Include custom downloaded font paths below --> Best for speed optimization
+*
+*/
+
+@use 'abstracts/mixins' as mixins;
+
+// * --------| Font variables |-------- *
+$font-primary: 'Roboto', sans-serif;
+$font-secondary: 'Open Sans', sans-serif;
+$font-h1: 4rem;
+$font-h2: 2.4rem;
+$font-h3: clamp(2.5rem, 1.8vw, 2.8rem);
+$font-h3-mobile: 3rem;
+$font-body: clamp(1.5rem, 1.8vw, 1.8rem);
+$font-body-mobile: 2rem;
+$font-icon-title: 0.8rem;
+$font-icon-body: 0.8rem;
+
+//Included fonts from assets
+
+/* Roboto Variable Font (Regular) */
+@font-face {
+  font-family: 'Roboto';
+  src: url('assets/fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 100 900; /* Supports weights from 100 to 900 */
+  font-stretch: 75% 125%; /* Supports variable width */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Roboto Variable Font (Italic) */
+@font-face {
+  font-family: 'Roboto';
+  src: url('assets/fonts/Roboto-Italic-VariableFont_wdth,wght.ttf')
+    format('truetype');
+  font-weight: 100 900; /* Supports weights from 100 to 900 */
+  font-stretch: 75% 125%; /* Supports variable width */
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Open Sans Variable Font (Regular) */
+@font-face {
+  font-family: 'Open Sans';
+  src: url('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf')
+    format('truetype');
+  font-weight: 100 900; /* Supports weights from 100 to 900 */
+  font-stretch: 75% 125%; /* Supports variable width */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Open Sans Variable Font (Italic) */
+@font-face {
+  font-family: 'Open Sans';
+  src: url('assets/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf')
+    format('truetype');
+  font-weight: 100 900; /* Supports weights from 100 to 900 */
+  font-stretch: 75% 125%; /* Supports variable width */
+  font-style: italic;
+  font-display: swap;
+}
+
+html {
+  // ! Makes 1 rem = 10px ( Simplifies dealing with rem to px calcs )
+  font-size: 55%; // 10px / 16px = 65.5%
+
+  @include mixins.respond(large) {
+    font-size: 62.5%;
+  }
+}
+
+body {
+  font-family: $font-primary;
+}
+
+.icon {
+  display: inline-block;
+  font-size: inherit;
+  height: 1em;
+  vertical-align: middle;
+  width: 1em;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+.h1__heading {
+  font-family: $font-secondary;
+  font-size: 3.8rem;
+  font-weight: 600;
+  margin-bottom: 4.5rem;
+  position: relative;
+  z-index: 5;
+
+  @include mixins.respond(smlmd) {
+    font-size: 2.9rem;
+  }
+}
+
+.h2__heading {
+  font-family: $font-secondary;
+  font-size: 3.5rem;
+  font-weight: 500;
+  margin-bottom: 2.5rem;
+
+  @include mixins.respond(smlmd) {
+    font-size: 2.5rem;
+  }
+}
+
+.h3__heading {
+  font-family: $font-secondary;
+  font-size: 2.4rem;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+
+  @include mixins.respond(smlmd) {
+    font-size: 2rem;
+  }
+}
+
+.h4__heading {
+  font-family: $font-secondary;
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  background-color: var(--color-green);
+  color: var(--color-white);
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.h4__heading--orange {
+  font-family: $font-secondary;
+  display: inline-block;
+  padding: 0.5rem 5rem 0.5rem 1.2rem;
+  background-color: var(--color-orange);
+  color: var(--color-white);
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.footer__h4 {
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: var(--color-black);
+  margin-bottom: 1.2rem;
+
+  @include mixins.respond(smlmd) {
+    font-size: 1.8rem;
+  }
+}
+
+.sub__heading,
+.single-resource__p {
+  font-size: 2.2rem;
+  line-height: 1.4;
+  margin-block-end: 2rem;
+
+  @include mixins.respond(smlmd) {
+    font-size: 1.8rem;
+  }
+}
+
+// Uppercase
+.uppercase {
+  text-transform: uppercase;
+}

@@ -1,0 +1,510 @@
+@use 'abstracts/mixins' as mixins;
+
+.header {
+  background-image: radial-gradient(
+      circle at bottom center,
+      rgba(255, 255, 255, 1) 0%,
+      /* solid white center */ rgba(255, 255, 255, 0.95) 35%,
+      /* smooth fade start */ rgba(255, 255, 255, 0) 100%
+        /* fully transparent outer edge */
+    ),
+    url(assets/img/bjs-nsvsp-banner-no-logo.png);
+  background-position: left 0 top -60px;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  @include mixins.respond(medium) {
+    background-image: radial-gradient(
+        circle at bottom right,
+        rgba(255, 255, 255, 1) 0%,
+        /* solid white center */ rgba(255, 255, 255, 0.95) 25%,
+        /* smooth fade start */ rgba(255, 255, 255, 0) 65%
+          /* fully transparent outer edge */
+      ),
+      url(assets/img/bjs-nsvsp-banner-no-logo.png);
+  }
+
+  // Header conatiner
+  &__container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 144rem;
+    padding: 80px 20px 35px;
+    width: 100%;
+    align-items: center; // optional for vertical centering
+
+    @include mixins.respond(medium) {
+      display: grid;
+      gap: 5rem;
+      grid-template-columns: 3fr 1fr; /* matches #front-page */
+    }
+  }
+
+  &__container > a {
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  /* If your header uses grid and you want it on the right column */
+  &__container > .custom-logo-link {
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  /* Size + alignment for the WP custom logo output */
+  .custom-logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto; /* pick your desired header height */
+    width: 25rem; /* keep aspect ratio */
+    position: relative;
+    z-index: 99999;
+    //max-width: 100%; /* prevent overflow */
+
+    @include mixins.respond(medium) {
+      height: auto; /* pick your desired header height */
+      width: 100%; /* keep aspect ratio */
+      max-width: 100%; /* prevent overflow */
+    }
+  }
+
+  &__logo {
+    width: 100%;
+    height: auto;
+    display: block; /* removes baseline gap in images */
+    max-width: 100%; /* prevent overflow */
+    position: relative;
+    z-index: 99999;
+  }
+
+  .navbar {
+    width: 100%;
+    border-top: none;
+    border-bottom: none;
+
+    @include mixins.respond(smlmd) {
+      border-top: 2px solid var(--color-grey);
+      border-bottom: 2px solid var(--color-grey);
+    }
+
+    &__container {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 144rem;
+      padding: 0 20px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto;
+      gap: 0;
+      // align-items: stretch; // make children (menu + search) fill full height
+      height: 64px; // set a consistent navbar height
+      justify-content: center; // justify menu items center on mobile
+
+      @include mixins.respond(smlmd) {
+        grid-template-columns: 3fr 1fr;
+        gap: 5rem;
+        justify-content: space-between; // menu left, search right
+      }
+    }
+  }
+
+  .nav {
+    &__menu {
+      display: none;
+      align-items: stretch; /* IMPORTANT */
+      height: 100%; /* <-- gives LIs a reference for 100% */
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      @include mixins.respond(smlmd) {
+        display: flex;
+      }
+
+      li {
+        display: flex;
+        align-items: stretch; // make the anchor fill full navbar height
+        height: 100%;
+      }
+    }
+
+    &__item {
+      position: relative; // allows pseudo-element to position correctly
+      display: flex; // allows vertical centering inside
+      align-items: center; // centers text vertically
+      justify-content: center; // optional, centers text horizontally
+      height: 100%; // fills the li height
+      padding-right: 1rem;
+      color: var(--color-dark-grey);
+      font-size: 1.6rem;
+      text-decoration: none;
+      cursor: pointer;
+
+      @include mixins.respond(medium) {
+        font-size: 1.7rem;
+        padding-right: 2rem;
+      }
+
+      // purple underline pseudo-element
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 6px;
+        background-color: var(--color-primary, #726c9a);
+        transform: scaleX(0); // start hidden
+        transform-origin: left; // grow from middle
+        transition: transform 0.3s ease;
+      }
+
+      &:hover,
+      &:focus {
+        color: var(
+          --color-primary,
+          #726c9a
+        ); // fallback to brand purple if var not set
+        text-decoration: none;
+      }
+
+      &:hover::after,
+      &:focus::after {
+        transform: scaleX(1); // reveal underline on hover
+      }
+    }
+    /* Active state (single Resource) */
+    &__item.is-active {
+      color: var(--color-primary, #726c9a);
+    }
+    &__item.is-active::after {
+      transform: scaleX(1);
+    }
+  }
+
+  .search {
+    color: var(--color-grey);
+    align-self: stretch;
+    display: none;
+    align-items: center;
+    border-left: 2px solid var(--color-grey);
+    border-right: 2px solid var(--color-grey);
+    position: relative;
+
+    @include mixins.respond(smlmd) {
+      display: flex;
+    }
+
+    &__icon {
+      fill: var(--color-dark-grey);
+      position: absolute;
+      right: 12px; // move slightly away from edge
+      top: 50%; // center vertically
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      pointer-events: none; // so it doesn’t block clicks on the input
+      z-index: 2;
+    }
+  }
+
+  .search input {
+    flex: 1;
+    height: 100%;
+    border: none;
+    padding: 0 1rem;
+    font-size: 1.6rem;
+    color: var(--color-dark-grey);
+    outline: none;
+    background: transparent;
+  }
+
+  .search input::placeholder {
+    color: rgba(var(--color-dark-grey-a), 0.5);
+  }
+
+  .search button {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background: none;
+    border: none;
+    padding: 0 1rem;
+    cursor: pointer;
+  }
+
+  ////// Mobile navigation styles
+  .mobile-navigation {
+    display: block;
+    position: relative;
+    text-align: center;
+
+    @include mixins.respond(smlmd) {
+      display: none;
+      text-align: center;
+    }
+    // Mobile menu outer grey box
+    &__menu {
+      position: absolute;
+      background-color: transparent;
+      border: 2px solid var(--color-grey);
+      height: 7rem;
+      width: 7rem;
+      border-radius: 3px;
+      top: -40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      cursor: pointer;
+      box-shadow: none;
+
+      &:focus {
+        outline: 2px dashed var(--color-white);
+      }
+    }
+
+    //Mobile menu icon
+    &__icon {
+      position: absolute;
+      top: 0;
+
+      @include mixins.respond(medium) {
+        display: none;
+      }
+
+      //Mobile menu base styles for two icon lines
+      &::before,
+      &::after {
+        width: 4.5rem;
+        height: 3px;
+        border-radius: 1px;
+        background-color: var(--color-purple);
+        display: inline-block;
+      }
+
+      //Content must be set empty for sudo elements
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        left: -2rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      //Individual positioining for 1st and 3rd icon lines
+      &::before {
+        top: 2.5rem;
+      }
+
+      &::after {
+        top: 4rem;
+      }
+
+      &--close-x {
+        &::before {
+          top: 3rem;
+          transform: rotate(135deg);
+        }
+
+        .mobile-navigation__icon {
+          opacity: 0;
+          background-color: transparent;
+        }
+
+        &::after {
+          top: 3rem;
+          transform: rotate(-135deg);
+        }
+      }
+    }
+
+    &__checkbox {
+      display: none;
+    }
+
+    &__button {
+      position: absolute;
+      height: 7rem;
+      width: 7rem;
+      border-radius: 3px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      cursor: pointer;
+      box-shadow: none;
+    }
+
+    &__background {
+      height: 6rem;
+      width: 6rem;
+      border-radius: 5%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: transparent;
+      z-index: 1000;
+      transition: all 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+
+      &--is-scrolled {
+        position: fixed !important;
+        top: 3.5rem !important;
+      }
+    }
+
+    ////////////// Mobile navigation wrapper - Initially hidden
+    &__nav {
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      //padding: 8rem;
+      top: 0;
+      background: var(--color-pale-aqua);
+      right: 0;
+      z-index: 1500;
+      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &__nav--is-visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-navigation__current-page {
+      background-position: 100% !important;
+      font-weight: 500 !important;
+      color: var(--color-black) !important;
+      background-color: var(--color-teal) !important;
+    }
+
+    &__logo {
+      padding: 8rem 2.5rem 5rem;
+    }
+
+    &__img {
+      width: 30rem;
+    }
+
+    // Mobile list
+    &__list {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      width: 100%;
+      transform: translate(-50%, -50%);
+      list-style: none;
+      text-align: center;
+    }
+
+    // Mobile list items
+    &__item {
+      &:not(:last-of-type) {
+        margin-block-end: 3rem;
+      }
+    }
+
+    // Mobile links
+    &__link {
+      &:link,
+      &:visited {
+        display: inline-block;
+        font-size: 2.5rem;
+        font-weight: 300;
+        width: 100%;
+        padding: 1rem 2rem;
+        color: var(--color-black);
+        background-color: transparent;
+        text-decoration: none;
+        transition: all 0.4s;
+      }
+
+      &:hover,
+      &:active {
+        background-position: 100%;
+        font-weight: 500;
+        color: var(--color-black);
+        background-color: var(--color-teal);
+        transform: translateX(1rem);
+      }
+    }
+
+    &__search {
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--color-grey);
+      height: 6rem;
+      width: 40rem;
+      position: relative;
+
+      &__icon {
+        fill: var(--color-dark-grey);
+        position: absolute;
+        right: 12px; // move slightly away from edge
+        top: 50%; // center vertically
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        pointer-events: none; // so it doesn’t block clicks on the input
+        z-index: 2;
+      }
+    }
+
+    &__search input {
+      height: 100%;
+      width: 100%;
+      border: none;
+      padding: 0 1rem;
+      font-size: 1.6rem;
+      outline: none;
+    }
+
+    &__search input::placeholder {
+      color: rgba(var(--color-dark-grey-a), 0.5);
+    }
+
+    &__search button {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      background: none;
+      border: none;
+      padding: 0 1rem;
+      cursor: pointer;
+    }
+
+    //FUNCTIONALITY
+    &__checkbox:checked ~ &__background {
+      transform: scale(60);
+      background-color: var(--color-blue);
+    }
+
+    &__checkbox:checked ~ &__nav {
+      opacity: 1;
+      width: 100%;
+      top: 0;
+      visibility: visible;
+    }
+
+    //When checkbox is selected --> slecte its sibling, then select the buttons child (icon) then remove middle icon line
+    &__checkbox:checked + &__button &__icon {
+      background-color: transparent;
+    }
+
+    //Rotate top icon line on menu click
+    &__checkbox:checked + &__button &__icon::before {
+      top: 3rem;
+      transform: rotate(135deg);
+    }
+
+    //Rotate bottom icon line on menu click
+    &__checkbox:checked + &__button &__icon::after {
+      top: 3rem;
+      transform: rotate(-135deg);
+    }
+  }
+}

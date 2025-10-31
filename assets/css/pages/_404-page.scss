@@ -1,0 +1,67 @@
+@use 'abstracts/mixins' as mixins;
+
+.error {
+  max-width: 130rem;
+  margin: 0 auto;
+  padding: 10rem 2.5rem;
+
+  @include mixins.respond(smlmd) {
+    padding: 20rem 2.5rem;
+  }
+
+  &__image {
+    padding: 5rem;
+    width: 50%;
+    margin-bottom: 4rem;
+    margin: 0 auto;
+    display: block;
+  }
+
+  &__header {
+    font-size: 3rem;
+    text-align: center;
+    margin-block-end: 1rem;
+    font-weight: 300;
+  }
+
+  &__p {
+    font-size: 2.5rem;
+    line-height: 1;
+    margin-bottom: 4rem;
+    text-align: center;
+    font-weight: 300;
+
+    a {
+      font-weight: 500;
+      color: var(--color-black);
+      text-decoration: none;
+    }
+  }
+
+  &__icon {
+    margin: 0 auto;
+    display: block;
+    fill: var(--color-orange);
+    width: 100%;
+  }
+
+  &__home,
+  &__home:link,
+  &__home:visited {
+    background-color: var(--color-blue);
+    font-size: 1.5rem;
+    font-weight: 100;
+    color: var(--color-white);
+    cursor: pointer;
+    width: 16rem;
+    border-radius: 2px;
+    transition: all 0.3s ease-in-out;
+    padding: 1rem 3rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    position: relative;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+  }
+}

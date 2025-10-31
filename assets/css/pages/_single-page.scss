@@ -1,0 +1,167 @@
+@use 'abstracts/mixins' as mixins;
+@use 'base/typography' as typography;
+
+// Single resource section
+.single-resource {
+  &__category {
+    font-size: 2rem;
+    line-height: 1.4;
+    margin-block-end: 1rem;
+    font-weight: 300;
+
+    @include mixins.respond(smlmd) {
+      font-size: 1.8rem;
+    }
+  }
+
+  &__date {
+    font-size: 2rem;
+    line-height: 1.4;
+    margin-block-end: 2rem;
+    font-weight: 300;
+
+    @include mixins.respond(smlmd) {
+      font-size: 1.8rem;
+    }
+  }
+}
+// Downloads styles
+.downloads {
+  display: block !important;
+
+  &__link,
+  &__empty {
+    display: flex; // <— this aligns icon + text on the same baseline
+    align-items: center; // <— vertically centers them
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
+
+  &__link:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  &__icon {
+    aspect-ratio: 1;
+    height: 1.5rem;
+    margin-right: 1rem;
+    flex-shrink: 0; // keeps icon from squishing
+  }
+}
+
+/* === Single Resource Content Typography === */
+#single-page .single-resource__content {
+  /* Paragraphs (mirrors .single-resource__p) */
+  p,
+  .wp-block-paragraph {
+    font-family: typography.$font-primary;
+    font-size: 2.2rem;
+    line-height: 1.4;
+    margin-block-end: 2rem;
+
+    @include mixins.respond(smlmd) {
+      font-size: 1.8rem;
+    }
+  }
+
+  /* Headings inside post content */
+  h1,
+  .wp-block-heading h1 {
+    font-family: typography.$font-secondary;
+    font-size: 3.8rem;
+    font-weight: 600;
+    margin-block: 4rem 2rem;
+    color: var(--color-black);
+
+    @include mixins.respond(smlmd) {
+      font-size: 2.9rem;
+    }
+  }
+
+  h2,
+  .wp-block-heading h2 {
+    font-family: typography.$font-secondary;
+    font-size: 3.5rem;
+    font-weight: 500;
+    margin-block: 3rem 1.8rem;
+    color: var(--color-black);
+
+    @include mixins.respond(smlmd) {
+      font-size: 2.5rem;
+    }
+  }
+
+  h3,
+  .wp-block-heading h3 {
+    font-family: typography.$font-secondary;
+    font-size: 2.4rem;
+    font-weight: 500;
+    margin-block: 2.5rem 1.2rem;
+    color: var(--color-black);
+
+    @include mixins.respond(smlmd) {
+      font-size: 2rem;
+    }
+  }
+
+  h4,
+  .wp-block-heading h4 {
+    font-family: typography.$font-secondary;
+    font-size: 1.9rem;
+    font-weight: 600;
+    margin-block: 2rem 1rem;
+    color: var(--color-black);
+
+    @include mixins.respond(smlmd) {
+      font-size: 1.7rem;
+    }
+  }
+
+  /* Lists and other content */
+  ul,
+  ol {
+    font-family: typography.$font-primary;
+    font-size: 2rem;
+    line-height: 1.6;
+    margin-block-end: 2rem;
+    padding-left: 3rem;
+
+    @include mixins.respond(smlmd) {
+      font-size: 1.7rem;
+    }
+  }
+
+  li {
+    margin-bottom: 0.8rem;
+  }
+
+  a {
+    color: var(--color-purple);
+    text-decoration: underline;
+    transition: color 0.3s ease;
+
+    &:hover,
+    &:focus {
+      color: var(--color-teal);
+      text-decoration: none;
+    }
+  }
+
+  /* Images and figures */
+  figure {
+    margin: 2.5rem 0;
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    figcaption {
+      font-size: 1.5rem;
+      color: var(--color-dark-grey);
+      margin-top: 0.8rem;
+    }
+  }
+}

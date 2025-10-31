@@ -1,0 +1,75 @@
+@use 'base/typography' as typography;
+@use 'abstracts/mixins' as mixins;
+
+//Pagination
+.pagination {
+  grid-column: 1 / -1;
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+
+  &__list {
+    display: inline-flex;
+    gap: 0.8rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* WP outputs .page-numbers links inside <li> */
+  &__item .page-numbers {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 40px;
+    height: 40px;
+    padding: 0 1rem;
+
+    font-size: 1.4rem;
+    text-decoration: none;
+    color: var(--color-dark-grey);
+
+    background: #fff;
+    border: 1px solid var(--color-grey);
+    border-radius: 3px;
+    transition: background-color 0.15s ease, color 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  /* Active page */
+  &__item .page-numbers.current {
+    color: #fff;
+    background: var(--color-purple);
+    border-color: var(--color-purple);
+    cursor: default;
+  }
+
+  /* Prev/Next */
+  &__item .prev,
+  &__item .next {
+    padding: 0 1.4rem;
+    border: none; // remove border
+    background: transparent;
+    color: var(--color-dark-grey);
+    font-weight: 300;
+
+    &:hover {
+      background: transparent; // keeps background clean on hover
+      text-decoration: underline; // optional, subtle hover cue
+    }
+  }
+
+  /* Ellipses */
+  &__item .dots {
+    background: transparent;
+    border: none;
+    min-width: auto;
+    padding: 0 0.4rem;
+    cursor: default;
+  }
+}
