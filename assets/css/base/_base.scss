@@ -13,6 +13,11 @@ html {
   box-sizing: border-box;
   scroll-behavior: smooth;
 
+  /* Adjust the offset for all anchored sections */
+  [id] {
+    scroll-margin-top: 9rem; /* adjust to match your navbar height */
+  }
+
   a:focus:not(.screen-reader-shortcut):not(.nav__survey .nav__item) {
     outline: 2px dashed var(--color-purple);
     outline-offset: 1rem;
