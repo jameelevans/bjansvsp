@@ -1,6 +1,8 @@
 @use 'abstracts/mixins' as mixins;
 
 .header {
+  overflow: visible !important;
+  transform: none !important;
   background-image: radial-gradient(
       circle at bottom center,
       rgba(255, 255, 255, 1) 0%,
@@ -51,6 +53,11 @@
     justify-self: end;
   }
 
+  .custom-logo-link:focus {
+    outline: 2px dashed var(--color-purple);
+    outline-offset: 1rem;
+  }
+
   /* Size + alignment for the WP custom logo output */
   .custom-logo {
     display: block;
@@ -59,7 +66,6 @@
     height: auto; /* pick your desired header height */
     width: 25rem; /* keep aspect ratio */
     position: relative;
-    z-index: 99999;
     //max-width: 100%; /* prevent overflow */
 
     @include mixins.respond(medium) {
@@ -77,125 +83,561 @@
     position: relative;
     z-index: 99999;
   }
+}
 
-  .navbar {
+.navbar {
+  position: sticky;
+  top: 0;
+  background-color: var(--color-white);
+  backdrop-filter: saturate(180%) blur(4px);
+  box-shadow: none;
+  width: 100%;
+  border-top: none;
+  border-bottom: none;
+  overflow: visible;
+  display: none;
+  z-index: 50;
+
+  @include mixins.respond(smlmd) {
+    border-top: 2px solid var(--color-grey);
+    border-bottom: 2px solid var(--color-grey);
+    display: block;
+  }
+
+  &__container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 144rem;
+    padding: 0 20px;
     width: 100%;
-    border-top: none;
-    border-bottom: none;
+    display: grid;
+    grid-template-columns: auto;
+    gap: 0;
+    height: 64px;
+    justify-content: center;
 
     @include mixins.respond(smlmd) {
-      border-top: 2px solid var(--color-grey);
-      border-bottom: 2px solid var(--color-grey);
-    }
-
-    &__container {
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 144rem;
-      padding: 0 20px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: auto;
-      gap: 0;
-      // align-items: stretch; // make children (menu + search) fill full height
-      height: 64px; // set a consistent navbar height
-      justify-content: center; // justify menu items center on mobile
-
-      @include mixins.respond(smlmd) {
-        grid-template-columns: 3fr 1fr;
-        gap: 5rem;
-        justify-content: space-between; // menu left, search right
-      }
+      grid-template-columns: 3fr 1fr;
+      gap: 5rem;
+      justify-content: space-between;
     }
   }
+}
 
-  .nav {
-    &__menu {
-      display: none;
-      align-items: stretch; /* IMPORTANT */
-      height: 100%; /* <-- gives LIs a reference for 100% */
-      gap: 2rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-
-      @include mixins.respond(smlmd) {
-        display: flex;
-      }
-
-      li {
-        display: flex;
-        align-items: stretch; // make the anchor fill full navbar height
-        height: 100%;
-      }
-    }
-
-    &__item {
-      position: relative; // allows pseudo-element to position correctly
-      display: flex; // allows vertical centering inside
-      align-items: center; // centers text vertically
-      justify-content: center; // optional, centers text horizontally
-      height: 100%; // fills the li height
-      padding-right: 1rem;
-      color: var(--color-dark-grey);
-      font-size: 1.6rem;
-      text-decoration: none;
-      cursor: pointer;
-
-      @include mixins.respond(medium) {
-        font-size: 1.7rem;
-        padding-right: 2rem;
-      }
-
-      // purple underline pseudo-element
-      &::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 6px;
-        background-color: var(--color-primary, #726c9a);
-        transform: scaleX(0); // start hidden
-        transform-origin: left; // grow from middle
-        transition: transform 0.3s ease;
-      }
-
-      &:hover,
-      &:focus {
-        color: var(
-          --color-primary,
-          #726c9a
-        ); // fallback to brand purple if var not set
-        text-decoration: none;
-      }
-
-      &:hover::after,
-      &:focus::after {
-        transform: scaleX(1); // reveal underline on hover
-      }
-    }
-    /* Active state (single Resource) */
-    &__item.is-active {
-      color: var(--color-primary, #726c9a);
-    }
-    &__item.is-active::after {
-      transform: scaleX(1);
-    }
-  }
-
-  .search {
-    color: var(--color-grey);
-    align-self: stretch;
+.nav {
+  &__menu {
     display: none;
-    align-items: center;
-    border-left: 2px solid var(--color-grey);
-    border-right: 2px solid var(--color-grey);
-    position: relative;
+    align-items: stretch; /* IMPORTANT */
+    height: 100%; /* <-- gives LIs a reference for 100% */
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 
     @include mixins.respond(smlmd) {
       display: flex;
     }
+
+    li {
+      display: flex;
+      align-items: stretch; // make the anchor fill full navbar height
+      height: 100%;
+      position: relative; //make the parent li a positioning context
+    }
+  }
+
+  &__survey {
+    background-color: var(--color-purple);
+    padding-left: 1.5rem;
+    transition: background-color 0.3s ease;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: var(--color-orange);
+    }
+  }
+
+  // FIRST item only
+  &__li:first-child a {
+    /* styles for the very first item */
+    color: var(--color-white);
+  }
+
+  &__item {
+    position: relative; // allows pseudo-element to position correctly
+    display: flex; // allows vertical centering inside
+    align-items: center; // centers text vertically
+    justify-content: center; // optional, centers text horizontally
+    height: 100%; // fills the li height
+    padding-right: 1rem;
+    color: var(--color-dark-grey);
+    font-size: 1.6rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    @include mixins.respond(medium) {
+      font-size: 1.7rem;
+      padding-right: 2rem;
+    }
+
+    // purple underline pseudo-element
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 6px;
+      background-color: var(--color-primary, #726c9a);
+      transform: scaleX(0); // start hidden
+      transform-origin: left; // grow from middle
+      transition: transform 0.3s ease;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--color-orange);
+      text-decoration: none;
+    }
+
+    &:hover::after,
+    &:focus::after {
+      transform: scaleX(1); // reveal underline on hover
+    }
+  }
+
+  // First nav item (Take Survey): text always white, underline white only on hover
+  &__li:first-child .nav__item {
+    color: var(--color-white) !important;
+
+    // keep underline hidden until hover/focus
+    &::after {
+      background-color: var(--color-white) !important;
+      left: -1.5rem; // extend under the purple padding on the first item
+      right: 0;
+      transform: scaleX(0);
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--color-white) !important; // keep text white on hover
+    }
+
+    &:hover::after,
+    &:focus::after {
+      transform: scaleX(1); // reveal underline on hover
+    }
+  }
+
+  /* Active state (single Resource) */
+  &__item.is-active {
+    color: var(--color-primary, #726c9a);
+  }
+  &__item.is-active::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Panel */
+.nav-dropdown {
+  position: absolute;
+  top: 5.6rem;
+  left: -5.5rem;
+  /* keep your sizing/visuals */
+  min-width: 26rem;
+  background: var(--color-grey); /* panel background */
+  box-shadow: -2px 2px 2px rgba(var(--color-black-a), 0.25);
+  padding: 4rem 5.5rem;
+  margin-top: 0.75rem;
+  list-style: none;
+  z-index: 4000;
+
+  /* animation state (closed) */
+  transform-origin: top;
+  transform: scaleY(0.96);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.22s ease,
+    visibility 0s linear 0.22s; /* hide after fade */
+  will-change: transform, opacity;
+}
+
+/* Show on hover/focus of the parent menu item + JS .is-open */
+.nav__li:hover > .nav-dropdown,
+.nav__li:focus-within > .nav-dropdown,
+.nav__li.is-open > .nav-dropdown {
+  transform: scaleY(1);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.22s ease,
+    visibility 0s; /* show immediately */
+}
+
+/* Items / links (keep your look) */
+.nav-dropdown__item {
+  /* slight stagger entrance without changing spacing */
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: transform 0.22s ease, opacity 0.22s ease;
+
+  &:not(:last-child) {
+    /* border-bottom: 1px solid rgba(0,0,0,.06); */
+  }
+}
+
+.nav__li:hover > .nav-dropdown .nav-dropdown__item,
+.nav__li:focus-within > .nav-dropdown .nav-dropdown__item,
+.nav__li.is-open > .nav-dropdown .nav-dropdown__item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* small stagger for polish */
+.nav-dropdown__item:nth-child(1) {
+  transition-delay: 0.02s;
+}
+.nav-dropdown__item:nth-child(2) {
+  transition-delay: 0.06s;
+}
+.nav-dropdown__item:nth-child(3) {
+  transition-delay: 0.1s;
+}
+.nav-dropdown__item:nth-child(4) {
+  transition-delay: 0.14s;
+}
+.nav-dropdown__item:nth-child(5) {
+  transition-delay: 0.18s;
+}
+
+.nav-dropdown__link {
+  display: block;
+  position: relative;
+  color: var(--color-black); /* link color */
+  text-decoration: none;
+  margin-bottom: 1.5rem; /* keep your spacing */
+  line-height: 1.3;
+  font-size: 1.8rem;
+
+  /* 5px black left pseudo element (only on hover/focus) */
+  &::before {
+    content: '';
+    position: absolute;
+    left: -2.5rem;
+    top: 0;
+    bottom: 0;
+    width: 5px; /* requested width */
+    background: var(--color-black); /* requested color */
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.18s ease;
+  }
+
+  &:hover,
+  &:focus {
+    color: var(--color-orange); /* stay black on hover */
+  }
+
+  &:hover::before,
+  &:focus::before {
+    transform: scaleY(1.2); /* reveal the bar */
+  }
+}
+
+/* Optional: keep dropdown off on mobile since you have a mobile nav */
+@media (max-width: 900px) {
+  .nav-dropdown {
+    display: none !important;
+  }
+}
+
+/* Allow JS to open the dropdown without hover */
+.nav__li.is-open > .nav-dropdown {
+  /* same visual state as hover/focus */
+  transform: scaleY(1);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Respect motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .nav-dropdown,
+  .nav-dropdown__item,
+  .nav-dropdown__link::before {
+    transition: none !important;
+  }
+}
+
+/* Header / navbar search only */
+.navbar .search {
+  color: var(--color-grey);
+  align-self: stretch;
+  display: none;
+  align-items: center;
+  border-left: 2px solid var(--color-grey);
+  border-right: 2px solid var(--color-grey);
+  position: relative;
+
+  @include mixins.respond(smlmd) {
+    display: flex;
+  }
+
+  &__icon {
+    fill: var(--color-dark-grey);
+    position: absolute;
+    right: 12px; // move slightly away from edge
+    top: 50%; // center vertically
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none; // so it doesn’t block clicks on the input
+    z-index: 2;
+  }
+}
+
+.navbar .search input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  padding: 0 1rem;
+  font-size: 1.6rem;
+  color: var(--color-dark-grey);
+  outline: none;
+  background: transparent;
+}
+
+.navbar .search input::placeholder {
+  color: rgba(var(--color-dark-grey-a), 0.5);
+}
+
+.navbar .search button {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  background: none;
+  border: none;
+  padding: 0 1rem;
+  cursor: pointer;
+}
+
+////// Mobile navigation styles
+.mobile-navigation {
+  display: block;
+  position: relative;
+  text-align: center;
+  margin-top: 7.5rem;
+
+  @include mixins.respond(smlmd) {
+    display: none;
+    text-align: center;
+    margin-top: 0;
+  }
+  // Mobile menu outer grey box
+  &__menu {
+    position: absolute;
+    background-color: var(--color-white);
+    border: 2px solid var(--color-grey);
+    height: 7rem;
+    width: 7rem;
+    border-radius: 3px;
+    top: -4rem;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    box-shadow: none;
+
+    &:focus {
+      outline: 2px dashed var(--color-purple);
+      outline-offset: 1rem;
+    }
+  }
+
+  //Mobile menu icon
+  &__icon {
+    position: absolute;
+    top: 0;
+
+    @include mixins.respond(medium) {
+      display: none;
+    }
+
+    //Mobile menu base styles for two icon lines
+    &::before,
+    &::after {
+      width: 4.5rem;
+      height: 3px;
+      border-radius: 1px;
+      background-color: var(--color-purple);
+      display: inline-block;
+    }
+
+    //Content must be set empty for sudo elements
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      transition: all 0.3s ease-in-out;
+    }
+
+    //Individual positioining for 1st and 3rd icon lines
+    &::before {
+      top: 2.5rem;
+    }
+
+    &::after {
+      top: 4rem;
+    }
+  }
+
+  &__checkbox {
+    display: none;
+  }
+
+  &__button {
+    position: absolute;
+    height: 7rem;
+    width: 7rem;
+    border-radius: 3px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    cursor: pointer;
+    box-shadow: none;
+  }
+
+  &__background {
+    height: 6rem;
+    width: 6rem;
+    border-radius: 5%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    z-index: 1000;
+    transition: all 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+
+    &--is-scrolled {
+      position: fixed !important;
+      top: 3.5rem !important;
+    }
+  }
+
+  ////////////// Mobile navigation wrapper - Initially hidden
+  &__nav {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    background: var(--color-pale-aqua);
+    right: 0;
+    z-index: 1500;
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; // 🔹 can't be clicked when hidden
+  }
+
+  &__nav--is-visible {
+    opacity: 1;
+    width: 100%;
+    top: 0;
+    visibility: visible;
+    pointer-events: auto; // 🔹 now catches all clicks
+  }
+
+  .mobile-navigation__current-page {
+    background-position: 100% !important;
+    font-weight: 500 !important;
+    color: var(--color-black) !important;
+    background-color: var(--color-teal) !important;
+  }
+
+  &__close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    height: 8rem;
+    width: 8rem;
+    border-radius: 50%;
+    background-color: var(--color-purple);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    &:focus-visible {
+      outline: 2px dashed var(--color-white);
+      outline-offset: 3px;
+    }
+  }
+
+  &__x {
+    display: block;
+    width: 4rem;
+    height: 4rem;
+    fill: var(--color-white);
+  }
+
+  // Mobile list
+  &__list {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    list-style: none;
+    text-align: center;
+  }
+
+  // Mobile list items
+  &__item {
+    &:not(:last-of-type) {
+      margin-block-end: 3rem;
+    }
+  }
+
+  // Mobile links
+  &__link {
+    &:link,
+    &:visited {
+      display: inline-block;
+      font-size: 2.5rem;
+      font-weight: 300;
+      width: 100%;
+      padding: 1rem 2rem;
+      color: var(--color-black);
+      background-color: transparent;
+      text-decoration: none;
+      transition: all 0.4s;
+    }
+
+    &:hover,
+    &:active {
+      background-position: 100%;
+      font-weight: 500;
+      color: var(--color-black);
+      background-color: var(--color-teal);
+      transform: translateX(1rem);
+    }
+  }
+
+  &__search {
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--color-grey);
+    height: 6rem;
+    width: 40rem;
+    position: relative;
 
     &__icon {
       fill: var(--color-dark-grey);
@@ -210,22 +652,20 @@
     }
   }
 
-  .search input {
-    flex: 1;
+  &__search input {
     height: 100%;
+    width: 100%;
     border: none;
     padding: 0 1rem;
     font-size: 1.6rem;
-    color: var(--color-dark-grey);
     outline: none;
-    background: transparent;
   }
 
-  .search input::placeholder {
+  &__search input::placeholder {
     color: rgba(var(--color-dark-grey-a), 0.5);
   }
 
-  .search button {
+  &__search button {
     display: flex;
     align-items: center;
     height: 100%;
@@ -235,276 +675,33 @@
     cursor: pointer;
   }
 
-  ////// Mobile navigation styles
-  .mobile-navigation {
-    display: block;
-    position: relative;
-    text-align: center;
+  //FUNCTIONALITY
+  &__checkbox:checked ~ &__background {
+    transform: scale(60);
+    background-color: var(--color-blue);
+  }
 
-    @include mixins.respond(smlmd) {
-      display: none;
-      text-align: center;
-    }
-    // Mobile menu outer grey box
-    &__menu {
-      position: absolute;
-      background-color: transparent;
-      border: 2px solid var(--color-grey);
-      height: 7rem;
-      width: 7rem;
-      border-radius: 3px;
-      top: -40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2000;
-      cursor: pointer;
-      box-shadow: none;
+  &__checkbox:checked ~ &__nav {
+    opacity: 1;
+    width: 100%;
+    top: 0;
+    visibility: visible;
+  }
 
-      &:focus {
-        outline: 2px dashed var(--color-white);
-      }
-    }
+  //When checkbox is selected --> slecte its sibling, then select the buttons child (icon) then remove middle icon line
+  &__checkbox:checked + &__button &__icon {
+    background-color: transparent;
+  }
 
-    //Mobile menu icon
-    &__icon {
-      position: absolute;
-      top: 0;
+  //Rotate top icon line on menu click
+  &__checkbox:checked + &__button &__icon::before {
+    top: 3rem;
+    transform: rotate(135deg);
+  }
 
-      @include mixins.respond(medium) {
-        display: none;
-      }
-
-      //Mobile menu base styles for two icon lines
-      &::before,
-      &::after {
-        width: 4.5rem;
-        height: 3px;
-        border-radius: 1px;
-        background-color: var(--color-purple);
-        display: inline-block;
-      }
-
-      //Content must be set empty for sudo elements
-      &::before,
-      &::after {
-        content: '';
-        position: absolute;
-        left: -2rem;
-        transition: all 0.3s ease-in-out;
-      }
-
-      //Individual positioining for 1st and 3rd icon lines
-      &::before {
-        top: 2.5rem;
-      }
-
-      &::after {
-        top: 4rem;
-      }
-
-      &--close-x {
-        &::before {
-          top: 3rem;
-          transform: rotate(135deg);
-        }
-
-        .mobile-navigation__icon {
-          opacity: 0;
-          background-color: transparent;
-        }
-
-        &::after {
-          top: 3rem;
-          transform: rotate(-135deg);
-        }
-      }
-    }
-
-    &__checkbox {
-      display: none;
-    }
-
-    &__button {
-      position: absolute;
-      height: 7rem;
-      width: 7rem;
-      border-radius: 3px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2000;
-      cursor: pointer;
-      box-shadow: none;
-    }
-
-    &__background {
-      height: 6rem;
-      width: 6rem;
-      border-radius: 5%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: transparent;
-      z-index: 1000;
-      transition: all 0.8s cubic-bezier(0.86, 0, 0.07, 1);
-
-      &--is-scrolled {
-        position: fixed !important;
-        top: 3.5rem !important;
-      }
-    }
-
-    ////////////// Mobile navigation wrapper - Initially hidden
-    &__nav {
-      height: 100%;
-      width: 100%;
-      position: fixed;
-      //padding: 8rem;
-      top: 0;
-      background: var(--color-pale-aqua);
-      right: 0;
-      z-index: 1500;
-      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    &__nav--is-visible {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .mobile-navigation__current-page {
-      background-position: 100% !important;
-      font-weight: 500 !important;
-      color: var(--color-black) !important;
-      background-color: var(--color-teal) !important;
-    }
-
-    &__logo {
-      padding: 8rem 2.5rem 5rem;
-    }
-
-    &__img {
-      width: 30rem;
-    }
-
-    // Mobile list
-    &__list {
-      position: absolute;
-      top: 52%;
-      left: 50%;
-      width: 100%;
-      transform: translate(-50%, -50%);
-      list-style: none;
-      text-align: center;
-    }
-
-    // Mobile list items
-    &__item {
-      &:not(:last-of-type) {
-        margin-block-end: 3rem;
-      }
-    }
-
-    // Mobile links
-    &__link {
-      &:link,
-      &:visited {
-        display: inline-block;
-        font-size: 2.5rem;
-        font-weight: 300;
-        width: 100%;
-        padding: 1rem 2rem;
-        color: var(--color-black);
-        background-color: transparent;
-        text-decoration: none;
-        transition: all 0.4s;
-      }
-
-      &:hover,
-      &:active {
-        background-position: 100%;
-        font-weight: 500;
-        color: var(--color-black);
-        background-color: var(--color-teal);
-        transform: translateX(1rem);
-      }
-    }
-
-    &__search {
-      left: 50%;
-      transform: translateX(-50%);
-      color: var(--color-grey);
-      height: 6rem;
-      width: 40rem;
-      position: relative;
-
-      &__icon {
-        fill: var(--color-dark-grey);
-        position: absolute;
-        right: 12px; // move slightly away from edge
-        top: 50%; // center vertically
-        transform: translateY(-50%);
-        width: 18px;
-        height: 18px;
-        pointer-events: none; // so it doesn’t block clicks on the input
-        z-index: 2;
-      }
-    }
-
-    &__search input {
-      height: 100%;
-      width: 100%;
-      border: none;
-      padding: 0 1rem;
-      font-size: 1.6rem;
-      outline: none;
-    }
-
-    &__search input::placeholder {
-      color: rgba(var(--color-dark-grey-a), 0.5);
-    }
-
-    &__search button {
-      display: flex;
-      align-items: center;
-      height: 100%;
-      background: none;
-      border: none;
-      padding: 0 1rem;
-      cursor: pointer;
-    }
-
-    //FUNCTIONALITY
-    &__checkbox:checked ~ &__background {
-      transform: scale(60);
-      background-color: var(--color-blue);
-    }
-
-    &__checkbox:checked ~ &__nav {
-      opacity: 1;
-      width: 100%;
-      top: 0;
-      visibility: visible;
-    }
-
-    //When checkbox is selected --> slecte its sibling, then select the buttons child (icon) then remove middle icon line
-    &__checkbox:checked + &__button &__icon {
-      background-color: transparent;
-    }
-
-    //Rotate top icon line on menu click
-    &__checkbox:checked + &__button &__icon::before {
-      top: 3rem;
-      transform: rotate(135deg);
-    }
-
-    //Rotate bottom icon line on menu click
-    &__checkbox:checked + &__button &__icon::after {
-      top: 3rem;
-      transform: rotate(-135deg);
-    }
+  //Rotate bottom icon line on menu click
+  &__checkbox:checked + &__button &__icon::after {
+    top: 3rem;
+    transform: rotate(-135deg);
   }
 }

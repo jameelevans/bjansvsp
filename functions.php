@@ -195,25 +195,25 @@ add_action('init', function () {
 
 // Custom Post Types
 add_action('init', function() {
-  // --- Dictionary ---
-  register_post_type('dictionary', [
-    'labels' => [
-      'name' => 'Dictionary',
-      'singular_name' => 'Term',
-      'add_new_item' => 'Add New Term',
-      'edit_item' => 'Edit Term',
-      'new_item' => 'New Term',
-      'view_item' => 'View Term',
-      'search_items' => 'Search Terms',
-      'not_found' => 'No terms found',
-    ],
-    'public' => true,
-    'has_archive' => true,
-    'rewrite' => ['slug' => 'dictionary'],
-    'menu_icon' => 'dashicons-book', // 📘
-    'supports' => ['title', 'editor', 'excerpt'],
-    'show_in_rest' => true,
-  ]);
+  // --- Glossary ---
+register_post_type('glossary', [
+  'labels' => [
+    'name' => 'Glossary',
+    'singular_name' => 'Term',
+    'add_new_item' => 'Add New Term',
+    'edit_item' => 'Edit Term',
+    'new_item' => 'New Term',
+    'view_item' => 'View Term',
+    'search_items' => 'Search Terms',
+    'not_found' => 'No terms found',
+  ],
+  'public' => true,
+  'has_archive' => false, // 🔴 Disable archive so /glossary/ uses your Page
+  'rewrite' => ['slug' => 'glossary-term'], // 🔴 Move single terms to /glossary-term/slug/
+  'menu_icon' => 'dashicons-book',
+  'supports' => ['title', 'editor', 'excerpt'],
+  'show_in_rest' => true,
+]);
 
   // --- FAQs ---
   register_post_type('faq', [
@@ -236,10 +236,31 @@ add_action('init', function() {
   ]);
 });
 
-// Attach built-in Categories to FAQs so we can match by category
+
+// Attach built-in Categories to FAQs and Glossary so we can match by category
 add_action('init', function () {
+  // Allow FAQs to use regular WP Categories
   register_taxonomy_for_object_type('category', 'faq');
+
+  // Allow Glossary terms to use regular WP Categories
+  register_taxonomy_for_object_type('category', 'glossary');
 }, 20);
 
+/**
+ * One-time migration: Convert all existing "Dictionary" posts to "Glossary".
+ *
+ * ⚠️ IMPORTANT:
+ * - Add this temporarily to functions.php (or a custom plugin).
+ * - Visit your site once (this will run on 'init').
+ * - Then remove or comment out this code to prevent it from running again.
+
+add_action('init', function() {
+    global $wpdb;
+    $wpdb->update(
+        $wpdb->posts,
+        ['post_type' => 'glossary'],
+        ['post_type' => 'dictionary']
+    );
+}); */
 
 

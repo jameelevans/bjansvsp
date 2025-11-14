@@ -37,10 +37,6 @@
     font-weight: 300;
   }
 
-  &__link:not(:last-child) {
-    margin-bottom: 1rem;
-  }
-
   &__icon {
     aspect-ratio: 1;
     height: 1.5rem;
@@ -50,7 +46,8 @@
 }
 
 /* === Single Resource Content Typography === */
-#single-page .single-resource__content {
+#single-page .single-resource__content,
+.single-page__content {
   /* Paragraphs (mirrors .single-resource__p) */
   p,
   .wp-block-paragraph {

@@ -10,6 +10,7 @@ import FaqAccordion from './modules/FaqAccordion';
 import ScrollSpy from './modules/ScrollSpy';
 import MobileNav from './modules/MobileNav';
 import ContactHighlight from './modules/ContactHighlight';
+import Dropdown from './modules/Dropdown';
 
 
 
@@ -24,5 +25,5 @@ new ScrollSpy({ navSel: '.side-nav' });
 const mobilenav = new MobileNav();
 new ContactHighlight({ wrapSel: '.contact' });
 // If you don’t set --sticky-offset elsewhere, you can pass offset: 140 here.
-
+new Dropdown(); // wires up any .nav__li that contains a .nav-dropdown
 

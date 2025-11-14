@@ -37,7 +37,11 @@ get_header();
 					if ( $resources_query->have_posts() ) :
 					while ( $resources_query->have_posts() ) : $resources_query->the_post(); ?>
 						<div class="resource">
-						<h3 class="h3__heading"><?php the_title(); ?></h3>
+						<h3 class="resource__heading">
+							<a href="<?php the_permalink(); ?>">
+								<?php the_title(); ?>
+							</a>
+						</h3>
 
 						<?php
 						// Optional: first category as "Resource Type"
@@ -51,7 +55,7 @@ get_header();
 							<?php echo esc_html( wp_trim_words( get_the_content(), 20, '…' ) ); ?>
 						</p>
 
-						<a href="<?php the_permalink(); ?>" class="resource__btn">Learn More</a>
+						<a href="<?php the_permalink(); ?>" class="btn">Learn More</a>
 						</div>
 					<?php endwhile;
 
@@ -84,15 +88,15 @@ get_header();
 					<?php endif; ?>
 				</div>
 			</section>
-			<section id="dictionary">
-				<h2 class="h2__heading">Dictionary</h2>
-				<p class="sub__heading"><?php echo esc_html( get_field('dictionary_subheading', get_queried_object_id()) ); ?></p>
+			<section id="glossary">
+				<h2 class="h2__heading">Glossary</h2>
+				<p class="sub__heading"><?php echo esc_html( get_field('glossary_subheading', get_queried_object_id()) ); ?></p>
 				<p class="sub__heading">Find a topic by its first letter:</p>
 
 				<?php
-					// 1) Fetch all dictionary terms (published), sorted A→Z
+					// 1) Fetch all glossary terms (published), sorted A→Z
 					$dict_posts = get_posts([
-					'post_type'      => 'dictionary',   // CPT slug
+					'post_type'      => 'glossary',   // CPT slug
 					'post_status'    => 'publish',
 					'posts_per_page' => -1,
 					'orderby'        => 'title',
@@ -109,11 +113,11 @@ get_header();
 					}
 
 					// 3) Letter bar (A–Z) without counts
-					echo '<div class="dict__letters">';
+					echo '<div class="glossary__letters">';
 					foreach (range('A','Z') as $L) {
 					$has_terms = !empty($groups[$L]);
-					$href = $has_terms ? '#dict-' . $L : '#';
-					$cls = 'dict__letter' . ($has_terms ? '' : ' is-empty');
+					$href = $has_terms ? '#glossary-' . $L : '#';
+					$cls = 'glossary__letter' . ($has_terms ? '' : ' is-empty');
 					echo '<a class="' . esc_attr($cls) . '" href="' . esc_url($href) . '" aria-disabled="' . ($has_terms ? 'false' : 'true') . '">';
 					echo esc_html($L);
 					echo '</a>';
@@ -125,16 +129,16 @@ get_header();
 					if ( empty($groups[$L]) ) continue;
 
 					$items = $groups[$L];
-					echo '<section id="dict-'. esc_attr($L) .'" class="dict__group">';
-					echo '<h3 class="h3__heading">'. esc_html($L) .' (<span class="dict__total">'. count($items) .'</span> Total)</h3>';
+					echo '<section id="glossary-'. esc_attr($L) .'" class="glossary__group">';
+					echo '<h3 class="h3__heading--orange">'. esc_html($L) .' (<span class="glossary__total">'. count($items) .'</span> Total)</h3>';
 
 					foreach ($items as $p) {
 						$title = get_the_title($p);
 						$desc  = has_excerpt($p) ? get_the_excerpt($p) : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
 
-						echo '<article class="dict__item">';
-						echo   '<h4 class="h4__heading--orange"><span class="dict__chip">'. esc_html($title) .':</span></h4>';
-						echo   '<p class="dict__desc">'. esc_html($desc) .'</p>';
+						echo '<article class="glossary__item">';
+						echo   '<h4 class="glossary__heading">'. esc_html($title) .'</h4>';
+						echo   '<p class="glossary__desc">'. esc_html($desc) .'</p>';
 						echo '</article>';
 					}
 
@@ -144,14 +148,14 @@ get_header();
 					// Optional: non-letter bucket (#)
 					if ( !empty($groups['#']) ) {
 					$items = $groups['#'];
-					echo '<section id="dict-nonalpha" class="dict__group">';
-					echo '<h3 class="dict__group-title"># (<span class="dict__total">'. count($items) .'</span> Total)</h3>';
+					echo '<section id="glossary-nonalpha" class="glossary__group">';
+					echo '<h3 class="glossary__group-title"># (<span class="glossary__total">'. count($items) .'</span> Total)</h3>';
 					foreach ($items as $p) {
 						$title = get_the_title($p);
 						$desc  = has_excerpt($p) ? get_the_excerpt($p) : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
-						echo '<article class="dict__item">';
-						echo   '<h4 class="dict__term"><span class="dict__chip">'. esc_html($title) .'</span></h4>';
-						echo   '<p class="dict__desc">'. esc_html($desc) .'</p>';
+						echo '<article class="glossary__item">';
+						echo   '<h4 class="glossary__term"><span class="glossary__chip">'. esc_html($title) .'</span></h4>';
+						echo   '<p class="glossary__desc">'. esc_html($desc) .'</p>';
 						echo '</article>';
 					}
 					echo '</section>';
@@ -205,7 +209,7 @@ get_header();
 			<ul class="side-nav__list">
 				<li class="side-nav__item"><a class="side-nav__link" href="#take-survey">Take Survey</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#resources">Resources</a></li>
-				<li class="side-nav__item"><a class="side-nav__link" href="#dictionary">Dictionary</a></li>
+				<li class="side-nav__item"><a class="side-nav__link" href="#glossary">Glossary</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#faqs">FAQs</a></li>
 			</ul>
 			<form class="aside-search" role="aside-search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">

@@ -57,6 +57,9 @@ Text Domain: BJA NSVSP
 //*--------| Layouts |--------*//
 @use 'layout/header' as header;
 @use 'layout/footer' as footer;
+@use 'layout/resources' as resources;
+@use 'layout/faqs' as faqs;
+@use 'layout/glossary' as glossary;
 
 //*--------| Pages |--------*//
 @use 'pages/login' as login;

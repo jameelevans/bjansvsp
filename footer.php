@@ -14,7 +14,7 @@
                 <ul class="footer__list">
                     <li class="footer__item"><a href="#take-survey" class="footer__links">Take Survey</a></li>
                     <li class="footer__item"><a href="#resources" class="footer__links">Resources</a></li>
-                    <li class="footer__item"><a href="#dictionary" class="footer__links">Dictionary</a></li>
+                    <li class="footer__item"><a href="#glossary" class="footer__links">Glossary</a></li>
                     <li class="footer__item"><a href="#faqs" class="footer__links">FAQs</a></li>
                     <li class="footer__item"><a href="#contact-us" class="footer__links">Contact Us</a></li>
                 </ul>

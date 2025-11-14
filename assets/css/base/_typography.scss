@@ -90,7 +90,7 @@ body {
 .h1__heading {
   font-family: $font-secondary;
   font-size: 3.8rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 4.5rem;
   position: relative;
   z-index: 5;
@@ -103,11 +103,11 @@ body {
 .h2__heading {
   font-family: $font-secondary;
   font-size: 3.5rem;
-  font-weight: 500;
+  font-weight: 700;
   margin-bottom: 2.5rem;
 
   @include mixins.respond(smlmd) {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
   }
 }
 
@@ -122,12 +122,58 @@ body {
   }
 }
 
+.h3__heading--orange {
+  font-family: $font-secondary;
+  font-size: 2.4rem;
+  font-weight: 500;
+  padding: 0.5rem 5rem 0.5rem 1.2rem;
+  background-color: var(--color-orange);
+  margin-bottom: 1.2rem;
+  color: var(--color-white);
+  display: inline-block;
+
+  @include mixins.respond(smlmd) {
+    font-size: 2rem;
+  }
+}
+
+.resource__heading {
+  font-family: $font-secondary;
+  font-size: 2.4rem;
+  font-weight: 600;
+  align-self: center;
+
+  @include mixins.respond(smlmd) {
+    font-size: 1.8rem;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover,
+    &:focus {
+      color: var(--color-orange);
+      text-decoration: none;
+    }
+  }
+}
+
 .h4__heading {
   font-family: $font-secondary;
-  display: inline-block;
   padding: 0.5rem 1.2rem;
-  background-color: var(--color-green);
-  color: var(--color-white);
+  border-left: 5px solid var(--color-black);
+  color: var(--color-black);
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.glossary__heading {
+  font-family: $font-secondary;
+  color: var(--color-black);
   font-size: 1.7rem;
   font-weight: 600;
   margin-bottom: 2rem;
