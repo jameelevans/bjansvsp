@@ -258,7 +258,7 @@
 
 			<li class="mobile-navigation__item">
 				<form class="mobile-navigation__search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<?php echo svg_icon('search__icon', 'search'); ?>
+				<?php echo svg_icon('mobile-navigation__icon', 'search'); ?>
 				<input type="search" name="s" placeholder="Search" aria-label="Search">
 				<button type="submit" aria-label="Submit search">
 					<span class="screen-reader-text">Search</span>

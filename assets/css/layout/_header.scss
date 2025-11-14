@@ -601,6 +601,17 @@
 
   // Mobile list items
   &__item {
+    .mobile-navigation__icon {
+      fill: var(--color-dark-grey);
+      position: absolute;
+      right: 12px; // move slightly away from edge
+      top: 50%; // center vertically
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      pointer-events: none; // so it doesn’t block clicks on the input
+      z-index: 2;
+    }
     &:not(:last-of-type) {
       margin-block-end: 3rem;
     }
@@ -638,18 +649,6 @@
     height: 6rem;
     width: 40rem;
     position: relative;
-
-    &__icon {
-      fill: var(--color-dark-grey);
-      position: absolute;
-      right: 12px; // move slightly away from edge
-      top: 50%; // center vertically
-      transform: translateY(-50%);
-      width: 18px;
-      height: 18px;
-      pointer-events: none; // so it doesn’t block clicks on the input
-      z-index: 2;
-    }
   }
 
   &__search input {
