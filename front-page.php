@@ -20,8 +20,9 @@ get_header();
 				<a class="btn" href="#">Take Survey</a>
 			</section>
 			<section id="resources">
-				<h2 class="h2__heading">Resources</h2>
+				<h2 class="h2__heading"><a class="h2__link" href="<?php echo esc_url( home_url( '/resources' ) ); ?>" title="View all resources">Resources<?php echo svg_icon('h2__icon', 'link');?></a></h2>
 				<p class="sub__heading"><?php echo esc_html( get_field('resource_subheading', get_queried_object_id()) ); ?></p>
+		
 
 				<div class="resources__container">
 					<?php
@@ -89,8 +90,11 @@ get_header();
 				</div>
 			</section>
 			<section id="glossary">
-				<h2 class="h2__heading">Glossary</h2>
+				<h2 class="h2__heading"><a class="h2__link" href="<?php echo esc_url( home_url( '/glossary' ) ); ?>" title="View the full glossary">Glossary<?php echo svg_icon('h2__icon', 'link');?></a></h2>
 				<p class="sub__heading"><?php echo esc_html( get_field('glossary_subheading', get_queried_object_id()) ); ?></p>
+				<a href="#" class="js-print-section print__text" data-print="#glossary">
+					Print this section <?php echo svg_icon('print__icon', 'print');?>
+				</a>
 				<p class="sub__heading">Find a topic by its first letter:</p>
 
 				<?php
@@ -130,7 +134,7 @@ get_header();
 
 					$items = $groups[$L];
 					echo '<section id="glossary-'. esc_attr($L) .'" class="glossary__group">';
-					echo '<h3 class="h3__heading--orange">'. esc_html($L) .' (<span class="glossary__total">'. count($items) .'</span> Total)</h3>';
+					echo '<h3 class="h3__heading--orange">'. esc_html($L) .'</h3>';
 
 					foreach ($items as $p) {
 						$title = get_the_title($p);
@@ -149,7 +153,7 @@ get_header();
 					if ( !empty($groups['#']) ) {
 					$items = $groups['#'];
 					echo '<section id="glossary-nonalpha" class="glossary__group">';
-					echo '<h3 class="glossary__group-title"># (<span class="glossary__total">'. count($items) .'</span> Total)</h3>';
+					echo '<h3 class="glossary__group-title">#</h3>';
 					foreach ($items as $p) {
 						$title = get_the_title($p);
 						$desc  = has_excerpt($p) ? get_the_excerpt($p) : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
@@ -163,9 +167,11 @@ get_header();
 					?>
 			</section>
 			<section id="faqs">
-				<h2 class="h2__heading">FAQs</h2>
+				<h2 class="h2__heading"><a class="h2__link" href="<?php echo esc_url( home_url( '/faqs' ) ); ?>" title="View all the FAQs">FAQs<?php echo svg_icon('h2__icon', 'link');?></a></h2>
 				<p class="sub__heading"><?php echo esc_html( get_field('faqs_subheading', get_queried_object_id()) ); ?></p>
-				
+				<a href="#" class="js-print-section print__text" data-print="#faqs">
+					Print this section <?php echo svg_icon('print__icon', 'print');?>
+				</a>
 				<?php
 					// FAQs loop (ordered by Menu Order, then date)
 					$faqs = new WP_Query([

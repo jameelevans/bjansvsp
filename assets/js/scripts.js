@@ -11,7 +11,7 @@ import ScrollSpy from './modules/ScrollSpy';
 import MobileNav from './modules/MobileNav';
 import ContactHighlight from './modules/ContactHighlight';
 import Dropdown from './modules/Dropdown';
-
+import initPrintSection from './modules/PrintSection';
 
 
 
@@ -26,4 +26,4 @@ const mobilenav = new MobileNav();
 new ContactHighlight({ wrapSel: '.contact' });
 // If you don’t set --sticky-offset elsewhere, you can pass offset: 140 here.
 new Dropdown(); // wires up any .nav__li that contains a .nav-dropdown
-
+initPrintSection();

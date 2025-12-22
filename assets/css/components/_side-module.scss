@@ -1,0 +1,181 @@
+@use 'base/typography' as typography;
+@use 'abstracts/mixins' as mixins;
+
+// Side Navigation Section
+.side-nav,
+.downloads {
+  background-color: var(--color-pale-aqua);
+  padding: 2rem;
+  position: sticky; /* stick within the right column */
+  top: calc(64px + 20px); /* header/nav height + spacing */
+  align-self: start; /* ensure the grid row starts at the top */
+  height: fit-content; /* you already have this */
+  max-height: calc(100vh - (64px + 20px)); /* keep it in viewport */
+  overflow: auto; /* scroll the panel if it gets taller than viewport */
+  display: none;
+  /* Optional: turn off sticky on small screens */
+  @include mixins.respond(smlmd) {
+    display: block;
+  }
+  @include mixins.respond(medium) {
+    padding: 4rem;
+  }
+
+  &__list {
+    list-style-type: none;
+  }
+
+  &__item {
+    margin-bottom: 0.5rem;
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-left-color: var(--color-black);
+    }
+  }
+
+  &__link {
+    display: block; // make the link fill its parent
+    width: 100%; // ensure it stretches full width
+    height: 100%; // ensures full clickable area
+    text-decoration: none;
+    color: var(--color-black);
+    font-size: 1.6rem;
+    font-weight: 300;
+    padding: 1rem 0; // move padding from the li to the link
+    transition: color 0.3s ease;
+
+    &:hover,
+    &:focus,
+    &.is-active {
+      color: var(--color-orange);
+    }
+  }
+
+  &__item:has(.side-nav__link.is-active) {
+    //border-left-color: var(--color-black);
+  }
+  .aside-search {
+    color: var(--color-black);
+    font-family: typography.$font-primary;
+    font-size: 1.6rem;
+    font-weight: 300;
+    transform: translateX(-1.4rem);
+  }
+
+  .aside-search input {
+    height: 100%;
+    border: none;
+    padding: 1rem 1.4rem;
+    font-family: typography.$font-primary;
+    font-size: 1.6rem;
+    outline: none;
+    font-weight: 300;
+
+    background: transparent;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus,
+    &:not(:placeholder-shown) {
+      background-color: rgba(
+        0,
+        0,
+        0,
+        0.05
+      ); // subtle background on focus/typing
+    }
+  }
+
+  .aside-search input::placeholder {
+    color: var(--color-black);
+    font-family: typography.$font-primary;
+    font-weight: 300;
+  }
+
+  .aside-search button {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background: none;
+    border: none;
+    padding: 0 1rem;
+    cursor: pointer;
+  }
+}
+
+.downloads__link {
+  padding: 0;
+}
+
+// Downloads styles
+.downloads {
+  display: block !important;
+
+  &__link,
+  &__empty {
+    display: flex; // <— this aligns icon + text on the same baseline
+    align-items: center; // <— vertically centers them
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-block-end: 1rem;
+  }
+
+  &__icon {
+    aspect-ratio: 1;
+    height: 1.5rem;
+    margin-right: 1rem;
+    flex-shrink: 0; // keeps icon from squishing
+  }
+}
+
+/* Base style for all file icons */
+.downloads__link::after {
+  content: '';
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.75rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+}
+
+/* PDF */
+.downloads__link[href$='.pdf' i]::after {
+  background-image: url('assets/img/pdf.webp');
+}
+
+/* Word */
+.downloads__link[href$='.doc' i]::after,
+.downloads__link[href$='.docx' i]::after {
+  background-image: url('assets/img/word.webp');
+}
+
+/* Excel */
+.downloads__link[href$='.xls' i]::after,
+.downloads__link[href$='.xlsx' i]::after {
+  background-image: url('assets/img/excel.webp');
+}
+
+/* PowerPoint */
+.downloads__link[href$='.ppt' i]::after,
+.downloads__link[href$='.pptx' i]::after {
+  background-image: url('assets/img/ppt.webp');
+}
+
+/* ZIP files */
+.downloads__link[href$='.zip' i]::after {
+  background-image: url('assets/img/zip.webp');
+}
+
+/* Images */
+.downloads__link[href$='.png' i]::after,
+.downloads__link[href$='.jpg' i]::after,
+.downloads__link[href$='.jpeg' i]::after,
+.downloads__link[href$='.webp' i]::after {
+  background-image: url('assets/img/image.webp');
+}

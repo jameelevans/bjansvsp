@@ -105,9 +105,30 @@ body {
   font-size: 3.5rem;
   font-weight: 700;
   margin-bottom: 2.5rem;
+  display: inline-block;
+  color: var(--color-black);
 
   @include mixins.respond(smlmd) {
     font-size: 2.3rem;
+  }
+}
+
+.h2__link {
+  text-decoration: none;
+  transition: color 0.3s ease;
+  color: var(--color-black);
+
+  &:hover,
+  &:focus {
+    color: var(--color-orange);
+  }
+
+  .h2__icon {
+    aspect-ratio: 1;
+    height: 1.2rem;
+    transform: translateY(-7px);
+    fill: var(--color-black);
+    stroke: var(--color-black); /* only matters if your SVG uses stroke paths */
   }
 }
 
@@ -126,7 +147,7 @@ body {
   font-family: $font-secondary;
   font-size: 2.4rem;
   font-weight: 500;
-  padding: 0.5rem 5rem 0.5rem 1.2rem;
+  padding: 0.5rem 1.2rem;
   background-color: var(--color-orange);
   margin-bottom: 1.2rem;
   color: var(--color-white);
@@ -217,4 +238,29 @@ body {
 // Uppercase
 .uppercase {
   text-transform: uppercase;
+}
+
+.print__text,
+.section-link__text {
+  display: block;
+  text-decoration: none;
+  margin-bottom: 2rem;
+  color: var(--color-black);
+  font-size: 1.8rem;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+
+  &:hover,
+  &:focus {
+    color: var(--color-orange);
+  }
+}
+
+.print__icon {
+  aspect-ratio: 1;
+  height: 1.6rem;
+  margin-left: 1rem;
+  transform: translateY(2px);
+  fill: currentColor;
+  stroke: currentColor; /* only matters if your SVG uses stroke paths */
 }

@@ -2,6 +2,14 @@
 /**
  * The template for displaying a single Resource page
  *
+ * SIDEBAR LOGIC:
+ * - If the current Resource has downloads (download_file_1..4), show ONLY those downloads.
+ * - If the Resource has NO downloads, show ONLY the Resource Spotlight items
+ *   from the ACF Options repeater.
+ *
+ * No “Newest Downloads” fallback.
+ * Same markup, classes, and CSS as existing downloads sidebar.
+ *
  * @package bja-nsvsp
  */
 
@@ -9,226 +17,225 @@ get_header();
 ?>
 
 <main id="single-page">
-  <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
-    <section class="single-resource">
-      <h1 class="h1__heading"><?php the_title(); ?></h1>
+  <section class="single-resource">
+    <h1 class="h1__heading"><?php the_title(); ?></h1>
 
+    <?php
+    // ------------------------------------------------------------
+    // Display Categories (text only)
+    // ------------------------------------------------------------
+    $cats = get_the_terms( get_the_ID(), 'category' );
+    if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) {
+      $cat_names = implode( ', ', wp_list_pluck( $cats, 'name' ) );
+      echo '<p class="single-resource__category">Category: ' . esc_html( $cat_names ) . '</p>';
+    }
+    ?>
+
+    <p class="single-resource__date">
+      Date Published: <?php echo esc_html( get_the_date( 'F j, Y' ) ); ?>
+    </p>
+
+    <div class="single-resource__content">
       <?php
-      // Built-in WordPress Categories (text only, no links)
-      $cats = get_the_terms( get_the_ID(), 'category' );
-      if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) {
-        $cat_names = implode( ', ', wp_list_pluck( $cats, 'name' ) );
-        echo '<p class="single-resource__category">Category: ' . esc_html( $cat_names ) . '</p>';
-      }
+        the_content();
+        wp_link_pages([
+          'before' => '<div class="page-links">',
+          'after'  => '</div>',
+        ]);
       ?>
+    </div>
 
-      <p class="single-resource__date">Date Published: <?php echo esc_html( get_the_date( 'F j, Y' ) ); ?></p>
+    <?php
+    // ------------------------------------------------------------
+    // Related FAQs (by shared Category)
+    // ------------------------------------------------------------
+    if ( get_post_type() === 'post' ) : ?>
+      <div id="faqs" class="faqs related-faqs">
+        <h2 class="h2__heading">Related FAQs</h2>
 
-      <div class="single-resource__content">
         <?php
-          the_content();
-          wp_link_pages( [
-            'before' => '<div class="page-links">',
-            'after'  => '</div>',
-          ] );
+        $cats    = get_the_terms( get_the_ID(), 'category' );
+        $cat_ids = ( $cats && ! is_wp_error( $cats ) ) ? wp_list_pluck( $cats, 'term_id' ) : [];
+
+        if ( ! empty( $cat_ids ) ) :
+          $related_faqs = new WP_Query([
+            'post_type'      => 'faq',
+            'posts_per_page' => 4,
+            'post_status'    => 'publish',
+            'tax_query'      => [[
+              'taxonomy' => 'category',
+              'field'    => 'term_id',
+              'terms'    => $cat_ids,
+            ]],
+            'orderby' => 'date',
+            'order'   => 'DESC',
+          ]);
         ?>
-      </div>
 
-      <?php // Related FAQs by shared Category (matches front-page FAQ CSS)
-      if ( get_post_type() === 'post' ) : ?>
-        <div id="faqs" class="faqs related-faqs">
-          <h2 class="h2__heading">Related FAQs</h2>
-
-          <?php
-          $cats    = get_the_terms( get_the_ID(), 'category' );
-          $cat_ids = ( $cats && ! is_wp_error( $cats ) ) ? wp_list_pluck( $cats, 'term_id' ) : [];
-
-          if ( ! empty( $cat_ids ) ) :
-            $related_faqs = new WP_Query( [
-              'post_type'      => 'faq',
-              'posts_per_page' => 4,
-              'post_status'    => 'publish',
-              'tax_query'      => [[
-                'taxonomy' => 'category',
-                'field'    => 'term_id',
-                'terms'    => $cat_ids,
-              ]],
-              'orderby'        => 'date',
-              'order'          => 'DESC',
-            ] );
-          ?>
-
-            <?php if ( $related_faqs->have_posts() ) : ?>
-              <div class="faqs__accordion">
-                <?php while ( $related_faqs->have_posts() ) : $related_faqs->the_post();
-                  $answer = apply_filters( 'the_content', get_post_field( 'post_content', get_the_ID() ) );
-                ?>
-                  <details class="faq">
-                    <summary class="faq__question">
-                      <span class="faq__q-text"><?php the_title(); ?></span>
-                      <span class="faq__icon" aria-hidden="true"></span>
-                    </summary>
-                    <div class="faq__answer">
-                      <?php echo $answer; ?>
-                    </div>
-                  </details>
-                <?php endwhile; wp_reset_postdata(); ?>
-              </div>
-            <?php else : ?>
-              <p class="related-faqs__empty">There are no related FAQs for this resource at this time.</p>
-            <?php endif; ?>
-
+          <?php if ( $related_faqs->have_posts() ) : ?>
+            <div class="faqs__accordion">
+              <?php while ( $related_faqs->have_posts() ) : $related_faqs->the_post();
+                $answer = apply_filters( 'the_content', get_post_field( 'post_content', get_the_ID() ) );
+              ?>
+                <details class="faq">
+                  <summary class="faq__question">
+                    <span class="faq__q-text"><?php the_title(); ?></span>
+                    <span class="faq__icon" aria-hidden="true"></span>
+                  </summary>
+                  <div class="faq__answer">
+                    <?php echo $answer; ?>
+                  </div>
+                </details>
+              <?php endwhile; wp_reset_postdata(); ?>
+            </div>
           <?php else : ?>
             <p class="related-faqs__empty">There are no related FAQs for this resource at this time.</p>
           <?php endif; ?>
-        </div>
-      <?php endif; ?>
 
-    </section><!-- closes .single-resource (removed the extra one) -->
+        <?php else : ?>
+          <p class="related-faqs__empty">There are no related FAQs for this resource at this time.</p>
+        <?php endif; ?>
+      </div>
+    <?php endif; ?>
 
-    <?php
-      // ==== Collect this post's downloads BEFORE checking for fallback ====
-      $downloads = [];
-      if ( function_exists('get_field') ) {
-        for ( $i = 1; $i <= 4; $i++ ) {
-          $val = get_field( 'download_file_' . $i );
-          if ( empty( $val ) ) continue;
+  </section><!-- /.single-resource -->
 
-          $url = '';
-          $label = '';
+  <?php
+  // ============================================================
+  // SIDEBAR DATA COLLECTION
+  // ============================================================
 
-          if ( is_array( $val ) ) {
-            // ACF File array
-            $url   = $val['url'] ?? '';
-            $label = $val['title'] ?? ( $val['filename'] ?? '' );
-          } elseif ( is_numeric( $val ) ) {
-            // Attachment ID
-            $att_id = (int) $val;
-            $url    = wp_get_attachment_url( $att_id ) ?: '';
-            $label  = get_the_title( $att_id ) ?: '';
-          } elseif ( is_string( $val ) ) {
-            // Raw URL
-            $url   = $val;
-            $label = basename( parse_url( $url, PHP_URL_PATH ) );
-          }
+  // ------------------------------------------------------------
+  // 1) Collect this resource's downloads
+  // ------------------------------------------------------------
+  $downloads = [];
 
-          if ( $url ) {
-            $downloads[] = [
-              'url'   => $url,
-              'label' => $label !== '' ? $label : basename( parse_url( $url, PHP_URL_PATH ) ),
-            ];
-          }
+  if ( function_exists( 'get_field' ) ) {
+    for ( $i = 1; $i <= 4; $i++ ) {
+      $val = get_field( 'download_file_' . $i );
+      if ( empty( $val ) ) continue;
+
+      $url   = '';
+      $label = '';
+
+      if ( is_array( $val ) ) {
+        // ACF File array
+        $url   = $val['url'] ?? '';
+        $label = $val['title'] ?? ( $val['filename'] ?? '' );
+      } elseif ( is_numeric( $val ) ) {
+        // Attachment ID
+        $att_id = (int) $val;
+        $url    = wp_get_attachment_url( $att_id ) ?: '';
+        $label  = get_the_title( $att_id ) ?: '';
+      } elseif ( is_string( $val ) ) {
+        // Raw URL
+        $url   = $val;
+        $label = basename( parse_url( $url, PHP_URL_PATH ) );
+      }
+
+      if ( $url ) {
+        $downloads[] = [
+          'url'   => $url,
+          'label' => $label !== '' ? $label : basename( parse_url( $url, PHP_URL_PATH ) ),
+        ];
+      }
+    }
+  }
+
+  // ------------------------------------------------------------
+  // 2) If no downloads, collect Resource Spotlight items
+  // ------------------------------------------------------------
+  $spotlight_items = [];
+
+  if ( empty( $downloads ) && function_exists( 'have_rows' ) && have_rows( 'resource_spotlight_items', 'option' ) ) {
+    while ( have_rows( 'resource_spotlight_items', 'option' ) ) {
+      the_row();
+
+      $type        = get_sub_field( 'spotlight_type' );   // resource | file
+      $label       = get_sub_field( 'spotlight_label' );  // optional override
+      $url         = '';
+      $final_label = '';
+      $new_tab     = false;
+
+      if ( $type === 'resource' ) {
+        // Resource = Post Object
+        $post_obj = get_sub_field( 'spotlight_resource' );
+        if ( $post_obj ) {
+          $url         = get_permalink( $post_obj );
+          $final_label = $label ? $label : get_the_title( $post_obj );
+          $new_tab     = false;
         }
       }
 
-      $is_resource          = ( get_post_type() === 'post' );
-      $show_recent_fallback = empty( $downloads );
+      if ( $type === 'file' ) {
+        // File = ACF File array
+        $file = get_sub_field( 'spotlight_file' );
+        if ( is_array( $file ) && ! empty( $file['url'] ) ) {
+          $url = $file['url'];
 
-      // ==== Build recent Resource downloads (top 5) only if needed ====
-      $recent_downloads = [];
-      if ( $show_recent_fallback ) {
-        $recent_posts = new WP_Query([
-          'post_type'      => ['post'], // Resources only
-          'post_status'    => 'publish',
-          'posts_per_page' => 40,       // search a batch to find 5 files
-          'orderby'        => 'date',
-          'order'          => 'DESC',
-          'no_found_rows'  => true,
-        ]);
-
-        if ( $recent_posts->have_posts() ) {
-          while ( $recent_posts->have_posts() ) {
-            $recent_posts->the_post();
-            $pid       = get_the_ID();
-            $parent_ts = (int) get_post_time('U', true, $pid); // fallback timestamp
-
-            for ( $i = 1; $i <= 4; $i++ ) {
-              $val = function_exists('get_field') ? get_field('download_file_' . $i, $pid) : null;
-              if ( empty($val) ) continue;
-
-              $url = '';
-              $label = '';
-              $ts = $parent_ts;
-
-              if ( is_array($val) ) {
-                $url   = $val['url'] ?? '';
-                $label = $val['title'] ?? ($val['filename'] ?? '');
-                if ( !empty($val['ID']) && is_numeric($val['ID']) ) {
-                  $att_id = (int) $val['ID'];
-                  $ts     = (int) get_post_time('U', true, $att_id ) ?: $parent_ts;
-                }
-              } elseif ( is_numeric($val) ) {
-                $att_id = (int) $val;
-                $url    = wp_get_attachment_url($att_id) ?: '';
-                $label  = get_the_title($att_id) ?: '';
-                $ts     = (int) get_post_time('U', true, $att_id ) ?: $parent_ts;
-              } elseif ( is_string($val) ) {
-                $url   = $val;
-                $label = basename( parse_url($url, PHP_URL_PATH) );
-              }
-
-              if ( $url ) {
-                $recent_downloads[] = [
-                  'url'      => $url,
-                  'label'    => $label !== '' ? $label : basename( parse_url($url, PHP_URL_PATH) ),
-                  'ts'       => $ts,
-                  'post_id'  => $pid,
-                  'post_ttl' => get_the_title($pid),
-                ];
-              }
-            }
+          if ( $label ) {
+            $final_label = $label;
+          } elseif ( ! empty( $file['title'] ) ) {
+            $final_label = $file['title'];
+          } elseif ( ! empty( $file['filename'] ) ) {
+            $final_label = $file['filename'];
+          } else {
+            $final_label = basename( parse_url( $url, PHP_URL_PATH ) );
           }
-          wp_reset_postdata();
+
+          $new_tab = true;
         }
-
-        // newest first and keep top 5
-        usort($recent_downloads, function($a,$b){ return $b['ts'] <=> $a['ts']; });
-        $recent_downloads = array_slice($recent_downloads, 0, 5);
       }
-    ?>
 
-    <aside class="downloads">
-      <h4 class="h4__heading">
-        <?php echo !empty($downloads) ? 'Downloads' : 'Our Newest Downloads'; ?>
-      </h4>
+      if ( $url && $final_label ) {
+        $spotlight_items[] = [
+          'url'   => $url,
+          'label' => $final_label,
+          'blank' => $new_tab,
+        ];
+      }
+    }
+  }
+  ?>
 
-      <?php if ( !empty($downloads) ) : ?>
+  <aside class="downloads">
+    <?php if ( ! empty( $downloads ) ) : ?>
 
-        <?php foreach ( $downloads as $dl ) : ?>
-          <a class="downloads__link" href="<?php echo esc_url( $dl['url'] ); ?>" target="_blank" rel="noopener">
-            <?php echo function_exists( 'svg_icon' ) ? svg_icon( 'downloads__icon', 'download' ) : ''; ?>
-            <?php echo esc_html( $dl['label'] ); ?>
-          </a>
-        <?php endforeach; ?>
+      <h4 class="h4__heading">Downloads</h4>
 
-      <?php elseif ( !empty($recent_downloads) ) : ?>
+      <?php foreach ( $downloads as $dl ) : ?>
+        <a class="downloads__link"
+           href="<?php echo esc_url( $dl['url'] ); ?>"
+           target="_blank"
+           rel="noopener">
+          <?php echo esc_html( $dl['label'] ); ?>
+        </a>
+      <?php endforeach; ?>
 
-        <p class="downloads__empty">
-          <?php echo $is_resource
-            ? 'This resource has no downloads. Try these:'
-            : 'Download our newest resources.'; ?>
-        </p>
+    <?php else : ?>
 
-        <?php foreach ( $recent_downloads as $item ) : ?>
-          <a class="downloads__link" href="<?php echo esc_url( $item['url'] ); ?>" target="_blank" rel="noopener"
-             title="<?php echo esc_attr('From: ' . $item['post_ttl']); ?>">
-            <?php echo function_exists( 'svg_icon' ) ? svg_icon( 'downloads__icon', 'download' ) : ''; ?>
+      <h4 class="h4__heading">Resource Spotlight</h4>
+
+      <?php if ( ! empty( $spotlight_items ) ) : ?>
+        <?php foreach ( $spotlight_items as $item ) : ?>
+          <a class="downloads__link"
+             href="<?php echo esc_url( $item['url'] ); ?>"
+             <?php if ( $item['blank'] ) : ?>target="_blank" rel="noopener"<?php endif; ?>>
             <?php echo esc_html( $item['label'] ); ?>
           </a>
         <?php endforeach; ?>
-
       <?php else : ?>
-
         <p class="downloads__empty">There are no downloads to show at this time.</p>
-
       <?php endif; ?>
 
-      <a class="btn" href="#take-survey">Take Survey</a>
-    </aside>
+    <?php endif; ?>
 
-  <?php endwhile; endif; ?>
+    <a class="btn" href="#take-survey">Take Survey</a>
+  </aside>
+
+<?php endwhile; endif; ?>
 </main>
 
 <?php get_footer(); ?>
-    

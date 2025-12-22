@@ -236,7 +236,6 @@ get_header();
           target="_blank"
           rel="noopener"
           title="<?php echo esc_attr( 'From: ' . $item['post_ttl'] ); ?>">
-          <?php echo function_exists( 'svg_icon' ) ? svg_icon( 'downloads__icon', 'download' ) : ''; ?>
           <?php echo esc_html( $item['label'] ); ?>
         </a>
       <?php endforeach; ?>

@@ -151,7 +151,6 @@ get_header();
                 <section id="<?php echo esc_attr( $id_prefix . '-' . $L ); ?>" class="glossary__group">
                   <h3 class="h3__heading--orange mt-xl">
                     <?php echo esc_html( $L ); ?>
-                    (<span class="glossary__total"><?php echo count( $items ); ?></span> Total)
                   </h3>
 
                   <?php
@@ -392,7 +391,6 @@ get_header();
           target="_blank"
           rel="noopener"
           title="<?php echo esc_attr( 'From: ' . $item['post_ttl'] ); ?>">
-          <?php echo function_exists( 'svg_icon' ) ? svg_icon( 'downloads__icon', 'download' ) : ''; ?>
           <?php echo esc_html( $item['label'] ); ?>
         </a>
       <?php endforeach; ?>
