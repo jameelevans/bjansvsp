@@ -143,109 +143,131 @@ get_header();
 
   </div>
 
-  <?php
-  // Build a global "Our Newest Downloads" list (top 5 across Resources).
-  $recent_downloads = array();
+ <?php
+    /**
+     * ============================================================
+     * Resource Spotlight (ACF Options) — Sidebar (Spotlight ONLY)
+     * ============================================================
+     *
+     * PURPOSE
+     * -------
+     * This sidebar is used on:
+     * - Resources page
+     * - Glossary page
+     * - FAQs page
+     *
+     * These pages have NO per-page downloads.
+     * We intentionally show ONLY the curated Resource Spotlight list.
+     *
+     * Editors manage this list via an ACF Options Page.
+     *
+     * ACF Options Repeater:
+     * - resource_spotlight_items
+     *
+     * Sub-fields:
+     * - spotlight_type     (resource | file)
+     * - spotlight_resource (Post Object)  [when type = resource]
+     * - spotlight_file     (File array)   [when type = file]
+     * - spotlight_label    (Text)         [optional override]
+     *
+     * MARKUP RULES
+     * ------------
+     * - Uses existing sidebar wrapper: <aside class="downloads">
+     * - Uses existing link class: .downloads__link
+     * - Uses existing empty text class: .downloads__empty
+     * - NO downloads logic
+     * - NO newest-downloads fallback
+     */
 
-  if ( function_exists( 'get_field' ) ) {
-    $recent_posts = new WP_Query(
-      array(
-        'post_type'      => array( 'post' ), // Resources only.
-        'post_status'    => 'publish',
-        'posts_per_page' => 40,             // Search a batch to find up to 5 files.
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-        'no_found_rows'  => true,
-      )
-    );
+    $spotlight_items = array();
 
-    if ( $recent_posts->have_posts() ) {
-      while ( $recent_posts->have_posts() ) {
-        $recent_posts->the_post();
-        $pid       = get_the_ID();
-        $parent_ts = (int) get_post_time( 'U', true, $pid ); // Fallback timestamp.
+    if ( function_exists( 'have_rows' ) && have_rows( 'resource_spotlight_items', 'option' ) ) {
+      while ( have_rows( 'resource_spotlight_items', 'option' ) ) {
+        the_row();
 
-        for ( $i = 1; $i <= 4; $i++ ) {
-          $val = get_field( 'download_file_' . $i, $pid );
-          if ( empty( $val ) ) {
-            continue;
+        $type  = (string) get_sub_field( 'spotlight_type' );
+        $label = (string) get_sub_field( 'spotlight_label' );
+
+        $url         = '';
+        $final_label = '';
+        $new_tab     = false;
+
+        // --------------------------------------------------------
+        // Spotlight type: RESOURCE (internal post link)
+        // --------------------------------------------------------
+        if ( $type === 'resource' ) {
+          $post_obj = get_sub_field( 'spotlight_resource' );
+          if ( $post_obj ) {
+            $url         = get_permalink( $post_obj );
+            $final_label = $label ? $label : get_the_title( $post_obj );
+            $new_tab     = false;
           }
+        }
 
-          $url   = '';
-          $label = '';
-          $ts    = $parent_ts;
+        // --------------------------------------------------------
+        // Spotlight type: FILE (media library download)
+        // --------------------------------------------------------
+        if ( $type === 'file' ) {
+          $file = get_sub_field( 'spotlight_file' );
+          if ( is_array( $file ) && ! empty( $file['url'] ) ) {
+            $url = $file['url'];
 
-          if ( is_array( $val ) ) {
-            // ACF File array.
-            $url   = $val['url'] ?? '';
-            $label = $val['title'] ?? ( $val['filename'] ?? '' );
-
-            if ( ! empty( $val['ID'] ) && is_numeric( $val['ID'] ) ) {
-              $att_id = (int) $val['ID'];
-              $ts     = (int) get_post_time( 'U', true, $att_id ) ?: $parent_ts;
+            // Label priority:
+            // 1) Manual override
+            // 2) File title
+            // 3) Filename
+            // 4) URL basename
+            if ( $label ) {
+              $final_label = $label;
+            } elseif ( ! empty( $file['title'] ) ) {
+              $final_label = $file['title'];
+            } elseif ( ! empty( $file['filename'] ) ) {
+              $final_label = $file['filename'];
+            } else {
+              $final_label = basename( parse_url( $url, PHP_URL_PATH ) );
             }
-          } elseif ( is_numeric( $val ) ) {
-            // Attachment ID.
-            $att_id = (int) $val;
-            $url    = wp_get_attachment_url( $att_id ) ?: '';
-            $label  = get_the_title( $att_id ) ?: '';
-            $ts     = (int) get_post_time( 'U', true, $att_id ) ?: $parent_ts;
-          } elseif ( is_string( $val ) ) {
-            // Raw URL string.
-            $url   = $val;
-            $label = basename( parse_url( $url, PHP_URL_PATH ) );
-          }
 
-          if ( $url ) {
-            $recent_downloads[] = array(
-              'url'      => $url,
-              'label'    => $label !== '' ? $label : basename( parse_url( $url, PHP_URL_PATH ) ),
-              'ts'       => $ts,
-              'post_id'  => $pid,
-              'post_ttl' => get_the_title( $pid ),
-            );
+            $new_tab = true;
           }
+        }
+
+        // --------------------------------------------------------
+        // Store only valid items
+        // --------------------------------------------------------
+        if ( $url && $final_label ) {
+          $spotlight_items[] = array(
+            'url'   => $url,
+            'label' => $final_label,
+            'blank' => $new_tab,
+          );
         }
       }
-      wp_reset_postdata();
     }
+    ?>
 
-    if ( ! empty( $recent_downloads ) ) {
-      // Newest first, keep top 5 only.
-      usort(
-        $recent_downloads,
-        function ( $a, $b ) {
-          return $b['ts'] <=> $a['ts'];
-        }
-      );
-      $recent_downloads = array_slice( $recent_downloads, 0, 5 );
-    }
-  }
-  ?>
+    <aside class="downloads">
+      <h4 class="h4__heading">Resource Spotlight</h4>
 
-  <aside class="downloads">
-    <h4 class="h4__heading">Resource Spotlight</h4>
+      <?php if ( ! empty( $spotlight_items ) ) : ?>
 
-    <?php if ( ! empty( $recent_downloads ) ) : ?>
+        <p class="downloads__empty">Explore our featured resources.</p>
 
-      <p class="downloads__empty">Download our newest resources.</p>
+        <?php foreach ( $spotlight_items as $item ) : ?>
+          <a class="downloads__link"
+            href="<?php echo esc_url( $item['url'] ); ?>"
+            <?php if ( ! empty( $item['blank'] ) ) : ?>target="_blank" rel="noopener"<?php endif; ?>>
+            <?php echo esc_html( $item['label'] ); ?>
+          </a>
+        <?php endforeach; ?>
 
-      <?php foreach ( $recent_downloads as $item ) : ?>
-        <a class="downloads__link"
-          href="<?php echo esc_url( $item['url'] ); ?>"
-          target="_blank"
-          rel="noopener"
-          title="<?php echo esc_attr( 'From: ' . $item['post_ttl'] ); ?>">
-          <?php echo esc_html( $item['label'] ); ?>
-        </a>
-      <?php endforeach; ?>
+      <?php else : ?>
 
-    <?php else : ?>
+        <p class="downloads__empty">
+          There are no featured resources to show at this time.
+        </p>
 
-      <p class="downloads__empty">There are no downloads to show at this time.</p>
-
-    <?php endif; ?>
-  </aside>
+      <?php endif; ?>
+    </aside>
 
 </main>
 

@@ -2,14 +2,6 @@
 /**
  * The template for displaying the header
  *
- * CURRENT-PAGE STYLING (DESKTOP ONLY)
- * ----------------------------------
- * We ONLY apply “current page” styling to the DESKTOP navbar links:
- * - Adds `is-active` class (your CSS already underlines/highlights this)
- * - Adds `aria-current="page"` for accessibility
- *
- * We DO NOT apply current-page styles to MOBILE navigation (per your request).
- *
  * @package bja-nsvsp
  */
 ?>
