@@ -1,23 +1,14 @@
 <?php
 /**
- * Header template for the BJA NSVSP theme
+ * The template for displaying the header
  *
- * This file handles:
- * - Site logo / branding
- * - Desktop navigation with dropdown menus
- * - Desktop search
- * - Mobile navigation with slide-in submenus
+ * CURRENT-PAGE STYLING (DESKTOP ONLY)
+ * ----------------------------------
+ * We ONLY apply “current page” styling to the DESKTOP navbar links:
+ * - Adds `is-active` class (your CSS already underlines/highlights this)
+ * - Adds `aria-current="page"` for accessibility
  *
- * CURRENT PAGE STYLING OVERVIEW
- * -----------------------------
- * We apply active styling using:
- * - CSS class: `is-active`
- * - Accessibility attribute: aria-current="page"
- *
- * IMPORTANT RULES:
- * - Only REAL pages / archives get "current" styling
- * - Anchor links (#take-survey, #contact-us) are NOT marked active
- *   because PHP cannot detect scroll position
+ * We DO NOT apply current-page styles to MOBILE navigation (per your request).
  *
  * @package bja-nsvsp
  */
@@ -31,107 +22,68 @@
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<?php wp_head(); ?>
 </head>
-
 <body <?php body_class(); ?>>
-
-<!-- Skip link for keyboard + screen reader users -->
-<a class="screen-reader-shortcut" href="#front-page">Skip to main content</a>
+<a class="screen-reader-shortcut" href="#front-page	">Skip to main content</a>
 
 <header id="top" class="header home-header" role="banner">
 	<div class="header__container">
-
-		<?php
-		/**
-		 * LOGO OUTPUT
-		 * -----------
-		 * Use WordPress Custom Logo if available.
-		 * Fall back to static theme image otherwise.
-		 */
-		?>
 		<?php if ( function_exists( 'the_custom_logo' ) && has_custom_logo() ) : ?>
-			<?php the_custom_logo(); ?>
+		<?php the_custom_logo(); ?>
 		<?php else : ?>
-			<a class="header__logo-link" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<img
-					class="header__logo"
-					src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/DOJ-OJP-BJS-NSVSP-Logo.webp' ); ?>"
-					alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
-				>
-			</a>
+		<a class="header__logo-link" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+			<img class="header__logo" src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/DOJ-OJP-BJS-NSVSP-Logo.webp' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+		</a>
 		<?php endif; ?>
-
+		
 	</div>
 </header>
 
 <?php
 /**
  * ============================================================
- * CURRENT PAGE DETECTION (SINGLE SOURCE OF TRUTH)
+ * Desktop current-page helpers
  * ============================================================
  *
- * These booleans are reused across:
- * - Desktop navigation
- * - Mobile navigation
+ * These booleans drive DESKTOP nav styling only.
  *
- * They define WHEN a top-level nav item is considered "current".
+ * Resources should be active for:
+ * - /resources page
+ * - single Resource posts (standard WP posts)
+ * - category archives (if used)
+ *
+ * Glossary active for:
+ * - /glossary page
+ *
+ * FAQs active for:
+ * - /faqs page
+ * - single FAQ posts (faq CPT)
  */
-
-// Front page
-$is_home = is_front_page();
-
-// Resources section:
-// - /resources page
-// - single Resource posts (standard WP posts)
-// - category archives
-$is_resources =
-	is_page( 'resources' ) ||
-	is_singular( 'post' ) ||
-	is_category();
-
-// Glossary section:
-// - /glossary page
-// - optional glossary CPT (future-proofed)
-$is_glossary =
-	is_page( 'glossary' ) ||
-	is_singular( 'glossary' ) ||
-	is_post_type_archive( 'glossary' );
-
-// FAQs section:
-// - /faqs page
-// - FAQ CPT single + archive
-$is_faqs =
-	is_page( 'faqs' ) ||
-	is_singular( 'faq' ) ||
-	is_post_type_archive( 'faq' );
+$is_resources = is_page( 'resources' ) || is_singular( 'post' ) || is_category();
+$is_glossary  = is_page( 'glossary' );
+$is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 ?>
 
 <div class="navbar">
 	<div class="navbar__container">
-
-		<!-- ========================= -->
-		<!-- DESKTOP NAVIGATION -->
-		<!-- ========================= -->
 		<nav class="nav" role="navigation" aria-label="Primary">
 			<ul class="nav__menu">
-
-				<!-- Take Survey (anchor link – NOT a real page) -->
 				<li class="nav__li nav__survey">
-					<a
-						class="nav__item<?php echo $is_home ? ' current-page' : ''; ?>"
-						href="<?php echo $is_home ? '#take-survey' : esc_url( home_url( '/#take-survey' ) ); ?>"
-					>
-						Take Survey
+					<a class="nav__item<?php echo is_front_page() ? ' current-page' : ''; ?>"
+					href="<?php echo is_front_page() ? '#take-survey' : esc_url( home_url( '/#take-survey' ) ); ?>">
+					Take Survey
 					</a>
 				</li>
 
-				<!-- ========================= -->
-				<!-- RESOURCES -->
-				<!-- ========================= -->
 				<li class="nav__li nav__has-dropdown">
 					<a
+						<?php
+						/**
+						 * DESKTOP: Resources current-page styling
+						 */
+						?>
 						class="nav__item<?php echo $is_resources ? ' is-active' : ''; ?>"
 						id="nav-resources"
-						href="<?php echo $is_home ? '#resources' : esc_url( home_url( '/resources' ) ); ?>"
+						href="<?php echo is_front_page() ? '#resources' : esc_url( home_url( '/resources' ) ); ?>"
 						<?php echo $is_resources ? ' aria-current="page"' : ''; ?>
 						aria-haspopup="true"
 						aria-expanded="false"
@@ -142,33 +94,31 @@ $is_faqs =
 					</a>
 
 					<?php
-					/**
-					 * Resources dropdown
-					 * ------------------
-					 * Lists all WordPress post categories.
-					 * Each link points to /resources#category-slug
-					 */
+					// Resources dropdown: list all post categories (hide empty)
 					$resource_cats = get_categories([
 						'taxonomy'   => 'category',
 						'hide_empty' => true,
 						'orderby'    => 'name',
 						'order'      => 'ASC',
 					]);
-
-					$resources_page = get_page_by_path( 'resources' );
-					$resources_url  = rtrim(
-						$resources_page ? get_permalink( $resources_page ) : home_url( '/resources/' ),
-						'/'
-					);
-
 					if ( ! empty( $resource_cats ) ) : ?>
 						<ul class="nav-dropdown" id="resources-submenu" role="menu" aria-labelledby="nav-resources">
-							<?php foreach ( $resource_cats as $cat ) : ?>
+							<?php
+							// Get the Resources page URL (by slug "resources")
+							$resources_page = get_page_by_path( 'resources' );
+							$resources_url  = $resources_page ? get_permalink( $resources_page ) : home_url( '/resources/' );
+							// remove any trailing slash so we get /resources#slug instead of /resources/#slug
+						$resources_url  = rtrim( $resources_url, '/' );
+
+							foreach ( $resource_cats as $cat ) :
+								// Use the category slug as the anchor (e.g., #best-category)
+								$anchor = $cat->slug;
+								?>
 								<li class="nav-dropdown__item" role="none">
 									<a
 										role="menuitem"
+										href="<?php echo esc_url( $resources_url . '#' . $anchor ); ?>"
 										class="nav-dropdown__link"
-										href="<?php echo esc_url( $resources_url . '#' . $cat->slug ); ?>"
 									>
 										<?php echo esc_html( $cat->name ); ?>
 									</a>
@@ -176,16 +126,18 @@ $is_faqs =
 							<?php endforeach; ?>
 						</ul>
 					<?php endif; ?>
-				</li>
+					</li>
 
-				<!-- ========================= -->
-				<!-- GLOSSARY -->
-				<!-- ========================= -->
 				<li class="nav__li nav__has-dropdown">
 					<a
+						<?php
+						/**
+						 * DESKTOP: Glossary current-page styling
+						 */
+						?>
 						class="nav__item<?php echo $is_glossary ? ' is-active' : ''; ?>"
 						id="nav-glossary"
-						href="<?php echo $is_home ? '#glossary' : esc_url( home_url( '/glossary' ) ); ?>"
+						href="<?php echo is_front_page() ? '#glossary' : esc_url( home_url( '/glossary' ) ); ?>"
 						<?php echo $is_glossary ? ' aria-current="page"' : ''; ?>
 						aria-haspopup="true"
 						aria-expanded="false"
@@ -194,9 +146,9 @@ $is_faqs =
 						Glossary
 						<span class="screen-reader-text">, open categories submenu</span>
 					</a>
-
 					<?php
-					$glossary_tax = taxonomy_exists( 'glossary_category' ) ? 'glossary_category' : 'category';
+					// Prefer a dedicated glossary taxonomy if available; otherwise use default categories.
+					$glossary_tax = taxonomy_exists('glossary_category') ? 'glossary_category' : 'category';
 					$glossary_terms = get_terms([
 						'taxonomy'   => $glossary_tax,
 						'hide_empty' => true,
@@ -204,20 +156,22 @@ $is_faqs =
 						'order'      => 'ASC',
 					]);
 
-					$glossary_page = get_page_by_path( 'glossary' );
-					$glossary_url  = rtrim(
-						$glossary_page ? get_permalink( $glossary_page ) : home_url( '/glossary/' ),
-						'/'
-					);
+					if ( ! is_wp_error( $glossary_terms ) && ! empty( $glossary_terms ) ) :
 
-					if ( ! empty( $glossary_terms ) && ! is_wp_error( $glossary_terms ) ) : ?>
+						// Get the Glossary page URL (by slug "glossary")
+						$glossary_page = get_page_by_path( 'glossary' );
+						$glossary_url  = $glossary_page ? get_permalink( $glossary_page ) : home_url( '/glossary/' );
+						// remove any trailing slash so we get /glossary#slug instead of /glossary/#slug
+						$glossary_url  = rtrim( $glossary_url, '/' );
+						?>
 						<ul class="nav-dropdown" id="glossary-submenu" role="menu" aria-labelledby="nav-glossary">
 							<?php foreach ( $glossary_terms as $term ) : ?>
+								<?php $anchor = $term->slug; ?>
 								<li class="nav-dropdown__item" role="none">
 									<a
 										role="menuitem"
+										href="<?php echo esc_url( $glossary_url . '#' . $anchor ); ?>"
 										class="nav-dropdown__link"
-										href="<?php echo esc_url( $glossary_url . '#' . $term->slug ); ?>"
 									>
 										<?php echo esc_html( $term->name ); ?>
 									</a>
@@ -227,14 +181,16 @@ $is_faqs =
 					<?php endif; ?>
 				</li>
 
-				<!-- ========================= -->
-				<!-- FAQS -->
-				<!-- ========================= -->
 				<li class="nav__li nav__has-dropdown">
 					<a
+						<?php
+						/**
+						 * DESKTOP: FAQs current-page styling
+						 */
+						?>
 						class="nav__item<?php echo $is_faqs ? ' is-active' : ''; ?>"
 						id="nav-faqs"
-						href="<?php echo $is_home ? '#faqs' : esc_url( home_url( '/faqs' ) ); ?>"
+						href="<?php echo is_front_page() ? '#faqs' : esc_url( home_url( '/faqs' ) ); ?>"
 						<?php echo $is_faqs ? ' aria-current="page"' : ''; ?>
 						aria-haspopup="true"
 						aria-expanded="false"
@@ -243,124 +199,267 @@ $is_faqs =
 						FAQs
 						<span class="screen-reader-text">, open categories submenu</span>
 					</a>
+
+					<?php
+					// Prefer a dedicated FAQs taxonomy if available; otherwise use default categories.
+					$faqs_tax = taxonomy_exists('faq_category') ? 'faq_category' : 'category';
+
+					$faqs_terms = get_terms([
+						'taxonomy'   => $faqs_tax,
+						'hide_empty' => true,
+						'orderby'    => 'name',
+						'order'      => 'ASC',
+					]);
+
+					if ( ! is_wp_error( $faqs_terms ) && ! empty( $faqs_terms ) ) :
+
+						// Get the FAQs page URL (by slug "faqs")
+						$faqs_page = get_page_by_path( 'faqs' );
+						$faqs_url  = $faqs_page ? get_permalink( $faqs_page ) : home_url( '/faqs' );
+						// remove any trailing slash
+						$faqs_url  = rtrim( $faqs_url, '/' );
+						?>
+						<ul class="nav-dropdown" id="faqs-submenu" role="menu" aria-labelledby="nav-faqs">
+							<?php foreach ( $faqs_terms as $term ) : ?>
+								<?php $anchor = $term->slug; ?>
+								<li class="nav-dropdown__item" role="none">
+									<a
+										role="menuitem"
+										href="<?php echo esc_url( $faqs_url . '#' . $anchor ); ?>"
+										class="nav-dropdown__link"
+									>
+										<?php echo esc_html( $term->name ); ?>
+									</a>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php endif; ?>
 				</li>
 
-				<!-- Contact Us (anchor link) -->
 				<li class="nav__li">
-					<a
-						class="nav__item"
-						href="<?php echo $is_home ? '#contact-us' : esc_url( home_url( '/#contact-us' ) ); ?>"
-					>
-						Contact Us
+					<a class="nav__item"
+					href="<?php echo is_front_page() ? '#contact-us' : esc_url( home_url( '/#contact-us' ) ); ?>">
+					Contact Us
 					</a>
 				</li>
-
-			</ul>
+				</ul>
 		</nav>
 
-		<!-- Desktop search -->
 		<form class="search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-			<?php echo svg_icon( 'search__icon', 'search' ); ?>
+			<?php echo svg_icon('search__icon', 'search');?>
 			<input type="search" name="s" placeholder="Search" aria-label="Search">
-			<button type="submit">
+			<button type="submit" aria-label="Submit search">
 				<span class="screen-reader-text">Search</span>
 			</button>
 		</form>
-
 	</div>
 </div>
 
-<!-- ========================================================= -->
-<!-- MOBILE NAVIGATION -->
-<!-- ========================================================= -->
+<!-- Mobile navigation -->
 <div class="mobile-navigation">
+	<!-- Hidden menu label for accessibility-->
+	<span hidden="" id="mobile-menu">Main menu</span>
 
-	<span hidden id="mobile-menu">Main menu</span>
+	<button class="mobile-navigation__menu" aria-controls="mobile-navigation" tabindex="0" aria-expanded="false" aria-labelledby="mobile-menu">
 
-	<button
-		class="mobile-navigation__menu"
-		aria-controls="mobile-navigation"
-		aria-expanded="false"
-		aria-labelledby="mobile-menu"
-	>
-		<i class="mobile-navigation__icon" aria-hidden="true"></i>
+		<!-- navigation menu icon-->
+		<i class="mobile-navigation__icon" alt="Menu icon" aria-hidden="true">&nbsp;</i>
 	</button>
 
-	<nav class="mobile-navigation__nav" aria-label="Mobile menu" aria-hidden="true">
 
+	<nav class="mobile-navigation__nav" aria-label="Mobile menu" aria-labelledby="mobile-menu" aria-hidden="true">
 		<div class="mobile-navigation__controls">
-
-			<!-- Close button -->
+			<!-- Close (X) - visible on main menu -->
 			<button class="mobile-navigation__close" type="button" aria-label="Close menu">
-				<?php echo svg_icon( 'mobile-navigation__x', 'times' ); ?>
+				<?php echo svg_icon('mobile-navigation__x', 'times'); ?>
 			</button>
 
-			<!-- Back button (visible when submenu is open) -->
+			<!-- Back - visible when submenu is open -->
 			<button class="mobile-navigation__back" type="button" aria-label="Back to main menu" aria-hidden="true">
-				<?php echo svg_icon( 'mobile-navigation__chevron-left', 'chevron-left' ); ?>
+				<?php echo svg_icon('mobile-navigation__chevron-left', 'chevron-left'); ?>
 				<span class="screen-reader-text">Back</span>
 			</button>
-
 		</div>
-
+		
 		<ul class="mobile-navigation__list">
-
 			<li class="mobile-navigation__item">
-				<a class="mobile-navigation__link<?php echo $is_home ? ' is-active' : ''; ?>"
-				   href="<?php echo esc_url( home_url( '/' ) ); ?>">
-					Home
+				<a href="<?php echo esc_url( home_url() ); ?>"
+				class="mobile-navigation__link" title="Go to the Take Survey section">
+				Home
+				</a>
+			</li>
+			<li class="mobile-navigation__item">
+				<a href="<?php echo is_front_page() ? '#take-survey' : esc_url( home_url( '/#take-survey' ) ); ?>"
+				class="mobile-navigation__link" title="Go to the Take Survey section">
+				Take Survey
+				</a>
+			</li>
+
+			<?php
+			/**
+			 * MOBILE NAV NOTE:
+			 * We intentionally do NOT add current-page styling (no is-active / aria-current)
+			 * on mobile links per your requirement.
+			 */
+			?>
+
+			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
+				<div class="mobile-navigation__row">
+					<a class="mobile-navigation__link"
+					href="<?php echo esc_url( home_url( '/resources' ) ); ?>">
+					Resources
+					</a>
+
+					<button class="mobile-navigation__submenu-toggle"
+							type="button"
+							aria-label="Open Resources categories"
+							aria-expanded="false"
+							data-submenu="mobile-submenu-resources">
+					<?php echo svg_icon('mobile-navigation__chevron', 'chevron-right'); ?>
+					</button>
+				</div>
+			</li>
+			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
+				<div class="mobile-navigation__row">
+					<a class="mobile-navigation__link"
+					href="<?php echo esc_url( home_url( '/glossary' ) ); ?>">
+					Glossary
+					</a>
+
+					<button class="mobile-navigation__submenu-toggle"
+							type="button"
+							aria-label="Open Glossary categories"
+							aria-expanded="false"
+							data-submenu="mobile-submenu-glossary">
+					<?php echo svg_icon('mobile-navigation__chevron', 'chevron-right'); ?>
+					</button>
+				</div>
+			</li>
+			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
+				<div class="mobile-navigation__row">
+					<a class="mobile-navigation__link"
+					href="<?php echo esc_url( home_url( '/faqs' ) ); ?>">
+					FAQs
+					</a>
+
+					<button class="mobile-navigation__submenu-toggle"
+							type="button"
+							aria-label="Open FAQs categories"
+							aria-expanded="false"
+							data-submenu="mobile-submenu-faqs">
+					<?php echo svg_icon('mobile-navigation__chevron', 'chevron-right'); ?>
+					</button>
+				</div>
+			</li>
+			<li class="mobile-navigation__item">
+				<a href="<?php echo is_front_page() ? '#contact-us' : esc_url( home_url( '/#contact-us' ) ); ?>"
+				class="mobile-navigation__link" title="Go to the Contact Us section">
+				Contact Us
 				</a>
 			</li>
 
 			<li class="mobile-navigation__item">
-				<a class="mobile-navigation__link"
-				   href="<?php echo $is_home ? '#take-survey' : esc_url( home_url( '/#take-survey' ) ); ?>">
-					Take Survey
+				<form class="mobile-navigation__search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+				<?php echo svg_icon('mobile-navigation__icon', 'search'); ?>
+				<input type="search" name="s" placeholder="Search" aria-label="Search">
+				<button type="submit" aria-label="Submit search">
+					<span class="screen-reader-text">Search</span>
+				</button>
+				</form>
+			</li>
+			</ul>
+
+		<div class="mobile-navigation__submenus" aria-hidden="true">
+			<?php
+			// Resources submenu items
+			$resources_page = get_page_by_path( 'resources' );
+			$resources_url  = $resources_page ? get_permalink( $resources_page ) : home_url( '/resources/' );
+			$resources_url  = rtrim( $resources_url, '/' );
+
+			$resource_cats = get_categories([
+				'taxonomy'   => 'category',
+				'hide_empty' => true,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+			]);
+
+			// Glossary submenu items
+			$glossary_tax   = taxonomy_exists('glossary_category') ? 'glossary_category' : 'category';
+			$glossary_terms = get_terms([
+				'taxonomy'   => $glossary_tax,
+				'hide_empty' => true,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+			]);
+			$glossary_page = get_page_by_path( 'glossary' );
+			$glossary_url  = $glossary_page ? get_permalink( $glossary_page ) : home_url( '/glossary/' );
+			$glossary_url  = rtrim( $glossary_url, '/' );
+
+			// FAQs submenu items
+			$faqs_tax   = taxonomy_exists('faq_category') ? 'faq_category' : 'category';
+			$faqs_terms = get_terms([
+				'taxonomy'   => $faqs_tax,
+				'hide_empty' => true,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+			]);
+			$faqs_page = get_page_by_path( 'faqs' );
+			$faqs_url  = $faqs_page ? get_permalink( $faqs_page ) : home_url( '/faqs' );
+			$faqs_url  = rtrim( $faqs_url, '/' );
+			?>
+
+			<!-- Resources submenu -->
+			<ul class="mobile-navigation__submenu" id="mobile-submenu-resources" aria-hidden="true">
+				<li class="mobile-navigation__submenu-item">
+				<a class="mobile-navigation__sublink" href="<?php echo esc_url( $resources_url ); ?>">
+					All Resources
 				</a>
-			</li>
-
-			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
-				<div class="mobile-navigation__row">
-					<a class="mobile-navigation__link<?php echo $is_resources ? ' is-active' : ''; ?>"
-					   href="<?php echo esc_url( home_url( '/resources' ) ); ?>"
-					   <?php echo $is_resources ? ' aria-current="page"' : ''; ?>>
-						Resources
+				</li>
+				<?php foreach ( $resource_cats as $cat ) : ?>
+				<li class="mobile-navigation__submenu-item">
+					<a class="mobile-navigation__sublink" href="<?php echo esc_url( $resources_url . '#' . $cat->slug ); ?>">
+					<?php echo esc_html( $cat->name ); ?>
 					</a>
-				</div>
-			</li>
+				</li>
+				<?php endforeach; ?>
+			</ul>
 
-			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
-				<div class="mobile-navigation__row">
-					<a class="mobile-navigation__link<?php echo $is_glossary ? ' is-active' : ''; ?>"
-					   href="<?php echo esc_url( home_url( '/glossary' ) ); ?>"
-					   <?php echo $is_glossary ? ' aria-current="page"' : ''; ?>>
-						Glossary
+			<!-- Glossary submenu -->
+			<?php if ( ! is_wp_error( $glossary_terms ) ) : ?>
+				<ul class="mobile-navigation__submenu" id="mobile-submenu-glossary" aria-hidden="true">
+				<li class="mobile-navigation__submenu-item">
+					<a class="mobile-navigation__sublink" href="<?php echo esc_url( $glossary_url ); ?>">
+					All Glossary
 					</a>
-				</div>
-			</li>
-
-			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
-				<div class="mobile-navigation__row">
-					<a class="mobile-navigation__link<?php echo $is_faqs ? ' is-active' : ''; ?>"
-					   href="<?php echo esc_url( home_url( '/faqs' ) ); ?>"
-					   <?php echo $is_faqs ? ' aria-current="page"' : ''; ?>>
-						FAQs
+				</li>
+				<?php foreach ( $glossary_terms as $term ) : ?>
+					<li class="mobile-navigation__submenu-item">
+					<a class="mobile-navigation__sublink" href="<?php echo esc_url( $glossary_url . '#' . $term->slug ); ?>">
+						<?php echo esc_html( $term->name ); ?>
 					</a>
-				</div>
-			</li>
+					</li>
+				<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
 
-			<li class="mobile-navigation__item">
-				<a class="mobile-navigation__link"
-				   href="<?php echo $is_home ? '#contact-us' : esc_url( home_url( '/#contact-us' ) ); ?>">
-					Contact Us
-				</a>
-			</li>
-
-		</ul>
-
+			<!-- FAQs submenu -->
+			<?php if ( ! is_wp_error( $faqs_terms ) ) : ?>
+				<ul class="mobile-navigation__submenu" id="mobile-submenu-faqs" aria-hidden="true">
+				<li class="mobile-navigation__submenu-item">
+					<a class="mobile-navigation__sublink" href="<?php echo esc_url( $faqs_url ); ?>">
+					All FAQs
+					</a>
+				</li>
+				<?php foreach ( $faqs_terms as $term ) : ?>
+					<li class="mobile-navigation__submenu-item">
+					<a class="mobile-navigation__sublink" href="<?php echo esc_url( $faqs_url . '#' . $term->slug ); ?>">
+						<?php echo esc_html( $term->name ); ?>
+					</a>
+					</li>
+				<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+		</div>
 	</nav>
-</div>
 
-<?php wp_footer(); ?>
-</body>
-</html>
+</div>
