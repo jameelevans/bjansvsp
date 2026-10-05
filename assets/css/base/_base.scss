@@ -85,3 +85,7 @@ button, input, textarea, select { font-family: inherit; }
 }
 
 .single-page__main a:hover, .single-page__main a:focus-visible { color: var(--color-dark-teal); }
+
+// Long words and URLs must not enlarge responsive grid columns.
+main { overflow-wrap: anywhere; }
+main > * { min-width: 0; }
