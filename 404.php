@@ -8,7 +8,7 @@
  get_header('general');
 
 ?>
-	<main id="main-content">
+	<main id="main-content" tabindex="-1">
     <section class="error">
       
       <h1 class="error__header">The requested page could not be found.</h1>

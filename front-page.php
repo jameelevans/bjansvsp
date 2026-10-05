@@ -8,7 +8,7 @@
 get_header();
 
 ?>
-	<main id="front-page">
+	<main id="front-page" tabindex="-1">
 		<div class="main-content">
 			<section id="take-survey">
 				<h1 class="h1__heading"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h1>
@@ -17,12 +17,12 @@ get_header();
 				$home_content = get_post_field('post_content', $home_id);
 				echo esc_html( wp_strip_all_tags( $home_content ) );
 				?></p>
-				<a class="btn" href="#">Take Survey</a>
+				<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Take Survey<span class="screen-reader-text"> (opens in a new tab)</span></a>
 			</section>
 			<section id="resources">
 				<h2 class="h2__heading"><a class="h2__link" href="<?php echo esc_url( home_url( '/resources' ) ); ?>" title="View all resources">Resources<?php echo svg_icon('h2__icon', 'link');?></a></h2>
 				<p class="sub__heading"><?php echo esc_html( get_field('resource_subheading', get_queried_object_id()) ); ?></p>
-		
+
 
 				<div class="resources__container">
 					<?php
@@ -56,7 +56,7 @@ get_header();
 							<?php echo esc_html( wp_trim_words( get_the_content(), 20, '…' ) ); ?>
 						</p>
 
-						<a href="<?php the_permalink(); ?>" class="btn">Learn More</a>
+						<a href="<?php the_permalink(); ?>" class="btn">Learn More<span class="screen-reader-text"> about <?php the_title(); ?></span></a>
 						</div>
 					<?php endwhile;
 
@@ -122,9 +122,11 @@ get_header();
 					$has_terms = !empty($groups[$L]);
 					$href = $has_terms ? '#glossary-' . $L : '#';
 					$cls = 'glossary__letter' . ($has_terms ? '' : ' is-empty');
-					echo '<a class="' . esc_attr($cls) . '" href="' . esc_url($href) . '" aria-disabled="' . ($has_terms ? 'false' : 'true') . '">';
-					echo esc_html($L);
-					echo '</a>';
+					if ($has_terms) {
+                  echo '<a class="' . esc_attr($cls) . '" href="' . esc_url($href) . '">' . esc_html($L) . '</a>';
+                } else {
+                  echo '<span class="' . esc_attr($cls) . '">' . esc_html($L) . '<span class="screen-reader-text"> (no terms)</span></span>';
+                }
 					}
 					echo '</div>';
 
@@ -208,23 +210,23 @@ get_header();
 					?>
 
 			</section>
-			<section id="contact-us"></section>
+
 		</div>
 		<aside class="side-nav">
-			<h4 class="h4__heading">On this page</h4>
+			<h2 class="h4__heading">On this page</h2>
 			<ul class="side-nav__list">
-				<li class="side-nav__item"><a class="side-nav__link" href="#take-survey">Take Survey</a></li>
+				<li class="side-nav__item"><a class="side-nav__link" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Take Survey<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#resources">Resources</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#glossary">Glossary</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#faqs">FAQs</a></li>
 			</ul>
-			<form class="aside-search" role="aside-search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+			<form class="aside-search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 				<input type="search" name="s" placeholder="Search" aria-label="Search">
 				<button type="submit" aria-label="Submit search">
 					<span class="screen-reader-text">Search</span>
 				</button>
 			</form>
-			<a class="btn" href="#">Take Survey</a>
+			<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Take Survey<span class="screen-reader-text"> (opens in a new tab)</span></a>
 		</aside>
 	</main>
 <?php get_footer(); ?>

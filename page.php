@@ -9,7 +9,7 @@
 get_header();
 ?>
 
-<main id="single-page" class="site-main single-page">
+<main id="single-page" class="site-main single-page" tabindex="-1">
   <div class="single-page__container">
 
     <?php if ( have_posts() ) : ?>
@@ -111,7 +111,7 @@ get_header();
   ?>
 
   <aside class="downloads">
-    <h4 class="h4__heading">Resource Spotlight</h4>
+    <h2 class="h4__heading">Resource Spotlight</h2>
 
     <?php if ( ! empty( $recent_downloads ) ) : ?>
 

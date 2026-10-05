@@ -14,7 +14,7 @@
 get_header();
 ?>
 
-<main id="search-page">
+<main id="search-page" tabindex="-1">
   <section class="search">
 
     <?php
@@ -37,7 +37,8 @@ get_header();
         'posts_per_page' => get_option( 'posts_per_page' ),
       ];
 
-      $the_query = new WP_Query( $args );
+      global $wp_query;
+      $the_query = $wp_query;
     ?>
 
     <h1 class="h2__heading">Search Results for: <?php echo esc_html( $query_string ); ?></h1>
@@ -50,7 +51,7 @@ get_header();
              title="<?php echo esc_attr( 'View ' . get_the_title() ); ?>">
 
             <header>
-              <h3 class="h3__heading"><?php the_title(); ?></h3>
+              <h2 class="h3__heading"><?php the_title(); ?></h2>
 
               <?php
                 /**
@@ -204,7 +205,7 @@ get_header();
   ?>
 
   <aside class="downloads">
-    <h4 class="h4__heading">Resource Spotlight</h4>
+    <h2 class="h4__heading">Resource Spotlight</h2>
 
     <?php if ( ! empty( $spotlight_items ) ) : ?>
 

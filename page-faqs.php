@@ -9,7 +9,7 @@
 get_header();
 ?>
 
-<main id="single-page" class="site-main single-page">
+<main id="single-page" class="site-main single-page" tabindex="-1">
   <div class="single-page__container">
 
     <?php
@@ -88,7 +88,7 @@ get_header();
 
           if ( $faqs->have_posts() ) :
             ?>
-            <section id="faqs" class="faqs-section">
+            <section id="faqs-category-<?php echo (int) $term->term_id; ?>" class="faqs-section">
               <h2 id="<?php echo esc_html( $term->slug ); ?>" class="h2__heading  mt-xl">
                 <?php echo esc_html( $term->name ); ?>
               </h2>
@@ -112,7 +112,7 @@ get_header();
                 while ( $faqs->have_posts() ) :
                   $faqs->the_post();
                   $i++;
-                  $panel_id = 'faq-' . get_the_ID();
+                  $panel_id = 'faq-' . $term->term_id . '-' . get_the_ID();
                   ?>
                   <details class="faq" <?php if ( 1 === $i ) echo 'open'; // first FAQ in each category open by default ?>>
                     <summary class="faq__question">
@@ -246,7 +246,7 @@ get_header();
     ?>
 
     <aside class="downloads">
-      <h4 class="h4__heading">Resource Spotlight</h4>
+      <h2 class="h4__heading">Resource Spotlight</h2>
 
       <?php if ( ! empty( $spotlight_items ) ) : ?>
 

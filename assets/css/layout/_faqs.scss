@@ -1,7 +1,7 @@
 @use 'base/typography' as typography;
 @use 'abstracts/mixins' as mixins;
 
-#faqs {
+#faqs, .faqs-section {
   .related-faqs__empty {
     font-size: 1.8rem;
     line-height: 1.5;
@@ -27,12 +27,12 @@
     justify-content: space-between;
     padding: 1.8rem 1.6rem;
     background: var(--color-teal); /* adjust to your palette */
-    background-image: url(assets/img/section-bg.png); /* dots on top */
+    background-image: url(assets/img/section-bg-small.webp); /* dots on top */
     background-repeat: no-repeat;
     background-position: right 0.8rem top; /* leave room for the +/- icon */
     background-size: 110px auto; /* tweak to taste */
     background-origin: padding-box; /* respect padding edge */
-    color: #fff;
+    color: var(--color-black);
     font-weight: 400;
     font-size: 1.5rem;
   }
@@ -52,12 +52,6 @@
     color: var(--color-black);
     font-size: 1.8rem;
     line-height: 1.5;
-    max-height: 0;
-    opacity: 0;
-    transform: translateY(-4px);
-    overflow: hidden;
-    transition: max-height 0.35s ease, opacity 0.25s ease, transform 0.35s ease;
-    will-change: max-height, opacity, transform;
 
     @include mixins.respond(smlmd) {
       font-size: 1.6rem;
@@ -68,13 +62,6 @@
   .faq__icon::before {
     content: '+';
     font-size: 2rem;
-  }
-  /* when <details> is open, reveal with animation */
-  details[open] .faq__answer {
-    /* use a “big enough” max-height to accommodate content */
-    max-height: 60rem; /* adjust if your answers are longer */
-    opacity: 1;
-    transform: translateY(0);
   }
   details[open] .faq__icon::before {
     content: '–';

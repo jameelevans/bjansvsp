@@ -47,7 +47,7 @@
     font-size: 1.8rem;
     font-weight: 500;
     color: var(--color-black);
-    transition: all 0.4s;
+    transition: color .18s ease;
 
     @include mixins.respond(smlmd) {
       font-size: 1.5rem;
@@ -128,62 +128,7 @@
     }
   }
 
-  /* Target block */
-  #contact-us {
-    position: relative; /* needed for the pseudo-element */
-  }
-
-  /* JS adds this class */
-  .contact--highlight {
-    /* optional subtle pulse */
-    animation: contact-pulse 1.2s ease-out 2;
-  }
-
-  /* Draw the dashed “outline” with a pseudo-element so it’s not clipped */
-  #contact-us.contact--highlight::after {
-    content: '';
-    position: absolute;
-    inset: 0; /* cover the element */
-    pointer-events: none;
-    border: 4px dashed var(--color-purple);
-    border-radius: 6px; /* adjust if you have rounded corners */
-    /* mimic a little gap using box-shadow instead of outline-offset */
-    box-shadow: 0 0 0 9px rgba(0, 0, 0, 0); /* creates spacing without clipping */
-    animation: contact-blink 0.6s steps(2, start) 6;
-    z-index: 1; /* above backgrounds, below content focus rings */
-  }
-
-  /* Blink the dashed border */
-  @keyframes contact-blink {
-    0%,
-    100% {
-      border-color: transparent;
-    }
-    50% {
-      border-color: var(--color-purple);
-    }
-  }
-
-  /* Soft glow pulse on the container (optional) */
-  @keyframes contact-pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(114, 108, 154, 0.25);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(114, 108, 154, 0.05);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(114, 108, 154, 0);
-    }
-  }
-
-  /* Respect reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    #contact-us.contact--highlight::after,
-    .contact--highlight {
-      animation: none !important;
-    }
-  }
+  .contact--highlight { outline: 2px solid var(--color-purple); outline-offset: 6px; }
 
   .external-links {
     text-decoration: none;
@@ -222,6 +167,8 @@
     }
     img {
       height: 5rem;
+      width: auto;
+      max-width: 100%;
     }
   }
 
@@ -249,9 +196,10 @@
     text-decoration: none;
     opacity: 0;
     transform: scale(0.8);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: opacity .18s ease, transform .18s ease;
     visibility: hidden;
     width: 4.5rem;
+    min-width: 44px;
     z-index: 99;
 
     &__icon {

@@ -6,5 +6,6 @@ module.exports = {
     path: path.resolve(__dirname, './assets/js'),
     filename: 'scripts-bundled.js'
   },
-  mode: 'development'
+  mode: 'production',
+  devtool: false
 }

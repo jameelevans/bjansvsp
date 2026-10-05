@@ -88,10 +88,10 @@ class ScrollSpy {
 
   _setActiveById(id) {
     // Clear current
-    this.links.forEach((lnk) => lnk.classList.remove('is-active'));
+    this.links.forEach(lnk => { lnk.classList.remove('is-active'); lnk.removeAttribute('aria-current'); });
     // Set new
     const link = this.map.get(id);
-    if (link) link.classList.add('is-active');
+    if (link) { link.classList.add('is-active'); link.setAttribute('aria-current', 'location'); }
   }
 }
 

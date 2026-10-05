@@ -48,7 +48,7 @@
     &:hover,
     &:focus,
     &.is-active {
-      color: var(--color-orange);
+      color: var(--color-orange-text);
     }
   }
 
@@ -69,14 +69,14 @@
     padding: 1rem 1.4rem;
     font-family: typography.$font-primary;
     font-size: 1.6rem;
-    outline: none;
+
     font-weight: 300;
 
     background: transparent;
     transition: border-color 0.3s ease;
 
     &:focus {
-      outline: none;
+
     }
 
     &:focus,

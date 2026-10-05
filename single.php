@@ -16,7 +16,7 @@
 get_header();
 ?>
 
-<main id="single-page">
+<main id="single-page" tabindex="-1">
 <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
   <section class="single-resource">
@@ -203,7 +203,7 @@ get_header();
   <aside class="downloads">
     <?php if ( ! empty( $downloads ) ) : ?>
 
-      <h4 class="h4__heading">Downloads</h4>
+      <h2 class="h4__heading">Downloads</h2>
 
       <?php foreach ( $downloads as $dl ) : ?>
         <a class="downloads__link"
@@ -216,7 +216,7 @@ get_header();
 
     <?php else : ?>
 
-      <h4 class="h4__heading">Resource Spotlight</h4>
+      <h2 class="h4__heading">Resource Spotlight</h2>
 
       <?php if ( ! empty( $spotlight_items ) ) : ?>
         <?php foreach ( $spotlight_items as $item ) : ?>
@@ -232,7 +232,7 @@ get_header();
 
     <?php endif; ?>
 
-    <a class="btn" href="#take-survey">Take Survey</a>
+    <a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Take Survey<span class="screen-reader-text"> (opens in a new tab)</span></a>
   </aside>
 
 <?php endwhile; endif; ?>

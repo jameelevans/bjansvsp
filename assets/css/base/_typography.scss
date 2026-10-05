@@ -21,47 +21,84 @@ $font-icon-body: 0.8rem;
 
 //Included fonts from assets
 
-/* Roboto Variable Font (Regular) */
 @font-face {
   font-family: 'Roboto';
-  src: url('assets/fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
-  font-weight: 100 900; /* Supports weights from 100 to 900 */
-  font-stretch: 75% 125%; /* Supports variable width */
+  src: url('assets/fonts/Roboto-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-stretch: 75% 100%;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0100-10FFFF;
 }
 
-/* Roboto Variable Font (Italic) */
 @font-face {
   font-family: 'Roboto';
-  src: url('assets/fonts/Roboto-Italic-VariableFont_wdth,wght.ttf')
-    format('truetype');
-  font-weight: 100 900; /* Supports weights from 100 to 900 */
-  font-stretch: 75% 125%; /* Supports variable width */
-  font-style: italic;
-  font-display: swap;
-}
-
-/* Open Sans Variable Font (Regular) */
-@font-face {
-  font-family: 'Open Sans';
-  src: url('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf')
-    format('truetype');
-  font-weight: 100 900; /* Supports weights from 100 to 900 */
-  font-stretch: 75% 125%; /* Supports variable width */
+  src: url('assets/fonts/Roboto-Variable-Latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-stretch: 75% 100%;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+FEFF,U+FFFD;
 }
 
-/* Open Sans Variable Font (Italic) */
 @font-face {
-  font-family: 'Open Sans';
-  src: url('assets/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf')
-    format('truetype');
-  font-weight: 100 900; /* Supports weights from 100 to 900 */
-  font-stretch: 75% 125%; /* Supports variable width */
+  font-family: 'Roboto';
+  src: url('assets/fonts/Roboto-Italic-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-stretch: 75% 100%;
   font-style: italic;
   font-display: swap;
+  unicode-range: U+0100-10FFFF;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('assets/fonts/Roboto-Italic-Variable-Latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-stretch: 75% 100%;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('assets/fonts/OpenSans-Variable.woff2') format('woff2');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-10FFFF;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('assets/fonts/OpenSans-Variable-Latin.woff2') format('woff2');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('assets/fonts/OpenSans-Italic-Variable.woff2') format('woff2');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0100-10FFFF;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('assets/fonts/OpenSans-Italic-Variable-Latin.woff2') format('woff2');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+FEFF,U+FFFD;
 }
 
 html {
@@ -120,7 +157,7 @@ body {
 
   &:hover,
   &:focus {
-    color: var(--color-orange);
+    color: var(--color-orange-text);
   }
 
   .h2__icon {
@@ -148,7 +185,7 @@ body {
   font-size: 2.4rem;
   font-weight: 500;
   padding: 0.5rem 1.2rem;
-  background-color: var(--color-orange);
+  background-color: var(--color-orange-text);
   margin-bottom: 1.2rem;
   color: var(--color-white);
   display: inline-block;
@@ -175,7 +212,7 @@ body {
 
     &:hover,
     &:focus {
-      color: var(--color-orange);
+      color: var(--color-orange-text);
       text-decoration: none;
     }
   }
@@ -205,7 +242,7 @@ body {
   font-family: $font-secondary;
   display: inline-block;
   padding: 0.5rem 5rem 0.5rem 1.2rem;
-  background-color: var(--color-orange);
+  background-color: var(--color-orange-text);
   color: var(--color-white);
   font-size: 1.6rem;
   font-weight: 600;
@@ -252,7 +289,7 @@ body {
 
   &:hover,
   &:focus {
-    color: var(--color-orange);
+    color: var(--color-orange-text);
   }
 }
 

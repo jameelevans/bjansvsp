@@ -15,18 +15,19 @@
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-<a class="screen-reader-shortcut" href="#front-page	">Skip to main content</a>
+<?php wp_body_open(); ?>
+<a class="screen-reader-shortcut" href="#<?php echo is_front_page() ? 'front-page' : (is_search() ? 'search-page' : ((is_archive() || is_home() || is_404()) ? 'main-content' : 'single-page')); ?>">Skip to main content</a>
 
-<header id="top" class="header home-header" role="banner">
+<header id="top" class="header home-header header--new-design" role="banner">
 	<div class="header__container">
 		<?php if ( function_exists( 'the_custom_logo' ) && has_custom_logo() ) : ?>
 		<?php the_custom_logo(); ?>
 		<?php else : ?>
 		<a class="header__logo-link" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-			<img class="header__logo" src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/DOJ-OJP-BJS-NSVSP-Logo.webp' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+			<img class="header__logo" src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/DOJ-OJP-BJS-NSVSP-Logo.webp' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="1100" height="376" decoding="async" fetchpriority="high">
 		</a>
 		<?php endif; ?>
-		
+
 	</div>
 </header>
 
@@ -61,8 +62,8 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 			<ul class="nav__menu">
 				<li class="nav__li nav__survey">
 					<a class="nav__item<?php echo is_front_page() ? ' current-page' : ''; ?>"
-					href="<?php echo is_front_page() ? '#take-survey' : esc_url( home_url( '/#take-survey' ) ); ?>">
-					Take Survey
+					href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">
+					Take Survey<span class="screen-reader-text"> (opens in a new tab)</span>
 					</a>
 				</li>
 
@@ -82,7 +83,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						aria-controls="resources-submenu"
 					>
 						Resources
-						<span class="screen-reader-text">, open categories submenu</span>
+
 					</a>
 
 					<?php
@@ -94,7 +95,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						'order'      => 'ASC',
 					]);
 					if ( ! empty( $resource_cats ) ) : ?>
-						<ul class="nav-dropdown" id="resources-submenu" role="menu" aria-labelledby="nav-resources">
+						<ul class="nav-dropdown" id="resources-submenu" aria-labelledby="nav-resources">
 							<?php
 							// Get the Resources page URL (by slug "resources")
 							$resources_page = get_page_by_path( 'resources' );
@@ -106,9 +107,9 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 								// Use the category slug as the anchor (e.g., #best-category)
 								$anchor = $cat->slug;
 								?>
-								<li class="nav-dropdown__item" role="none">
+								<li class="nav-dropdown__item">
 									<a
-										role="menuitem"
+
 										href="<?php echo esc_url( $resources_url . '#' . $anchor ); ?>"
 										class="nav-dropdown__link"
 									>
@@ -136,7 +137,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						aria-controls="glossary-submenu"
 					>
 						Glossary
-						<span class="screen-reader-text">, open categories submenu</span>
+
 					</a>
 					<?php
 					// Prefer a dedicated glossary taxonomy if available; otherwise use default categories.
@@ -156,12 +157,12 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						// remove any trailing slash so we get /glossary#slug instead of /glossary/#slug
 						$glossary_url  = rtrim( $glossary_url, '/' );
 						?>
-						<ul class="nav-dropdown" id="glossary-submenu" role="menu" aria-labelledby="nav-glossary">
+						<ul class="nav-dropdown" id="glossary-submenu" aria-labelledby="nav-glossary">
 							<?php foreach ( $glossary_terms as $term ) : ?>
 								<?php $anchor = $term->slug; ?>
-								<li class="nav-dropdown__item" role="none">
+								<li class="nav-dropdown__item">
 									<a
-										role="menuitem"
+
 										href="<?php echo esc_url( $glossary_url . '#' . $anchor ); ?>"
 										class="nav-dropdown__link"
 									>
@@ -189,7 +190,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						aria-controls="faqs-submenu"
 					>
 						FAQs
-						<span class="screen-reader-text">, open categories submenu</span>
+
 					</a>
 
 					<?php
@@ -211,12 +212,12 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						// remove any trailing slash
 						$faqs_url  = rtrim( $faqs_url, '/' );
 						?>
-						<ul class="nav-dropdown" id="faqs-submenu" role="menu" aria-labelledby="nav-faqs">
+						<ul class="nav-dropdown" id="faqs-submenu" aria-labelledby="nav-faqs">
 							<?php foreach ( $faqs_terms as $term ) : ?>
 								<?php $anchor = $term->slug; ?>
-								<li class="nav-dropdown__item" role="none">
+								<li class="nav-dropdown__item">
 									<a
-										role="menuitem"
+
 										href="<?php echo esc_url( $faqs_url . '#' . $anchor ); ?>"
 										class="nav-dropdown__link"
 									>
@@ -238,10 +239,10 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 		</nav>
 
 		<form class="search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-			<?php echo svg_icon('search__icon', 'search');?>
+
 			<input type="search" name="s" placeholder="Search" aria-label="Search">
 			<button type="submit" aria-label="Submit search">
-				<span class="screen-reader-text">Search</span>
+				<?php echo svg_icon('search__icon', 'search'); ?><span class="screen-reader-text">Search</span>
 			</button>
 		</form>
 	</div>
@@ -252,14 +253,14 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 	<!-- Hidden menu label for accessibility-->
 	<span hidden="" id="mobile-menu">Main menu</span>
 
-	<button class="mobile-navigation__menu" aria-controls="mobile-navigation" tabindex="0" aria-expanded="false" aria-labelledby="mobile-menu">
+	<button type="button" class="mobile-navigation__menu" aria-controls="mobile-navigation" aria-expanded="false" aria-labelledby="mobile-menu">
 
 		<!-- navigation menu icon-->
-		<i class="mobile-navigation__icon" alt="Menu icon" aria-hidden="true">&nbsp;</i>
+		<span class="mobile-navigation__menu-icon" aria-hidden="true"></span>
 	</button>
 
 
-	<nav class="mobile-navigation__nav" aria-label="Mobile menu" aria-labelledby="mobile-menu" aria-hidden="true">
+	<div id="mobile-navigation" class="mobile-navigation__nav" role="dialog" aria-modal="true" aria-labelledby="mobile-menu" aria-hidden="true" tabindex="-1" inert>
 		<div class="mobile-navigation__controls">
 			<!-- Close (X) - visible on main menu -->
 			<button class="mobile-navigation__close" type="button" aria-label="Close menu">
@@ -272,18 +273,19 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 				<span class="screen-reader-text">Back</span>
 			</button>
 		</div>
-		
+
+		<nav aria-label="Mobile">
 		<ul class="mobile-navigation__list">
 			<li class="mobile-navigation__item">
 				<a href="<?php echo esc_url( home_url() ); ?>"
-				class="mobile-navigation__link" title="Go to the Take Survey section">
+				class="mobile-navigation__link" title="Home">
 				Home
 				</a>
 			</li>
 			<li class="mobile-navigation__item">
-				<a href="<?php echo is_front_page() ? '#take-survey' : esc_url( home_url( '/#take-survey' ) ); ?>"
-				class="mobile-navigation__link" title="Go to the Take Survey section">
-				Take Survey
+				<a href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer"
+				class="mobile-navigation__link" title="Take the NSVSP survey (opens in a new tab)">
+				Take Survey<span class="screen-reader-text"> (opens in a new tab)</span>
 				</a>
 			</li>
 
@@ -306,7 +308,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 							type="button"
 							aria-label="Open Resources categories"
 							aria-expanded="false"
-							data-submenu="mobile-submenu-resources">
+							aria-controls="mobile-submenu-resources" data-submenu="mobile-submenu-resources">
 					<?php echo svg_icon('mobile-navigation__chevron', 'chevron-right'); ?>
 					</button>
 				</div>
@@ -322,7 +324,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 							type="button"
 							aria-label="Open Glossary categories"
 							aria-expanded="false"
-							data-submenu="mobile-submenu-glossary">
+							aria-controls="mobile-submenu-glossary" data-submenu="mobile-submenu-glossary">
 					<?php echo svg_icon('mobile-navigation__chevron', 'chevron-right'); ?>
 					</button>
 				</div>
@@ -338,7 +340,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 							type="button"
 							aria-label="Open FAQs categories"
 							aria-expanded="false"
-							data-submenu="mobile-submenu-faqs">
+							aria-controls="mobile-submenu-faqs" data-submenu="mobile-submenu-faqs">
 					<?php echo svg_icon('mobile-navigation__chevron', 'chevron-right'); ?>
 					</button>
 				</div>
@@ -352,10 +354,10 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 
 			<li class="mobile-navigation__item">
 				<form class="mobile-navigation__search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<?php echo svg_icon('mobile-navigation__icon', 'search'); ?>
+
 				<input type="search" name="s" placeholder="Search" aria-label="Search">
 				<button type="submit" aria-label="Submit search">
-					<span class="screen-reader-text">Search</span>
+					<?php echo svg_icon('search__icon', 'search'); ?><span class="screen-reader-text">Search</span>
 				</button>
 				</form>
 			</li>
@@ -453,5 +455,5 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 			<?php endif; ?>
 		</div>
 	</nav>
-
+	</div>
 </div>

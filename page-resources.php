@@ -9,7 +9,7 @@
 get_header();
 ?>
 
-<main id="single-page" class="site-main single-page">
+<main id="single-page" class="site-main single-page" tabindex="-1">
   <div class="single-page__container">
 
     <?php
@@ -57,6 +57,7 @@ get_header();
           // Query Resources (posts) in this category
           $resources_in_cat = new WP_Query( array(
             'post_type'      => 'post',          // your "Resources" are posts with relabeled UI
+            'no_found_rows'  => true,
             'posts_per_page' => -1,              // show all for now
             'orderby'        => 'date',
             'order'          => 'DESC',
@@ -108,7 +109,7 @@ get_header();
                     </p>
 
                     <a href="<?php the_permalink(); ?>" class="btn">
-                      Learn More
+                      Learn More<span class="screen-reader-text"> about <?php the_title(); ?></span>
                     </a>
                   </article>
                   <?php
@@ -236,7 +237,7 @@ get_header();
       ?>
 
       <aside class="downloads">
-        <h4 class="h4__heading">Resource Spotlight</h4>
+        <h2 class="h4__heading">Resource Spotlight</h2>
 
         <?php if ( ! empty( $spotlight_items ) ) : ?>
 

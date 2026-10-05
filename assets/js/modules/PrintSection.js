@@ -1,123 +1,38 @@
-import $ from 'jquery';
-
-/**
- * PrintSection
- * ------------
- * Prints ONLY a target section (e.g. #glossary or #faqs)
- * using a hidden iframe.
- *
- * NO popups
- * NO new tabs
- * NO popup blockers
- *
- * Expected markup:
- * <a href="#" class="js-print-section" data-print="#glossary">Print this section</a>
- * <a href="#" class="js-print-section" data-print="#faqs">Print this section</a>
- */
 export default function initPrintSection() {
-  $(document).on('click', '.js-print-section', function (e) {
-    e.preventDefault();
-
-    const selector = $(this).data('print'); // "#glossary" or "#faqs"
-    if (!selector) return;
-
-    const $section = $(selector);
-    if (!$section.length) {
-      console.warn('[PrintSection] Target not found:', selector);
-      return;
-    }
-
-    const html = buildPrintHtml($section);
-    printViaIframe(html);
+  document.addEventListener('click', event => {
+    const link = event.target.closest('.js-print-section');
+    if (!link) return;
+    const section = document.querySelector(link.dataset.print);
+    if (!section) return;
+    event.preventDefault();
+    const clone = section.cloneNode(true);
+    clone.querySelectorAll('details').forEach(item => item.open = true);
+    clone.querySelectorAll('.js-print-section,.glossary__letters,.glossary__letter-bar').forEach(item => item.remove());
+    const iframe = document.createElement('iframe');
+    iframe.id = 'print-section-iframe';
+    iframe.title = 'Printable section';
+    iframe.setAttribute('aria-hidden', 'true');
+    iframe.style.cssText = 'position:fixed;width:0;height:0;border:0;visibility:hidden';
+    const logo = document.querySelector('.custom-logo-link');
+    const stylesheet = document.querySelector('#bjansvsp_main_styles-css');
+    const base = stylesheet ? new URL('.', stylesheet.href).href : location.href;
+    const fontCss = [...document.styleSheets].flatMap(sheet => {
+      try { return [...sheet.cssRules].filter(rule => rule.type === CSSRule.FONT_FACE_RULE).map(rule => rule.cssText); }
+      catch (_) { return []; }
+    }).join('\n');
+    iframe.onload = async () => {
+      await iframe.contentDocument.fonts.ready;
+      await Promise.all([...iframe.contentDocument.images].map(img => img.decode().catch(() => {})));
+      iframe.contentWindow.addEventListener('afterprint', () => iframe.remove(), {once: true});
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    };
+    iframe.srcdoc = `<!doctype html><html lang="${escapeHtml(document.documentElement.lang)}"><head><meta charset="utf-8"><base href="${escapeHtml(base)}"><title>${escapeHtml(document.title)} — Print</title><style>${fontCss}\n${getPrintCss()}</style></head><body><header class="print-header">${logo?.outerHTML || escapeHtml(document.title)}</header><main class="print-content">${clone.outerHTML}</main></body></html>`;
+    document.getElementById('print-section-iframe')?.remove();
+    document.body.appendChild(iframe);
   });
 }
 
-/**
- * Build the full printable HTML document
- */
-function buildPrintHtml($section) {
-  const $clone = $section.clone(true, true);
-
-  // FAQs: force all answers open
-  $clone.find('details').attr('open', true);
-
-  // Hide print links inside printed content
-  $clone.find('.js-print-section').attr('data-print-hide', 'true');
-
-  // Optional: hide glossary letter bar
-  $clone.find('.glossary__letters, .glossary__letter-bar')
-    .attr('data-print-hide', 'true');
-
-  // Grab WP logo if present
-  const $logo = $('.custom-logo-link').first();
-  const logoHtml = $logo.length
-    ? $logo.clone(true, true).prop('outerHTML')
-    : '';
-
-  const pageTitle = document.title || 'NSVSP';
-  const printedOn = new Date().toLocaleDateString();
-
-  return `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>${escapeHtml(pageTitle)} — Print</title>
-  <style>${getPrintCss()}</style>
-</head>
-<body>
-  <header class="print-header">
-    <div class="print-header__left">
-      ${logoHtml || `<div class="print-header__title">${escapeHtml(pageTitle)}</div>`}
-    </div>
-    <div class="print-header__right">
-      <div class="print-header__meta">Printed on ${escapeHtml(printedOn)}</div>
-    </div>
-  </header>
-
-  <main class="print-content">
-    ${$clone.prop('outerHTML') || ''}
-  </main>
-</body>
-</html>`;
-}
-
-/**
- * Print using a hidden iframe (popup-proof)
- */
-function printViaIframe(html) {
-  // Remove any existing print iframe
-  const existing = document.getElementById('print-section-iframe');
-  if (existing) existing.remove();
-
-  const iframe = document.createElement('iframe');
-  iframe.id = 'print-section-iframe';
-  iframe.style.position = 'fixed';
-  iframe.style.right = '0';
-  iframe.style.bottom = '0';
-  iframe.style.width = '0';
-  iframe.style.height = '0';
-  iframe.style.border = '0';
-  iframe.style.visibility = 'hidden';
-
-  // Write full document via srcdoc
-  iframe.srcdoc = html;
-
-  document.body.appendChild(iframe);
-
-  iframe.onload = () => {
-    try {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-    } catch (err) {
-      console.error('[PrintSection] iframe print failed:', err);
-    }
-  };
-}
-
-/**
- * Print-only CSS (clean handout style)
- */
 function getPrintCss() {
   return `
     :root {
@@ -132,7 +47,7 @@ function getPrintCss() {
       margin: 0;
       padding: 0;
       color: var(--print-text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: 'Roboto', Arial, sans-serif;
     }
 
     .h2__icon{
@@ -181,6 +96,8 @@ function getPrintCss() {
     }
 
     /* Typography */
+    h1, h2, h3, h4 { font-family: 'Open Sans', Arial, sans-serif; }
+    .faq__answer { display: block; max-height: none; opacity: 1; }
     h1 { font-size: 22px; margin: 0 0 10px; }
     h2 { font-size: 18px; margin: 18px 0 10px; }
     h3 { font-size: 15px; margin: 14px 0 6px; }

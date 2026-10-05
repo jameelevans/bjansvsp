@@ -3,7 +3,8 @@
 .header {
   overflow: visible !important;
   transform: none !important;
-  background-image: radial-gradient(
+  background-image:
+    radial-gradient(
       circle at bottom center,
       rgba(255, 255, 255, 1) 0%,
       /* solid white center */ rgba(255, 255, 255, 0.95) 35%,
@@ -16,7 +17,8 @@
   background-repeat: no-repeat;
 
   @include mixins.respond(medium) {
-    background-image: radial-gradient(
+    background-image:
+      radial-gradient(
         circle at bottom right,
         rgba(255, 255, 255, 1) 0%,
         /* solid white center */ rgba(255, 255, 255, 0.95) 25%,
@@ -43,6 +45,8 @@
   }
 
   &__container > a {
+    width: 100%;
+    min-width: 0;
     grid-column: 2;
     justify-self: end;
   }
@@ -85,11 +89,50 @@
   }
 }
 
+// Remove header--new-design from header.php to restore the original artwork.
+// Backgrounds only: keep the existing header height and logo placement.
+.header--new-design {
+  background-color: #f1eff7;
+  background-image:
+    linear-gradient(to top, #ffffff 0%, rgba(255, 255, 255, 0) 35%),
+    url(assets/img/nsvsp-header-left.svg),
+    url(assets/img/nsvsp-header-network.svg),
+    linear-gradient(to right, #ffffff 0%, #f1eff7 100%);
+  background-position:
+    center,
+    -135px top,
+    right top,
+    center;
+  background-repeat: no-repeat;
+  // Keep the wave above the centered logo on phones and narrow tablets.
+  background-size:
+    100% 100%,
+    auto 100px,
+    auto 100%,
+    100% 100%;
+
+  @include mixins.respond(medium) {
+    // Keep the white fade limited to the centered mobile header layout.
+    background-image:
+      url(assets/img/nsvsp-header-left.svg),
+      url(assets/img/nsvsp-header-network.svg),
+      linear-gradient(to right, #ffffff 0%, #f1eff7 100%);
+    background-position:
+      -135px top,
+      right top,
+      center;
+    background-size:
+      auto 100%,
+      auto 100%,
+      100% 100%;
+  }
+}
+
 .navbar {
   position: sticky;
   top: 0;
   background-color: var(--color-white);
-  backdrop-filter: saturate(180%) blur(4px);
+  // Opaque background does not need an expensive backdrop filter.
   box-shadow: none;
   width: 100%;
   border-top: none;
@@ -154,7 +197,7 @@
     &:hover,
     &:active,
     &:focus {
-      background-color: var(--color-orange);
+      background-color: var(--color-orange-text);
     }
   }
 
@@ -198,7 +241,7 @@
 
     &:hover,
     &:focus {
-      color: var(--color-orange);
+      color: var(--color-orange-text);
       text-decoration: none;
     }
 
@@ -261,20 +304,22 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.22s ease,
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.22s ease,
     visibility 0s linear 0.22s; /* hide after fade */
   will-change: transform, opacity;
 }
 
 /* Show on hover/focus of the parent menu item + JS .is-open */
-.nav__li:hover > .nav-dropdown,
-.nav__li:focus-within > .nav-dropdown,
 .nav__li.is-open > .nav-dropdown {
   transform: scaleY(1);
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.22s ease,
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.22s ease,
     visibility 0s; /* show immediately */
 }
 
@@ -283,35 +328,18 @@
   /* slight stagger entrance without changing spacing */
   opacity: 0;
   transform: translateY(-4px);
-  transition: transform 0.22s ease, opacity 0.22s ease;
+  transition:
+    transform 0.22s ease,
+    opacity 0.22s ease;
 
   &:not(:last-child) {
     /* border-bottom: 1px solid rgba(0,0,0,.06); */
   }
 }
 
-.nav__li:hover > .nav-dropdown .nav-dropdown__item,
-.nav__li:focus-within > .nav-dropdown .nav-dropdown__item,
 .nav__li.is-open > .nav-dropdown .nav-dropdown__item {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* small stagger for polish */
-.nav-dropdown__item:nth-child(1) {
-  transition-delay: 0.02s;
-}
-.nav-dropdown__item:nth-child(2) {
-  transition-delay: 0.06s;
-}
-.nav-dropdown__item:nth-child(3) {
-  transition-delay: 0.1s;
-}
-.nav-dropdown__item:nth-child(4) {
-  transition-delay: 0.14s;
-}
-.nav-dropdown__item:nth-child(5) {
-  transition-delay: 0.18s;
 }
 
 .nav-dropdown__link {
@@ -340,7 +368,7 @@
 
   &:hover,
   &:focus {
-    color: var(--color-orange); /* stay black on hover */
+    color: var(--color-orange-text); /* stay black on hover */
   }
 
   &:hover::before,
@@ -350,7 +378,7 @@
 }
 
 /* Optional: keep dropdown off on mobile since you have a mobile nav */
-@media (max-width: 900px) {
+@media (max-width: 699px) {
   .nav-dropdown {
     display: none !important;
   }
@@ -408,7 +436,7 @@
   padding: 0 1rem;
   font-size: 1.6rem;
   color: var(--color-dark-grey);
-  outline: none;
+
   background: transparent;
 }
 
@@ -426,511 +454,154 @@
   cursor: pointer;
 }
 
-////// Mobile navigation styles
+
+// Mobile dialog uses opacity and small translations, without moving the page.
 .mobile-navigation {
   display: block;
   position: relative;
   text-align: center;
   margin-top: 7.5rem;
-
-  @include mixins.respond(smlmd) {
-    display: none;
-    text-align: center;
-    margin-top: 0;
-  }
-  // Mobile menu outer grey box
+  @include mixins.respond(smlmd) { display: none; margin-top: 0; }
+  [hidden] { display: none !important; }
   &__menu {
     position: absolute;
-    background-color: var(--color-white);
-    border: 2px solid var(--color-grey);
-    height: 7rem;
-    width: 7rem;
-    border-radius: 3px;
     top: -4rem;
     left: 50%;
     transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    width: 7rem;
+    height: 7rem;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    background: var(--color-white);
+    border: 2px solid var(--color-grey);
+    border-radius: 3px;
     cursor: pointer;
-    box-shadow: none;
-
-    &:focus {
-      outline: 2px dashed var(--color-purple);
-      outline-offset: 1rem;
-    }
   }
-
-  //Mobile menu icon
-  &__icon {
-    position: absolute;
-    top: 0;
-
-    @include mixins.respond(medium) {
-      display: none;
-    }
-
-    //Mobile menu base styles for two icon lines
-    &::before,
-    &::after {
-      width: 4.5rem;
-      height: 3px;
-      border-radius: 1px;
-      background-color: var(--color-purple);
-      display: inline-block;
-    }
-
-    //Content must be set empty for sudo elements
-    &::before,
-    &::after {
+  &__menu-icon {
+    position: relative;
+    display: block;
+    width: 4.5rem;
+    height: 1.8rem;
+    &::before, &::after {
       content: '';
       position: absolute;
-      left: -2rem;
-      transition: all 0.3s ease-in-out;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      border-radius: 1px;
+      background: var(--color-purple);
     }
-
-    //Individual positioining for 1st and 3rd icon lines
-    &::before {
-      top: 2.5rem;
-    }
-
-    &::after {
-      top: 4rem;
-    }
+    &::before { top: 0; }
+    &::after { bottom: 0; }
   }
-
-  &__checkbox {
-    display: none;
-  }
-
-  &__button {
-    position: absolute;
-    height: 7rem;
-    width: 7rem;
-    border-radius: 3px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2000;
-    cursor: pointer;
-    box-shadow: none;
-  }
-
-  &__background {
-    height: 6rem;
-    width: 6rem;
-    border-radius: 5%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: transparent;
-    z-index: 1000;
-    transition: all 0.8s cubic-bezier(0.86, 0, 0.07, 1);
-
-    &--is-scrolled {
-      position: fixed !important;
-      top: 3.5rem !important;
-    }
-  }
-
-  ////////////// Mobile navigation wrapper - Initially hidden
   &__nav {
-    height: 100%;
-    width: 100%;
     position: fixed;
-    top: 0;
-    background: var(--color-pale-aqua);
-    right: 0;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
     z-index: 1500;
-    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    background: var(--color-pale-aqua);
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
     opacity: 0;
     visibility: hidden;
-    pointer-events: none; // 🔹 can't be clicked when hidden
-  }
-
-  &__nav--is-visible {
-    opacity: 1;
-    width: 100%;
-    top: 0;
-    visibility: visible;
-    pointer-events: auto; // 🔹 now catches all clicks
-  }
-
-  .mobile-navigation__current-page {
-    background-position: 100% !important;
-    font-weight: 500 !important;
-    color: var(--color-black) !important;
-    background-color: var(--color-teal) !important;
-  }
-
-  &__close {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    height: 8rem;
-    width: 8rem;
-    border-radius: 50%;
-    background-color: var(--color-purple);
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
-    &:focus-visible {
-      outline: 2px dashed var(--color-white);
-      outline-offset: 3px;
-    }
-  }
-
-  &__x {
-    display: block;
-    width: 4rem;
-    height: 4rem;
-    fill: var(--color-white);
-  }
-
-  // Mobile list
-  &__list {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    width: 100%;
-    transform: translate(-50%, -50%);
-    list-style: none;
-    text-align: center;
-  }
-
-  // Mobile list items
-  &__item {
-    .mobile-navigation__icon {
-      fill: var(--color-dark-grey);
-      position: absolute;
-      right: 12px; // move slightly away from edge
-      top: 50%; // center vertically
-      transform: translateY(-50%);
-      width: 18px;
-      height: 18px;
-      pointer-events: none; // so it doesn’t block clicks on the input
-      z-index: 2;
-    }
-    &:not(:last-of-type) {
-      margin-block-end: 3rem;
-    }
-  }
-
-  // Mobile links
-  &__link {
-    &:link,
-    &:visited {
-      display: inline-block;
-      font-size: 2.5rem;
-      font-weight: 300;
-      //width: 100%;
-      padding: 1rem 2rem;
-      color: var(--color-black);
-      background-color: transparent;
-      text-decoration: none;
-      transition: all 0.4s;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-position: 100%;
-      font-weight: 500;
-      color: var(--color-black);
-      background-color: var(--color-teal);
-      transform: translateX(1rem);
-    }
-  }
-
-  &__search {
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--color-grey);
-    height: 6rem;
-    width: 40rem;
-    position: relative;
-  }
-
-  &__search input {
-    height: 100%;
-    width: 100%;
-    border: none;
-    padding: 0 1rem;
-    font-size: 1.6rem;
-    outline: none;
-  }
-
-  &__search input::placeholder {
-    color: rgba(var(--color-dark-grey-a), 0.5);
-  }
-
-  &__search button {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    background: none;
-    border: none;
-    padding: 0 1rem;
-    cursor: pointer;
-  }
-
-  //FUNCTIONALITY
-  &__checkbox:checked ~ &__background {
-    transform: scale(60);
-    background-color: var(--color-blue);
-  }
-
-  &__checkbox:checked ~ &__nav {
-    opacity: 1;
-    width: 100%;
-    top: 0;
-    visibility: visible;
-  }
-
-  //When checkbox is selected --> slecte its sibling, then select the buttons child (icon) then remove middle icon line
-  &__checkbox:checked + &__button &__icon {
-    background-color: transparent;
-  }
-
-  //Rotate top icon line on menu click
-  &__checkbox:checked + &__button &__icon::before {
-    top: 3rem;
-    transform: rotate(135deg);
-  }
-
-  //Rotate bottom icon line on menu click
-  &__checkbox:checked + &__button &__icon::after {
-    top: 3rem;
-    transform: rotate(-135deg);
-  }
-
-  /* ---------------------------------------------------------
-   Toggle visibility of Close / Back buttons via aria-hidden
-   ---------------------------------------------------------
-   aria-hidden alone does NOT visually hide elements,
-   so we explicitly map aria-hidden state to display.
---------------------------------------------------------- */
-
-  .mobile-navigation__back[aria-hidden='true'],
-  .mobile-navigation__close[aria-hidden='true'] {
-    display: none;
-  }
-
-  /* =========================================================
-   MOBILE SLIDE-IN SUBMENUS (Level 2 panels)
-   ---------------------------------------------------------
-   Goal:
-   - Tap chevron on a parent item -> submenu slides in from right
-   - Main menu stays underneath (blur/dim) and becomes non-interactive
-   - Back button appears in the same location as the Close (X) button
-   - Uses ARIA state (aria-hidden="false") to determine which submenu is active
-   ========================================================= */
-
-  /* ---------------------------------------------------------
-   CONTROLS (Close + Back)
-   ---------------------------------------------------------
-   This wrapper sits at the top of the mobile panel.
-   We set pointer-events: none so it doesn't block clicks on the menu,
-   and then re-enable pointer-events on the actual buttons.
---------------------------------------------------------- */
-  &__controls {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 12rem; /* reserve space so list doesn’t collide with buttons */
-    z-index: 5; /* above menus */
     pointer-events: none;
+    transition: opacity .18s ease, visibility .18s;
+    &--is-visible { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .18s ease; }
+    > nav { min-height: 100%; }
   }
-
-  /* Ensure the Close button remains clickable inside the pointer-events: none wrapper */
-  &__close {
-    pointer-events: auto;
-  }
-
-  /* Back button mirrors the Close button positioning + style */
-  &__back {
+  &__controls { position: absolute; top: 0; right: 0; left: 0; z-index: 5; pointer-events: none; }
+  &__close, &__back {
     position: absolute;
-    top: 2rem;
-    right: 2rem;
-    height: 8rem;
-    width: 8rem;
-    border-radius: 50%;
-    background-color: var(--color-purple);
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    pointer-events: auto;
-
-    /* Keyboard accessibility */
-    &:focus-visible {
-      outline: 2px dashed var(--color-white);
-      outline-offset: 3px;
-    }
-
-    /* Icon sizing */
-    svg {
-      width: 4rem;
-      height: 4rem;
-      fill: var(--color-white);
-      transform: translateX(-3px);
-    }
-  }
-
-  /* ---------------------------------------------------------
-   MAIN MENU ROWS (Parent link + chevron button)
-   --------------------------------------------------------- */
-  &__row {
-    //display: grid;
-    //grid-template-columns: 1fr auto;
-    align-items: center;
-    position: relative;
-    width: 100%;
-  }
-
-  /* Chevron “open submenu” button */
-  &__submenu-toggle {
-    height: 6rem;
+    top: max(2rem, env(safe-area-inset-top));
+    right: max(2rem, env(safe-area-inset-right));
+    display: grid;
+    place-items: center;
     width: 6rem;
-    border-radius: 50%;
+    height: 6rem;
+    min-width: 44px;
+    min-height: 44px;
     border: none;
-    position: absolute;
-    right: 10rem;
-    background: transparent;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-purple);
+    color: var(--color-white);
     cursor: pointer;
-
-    svg {
-      width: 3rem;
-      height: 3rem;
-      fill: var(--color-purple);
-    }
-
-    &:focus-visible {
-      outline: 2px dashed var(--color-purple);
-      outline-offset: 6px;
-    }
+    pointer-events: auto;
   }
-
-  /* ---------------------------------------------------------
-   SUBMENU LAYER (holds the 3 different submenu <ul>s)
-   ---------------------------------------------------------
-   This container sits on top of the main list.
-   We keep it non-interactive until submenu-open state is active.
---------------------------------------------------------- */
-  &__submenus {
-    position: absolute;
-    inset: 0; /* top/right/bottom/left: 0 */
-    z-index: 4;
-    pointer-events: none;
-  }
-
-  /* ---------------------------------------------------------
-   SUBMENU PANELS (each <ul> panel)
-   ---------------------------------------------------------
-   Default: off-canvas to the right
-   Active: translateX(0) so it slides into view
---------------------------------------------------------- */
-  &__submenu {
-    position: absolute;
-    inset: 0;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    /* Match your main list layout (centered vertically) */
+  &__x, &__chevron-left { width: 3rem; height: 3rem; fill: currentColor; }
+  &__list, &__submenu {
     display: flex;
     flex-direction: column;
+    gap: .8rem;
+    list-style: none;
+    padding: 10rem 2rem max(3rem, env(safe-area-inset-bottom));
+    margin: 0 auto;
+    width: 100%;
+    max-width: 44rem;
+    min-height: 100vh;
+    min-height: 100dvh;
+    text-align: center;
     justify-content: center;
-
-    /* Slide-in animation */
-    transform: translateX(100%);
-    transition: transform 0.35s ease;
-
-    /* Only active submenu should be clickable */
+  }
+  &__list { transition: opacity .18s ease; }
+  &__nav--submenu-open &__list { opacity: 0; pointer-events: none; }
+  &__row { display: flex; align-items: center; justify-content: center; gap: .8rem; }
+  &__link, &__sublink {
+    display: inline-block;
+    padding: 1rem 1.4rem;
+    min-height: 44px;
+    font-size: 2.5rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--color-black);
+    text-decoration: none;
+    border-radius: 3px;
+    transition: background-color .18s ease;
+    &:hover { background: rgba(255,255,255,.5); }
+  }
+  &__submenu-toggle {
+    display: grid;
+    place-items: center;
+    min-width: 44px;
+    min-height: 44px;
+    border: 0;
+    border-radius: 3px;
+    background: transparent;
+    color: var(--color-black);
+    cursor: pointer;
+    &:hover { background: rgba(255,255,255,.5); }
+  }
+  &__chevron { width: 2rem; height: 2rem; fill: currentColor; }
+  &__search {
+    margin: 1rem auto 0;
+    position: relative;
+    width: 100%;
+    max-width: 40rem;
+    height: 6rem;
+    input { width: 100%; height: 100%; border: 1px solid var(--color-dark-grey); border-radius: 3px; padding: 0 52px 0 12px; font: inherit; font-size: 16px; }
+    button { position: absolute; right: 0; top: 0; height: 100%; width: 44px; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+    .search__icon { position: static; width: 18px; height: 18px; fill: var(--color-dark-grey); }
+  }
+  &__submenus { position: absolute; inset: 0; pointer-events: none; }
+  &__submenu {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(calc(-50% + 12px));
+    opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-
-    /* Same background as the mobile nav so it feels like a new “screen” */
-    background: var(--color-pale-aqua);
-
-    /* ACTIVE STATE:
-     Instead of relying on a class, we use aria-hidden="false"
-     because your JS is already toggling that attribute correctly. */
-    &[aria-hidden='false'] {
-      transform: translateX(0);
-      pointer-events: auto;
-    }
-  }
-
-  /* Submenu items spacing (slightly tighter so long category lists fit better) */
-  &__submenu-item {
-    margin-block-end: 2.5rem;
-  }
-
-  /* Submenu links mirror the main menu link styling */
-  &__sublink {
-    &:link,
-    &:focus,
-    &:visited {
-      display: inline-block;
-      font-size: 2.5rem;
-      font-weight: 300;
-      padding: 1rem 2rem;
-      color: var(--color-black);
-      background-color: transparent;
-      text-decoration: none;
-      transition: all 0.4s;
-      text-align: center;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      font-weight: 500;
-      color: var(--color-black);
-      background-color: var(--color-teal);
-      transform: translateX(1rem);
-    }
-  }
-
-  /* ---------------------------------------------------------
-   SUBMENU-OPEN MODE
-   ---------------------------------------------------------
-   The JS adds `.mobile-navigation__nav--submenu-open` to the panel.
-   In this mode:
-   - Main menu stays visible but blurred/dimmed
-   - Main menu becomes non-interactive
-   - Submenu layer becomes interactive
---------------------------------------------------------- */
-  &__nav--submenu-open {
-    .mobile-navigation__list {
-      filter: blur(2px);
-      opacity: 0.35;
-      pointer-events: none;
-    }
-
-    .mobile-navigation__submenus {
-      pointer-events: auto;
-    }
-  }
-
-  /* ---------------------------------------------------------
-   REDUCED MOTION
-   ---------------------------------------------------------
-   Respect user motion preferences by removing transitions.
---------------------------------------------------------- */
-  @media (prefers-reduced-motion: reduce) {
-    &__submenu {
-      transition: none !important;
-    }
+    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+    &[aria-hidden='false'] { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%); }
   }
 }
+
+.navbar .search { min-width: 0; }
+.navbar .search input { min-width: 0; font-size: 16px; }
+.navbar .search button { min-width: 44px; min-height: 44px; justify-content: center; padding: 0; }
+.navbar .search button .search__icon { position: static; transform: none; }

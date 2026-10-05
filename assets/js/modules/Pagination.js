@@ -21,6 +21,7 @@ class Pagination {
 
     // Capture helps if other handlers stop propagation
     document.addEventListener('click', this.onClick, true);
+    history.replaceState({...history.state, nsvspResources: true}, '', location.href);
     window.addEventListener('popstate', this.onPopState);
   }
 
@@ -39,7 +40,7 @@ class Pagination {
   onClick(e) {
     // Find the nearest <a>, then ensure it lives inside .pagination
     const link = e.target.closest('a');
-    if (!link || !this.pagination.contains(link)) return;
+    if (!link || !this.pagination || !this.pagination.contains(link)) return;
 
     // allow new tab / middle click / modifiers
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
@@ -48,10 +49,9 @@ class Pagination {
     this.navigate(link.href);
   }
 
-  onPopState() {
+  onPopState(event) {
     // Only handle history events that involve pagination
-    const qs = window.location.search || '';
-    if (!/[?&](paged|page)=\d+/.test(qs)) return;
+    if (!event.state?.nsvspResources) return;
     this.navigate(window.location.href, { push: false });
   }
 
@@ -61,17 +61,20 @@ class Pagination {
 
     try {
       // Fetch the new page (hash is ignored by the network, so href is fine)
-      const html = await fetch(href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).then(r => r.text());
+      const html = await fetch(href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).then(r => { if (!r.ok) throw new Error('Request failed'); return r.text(); });
       const doc  = new DOMParser().parseFromString(html, 'text/html');
 
       const nextContainer  = doc.querySelector(this.containerSel);
       const nextPagination = doc.querySelector(this.paginationSel);
 
-      if (nextContainer) this.container.replaceWith(nextContainer);
+      if (!nextContainer) throw new Error('Missing resource list');
+      this.container.replaceWith(nextContainer);
       if (nextPagination) {
         const existingPag = document.querySelector(this.paginationSel);
         if (existingPag) existingPag.replaceWith(nextPagination);
       }
+
+      if (!nextPagination) this.pagination?.remove();
 
       // refresh refs after swap
       this.container  = document.querySelector(this.containerSel);
@@ -85,13 +88,13 @@ class Pagination {
       if (push) {
         const u = new URL(href, window.location.origin);
         u.hash = this.sectionId.replace('#', '');
-        history.pushState({}, '', u.toString());
+        history.pushState({nsvspResources: true}, '', u.toString());
       }
 
       // focus + scroll for accessibility & UX
       const section = document.querySelector(this.sectionId);
       if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        section.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
         this.container?.setAttribute('tabindex', '-1');
         this.container?.focus({ preventScroll: true });
       }

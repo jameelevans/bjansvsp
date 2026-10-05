@@ -10,13 +10,13 @@
     <footer class="footer">
         <div class="footer__top">
             <div class="footer__container">
-                <nav class="footer__nav">
+                <nav class="footer__nav" aria-label="Footer">
                 <ul class="footer__list">
-                    <li class="footer__item"><a href="#take-survey" class="footer__links">Take Survey</a></li>
-                    <li class="footer__item"><a href="#resources" class="footer__links">Resources</a></li>
-                    <li class="footer__item"><a href="#glossary" class="footer__links">Glossary</a></li>
-                    <li class="footer__item"><a href="#faqs" class="footer__links">FAQs</a></li>
-                    <li class="footer__item"><a href="#contact-us" class="footer__links">Contact Us</a></li>
+                    <li class="footer__item"><a href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer" class="footer__links">Take Survey<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
+                    <li class="footer__item"><a href="<?php echo esc_url(home_url('/resources/')); ?>" class="footer__links">Resources</a></li>
+                    <li class="footer__item"><a href="<?php echo esc_url(home_url('/glossary/')); ?>" class="footer__links">Glossary</a></li>
+                    <li class="footer__item"><a href="<?php echo esc_url(home_url('/faqs/')); ?>" class="footer__links">FAQs</a></li>
+                    <li class="footer__item"><a href="<?php echo esc_url(home_url('/#contact-us')); ?>" class="footer__links">Contact Us</a></li>
                 </ul>
             </nav>
             </div>
@@ -32,8 +32,8 @@
                         elit. Sit amet consectetur adipiscing elit quisque faucibus ex.</p>
                     </div>
                 
-                    <div id="contact-us" class="contact">
-                        <h4 class="footer__h4">Contact Us</h4>
+                    <div id="contact-us" class="contact" tabindex="-1">
+                        <h2 class="footer__h4">Contact Us</h2>
                         <ul class="contact__list">
                             <li class="contact__item"><?php echo svg_icon('contact__icon', 'envelope');?> our-email@EMAIL.COM</li>
                             <li class="contact__item"><?php echo svg_icon('contact__icon', 'phone');?> (444)444-4444</li>
@@ -45,21 +45,33 @@
                 
             </div> 
             <div class="footer__container">
-                <p class="external-links"><a href="#">BJA.OJP.gov</a> | <a href="">Accessibility</a> | <a href="">Plain Language</a> | <a href="">Privacy Policy</a> | <a href="">Legal Policies and Disclaimer</a> | <a href="">No FEAR Act</a> | <a href="">Freedom of Information Act</a> | <a href="">USA.gov</a> | <a href="">Justice.gov</a>
-                    </p>
+                <p class="external-links">
+                  <?php
+                  $links = ['BJA.OJP.gov' => 'https://bja.ojp.gov/'];
+                  foreach (['accessibility' => 'Accessibility', 'plain-language' => 'Plain Language', 'legal' => 'Legal Policies and Disclaimer', 'no-fear' => 'No FEAR Act', 'foia' => 'Freedom of Information Act'] as $key => $label) {
+                    $url = get_theme_mod('bjansvsp_policy_' . $key);
+                    if ($url) $links[$label] = $url;
+                  }
+                  if (get_privacy_policy_url()) $links['Privacy Policy'] = get_privacy_policy_url();
+                  $links['USA.gov'] = 'https://www.usa.gov/';
+                  $links['Justice.gov'] = 'https://www.justice.gov/';
+                  $rendered = [];
+                  foreach ($links as $label => $url) $rendered[] = '<a href="' . esc_url($url) . '">' . esc_html($label) . '</a>';
+                  echo implode(' | ', $rendered);
+                  ?>
+                </p>
                 <div class="footer__logos">
-                    <a href=""><img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/DOJ-OJP-BJS-NSVSP-Logo.webp' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" alt=""></a>
-                    <a href=""><img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/us-office-of-justice-programs-logo.webp' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" alt=""></a>
-                    <a href=""><img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/bjs-bureau-of-justice-statistics-seeklogo.webp' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" alt=""></a>
-                    <a href=""><img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/ovc-logo.webp' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" alt=""></a>
-                    <a href=""><img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/icf-logo.webp' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" alt=""></a>
+                    <a href="<?php echo esc_url(home_url('/')); ?>"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/DOJ-OJP-BJS-NSVSP-Logo-footer.webp'); ?>" alt="National Survey of Victim Service Providers" width="293" height="100" loading="lazy" decoding="async"></a>
+                    <a href="https://www.ojp.gov/"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/us-office-of-justice-programs-logo-footer.webp'); ?>" alt="Office of Justice Programs" width="100" height="100" loading="lazy" decoding="async"></a>
+                    <a href="https://bjs.ojp.gov/"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/bjs-bureau-of-justice-statistics-seeklogo-footer.webp'); ?>" alt="Bureau of Justice Statistics" width="337" height="100" loading="lazy" decoding="async"></a>
+                    <a href="https://ovc.ojp.gov/"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/ovc-logo-footer.webp'); ?>" alt="Office for Victims of Crime" width="280" height="100" loading="lazy" decoding="async"></a>
+                    <a href="https://www.icf.com/"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/icf-logo-footer.webp'); ?>" alt="ICF" width="123" height="100" loading="lazy" decoding="async"></a>
                 </div>
             </div>
         </div>
             
             
             <a class="back-top" href="#top" aria-label="Go back to the top"><?php echo svg_icon('back-top__icon', 'up');?>Top</a>
-        </div>
         
     </footer>
   

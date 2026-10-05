@@ -1,29 +1,11 @@
-class BackTop {
-  constructor({ btnSel = '.back-top', headerSel = 'header' } = {}) {
-    this.btn = document.querySelector(btnSel);
-    this.header = document.querySelector(headerSel);
-
-    if (!this.btn || !this.header) return;
-
-    this.lastState = false;
-    this.events();
-  }
-
-  events() {
-    window.addEventListener('scroll', () => this.toggleVisibility());
-  }
-
-  toggleVisibility() {
-    const headerBottom = this.header.offsetTop + this.header.offsetHeight;
-    const scrollY = window.scrollY || window.pageYOffset;
-    const isPastHeader = scrollY > headerBottom;
-
-    // Add/remove class only when state changes
-    if (isPastHeader !== this.lastState) {
-      this.btn.classList.toggle('back-top--is-visible', isPastHeader);
-      this.lastState = isPastHeader;
-    }
+export default class BackTop {
+  constructor({btnSel = '.back-top', headerSel = '.header'} = {}) {
+    const button = document.querySelector(btnSel), header = document.querySelector(headerSel);
+    if (!button || !header) return;
+    this.observer = new IntersectionObserver(entries => {
+      const visible = entries[0].boundingClientRect.bottom < 0;
+      button.classList.toggle('back-top--is-visible', visible);
+    });
+    this.observer.observe(header);
   }
 }
-
-export default BackTop;

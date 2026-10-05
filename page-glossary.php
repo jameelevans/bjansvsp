@@ -9,7 +9,7 @@
 get_header();
 ?>
 
-<main id="single-page" class="site-main single-page">
+<main id="single-page" class="site-main single-page" tabindex="-1">
   <div class="single-page__container">
 
     <?php
@@ -134,9 +134,11 @@ get_header();
                 $href      = $has_terms ? '#' . $id_prefix . '-' . $L : '#';
                 $cls       = 'glossary__letter' . ( $has_terms ? '' : ' is-empty' );
 
-                echo '<a class="' . esc_attr( $cls ) . '" href="' . esc_url( $href ) . '" aria-disabled="' . ( $has_terms ? 'false' : 'true' ) . '">';
-                echo esc_html( $L );
-                echo '</a>';
+                if ($has_terms) {
+                  echo '<a class="' . esc_attr($cls) . '" href="' . esc_url($href) . '">' . esc_html($L) . '</a>';
+                } else {
+                  echo '<span class="' . esc_attr($cls) . '">' . esc_html($L) . '<span class="screen-reader-text"> (no terms)</span></span>';
+                }
               }
               echo '</div>';
 
@@ -161,9 +163,9 @@ get_header();
                       : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
                     ?>
                     <article class="glossary__item">
-                      <h4 class="glossary__heading">
+                      <h3 class="glossary__heading">
                         <?php echo esc_html( $title ); ?>
-                      </h4>
+                      </h3>
                       <p class="glossary__desc">
                         <?php echo esc_html( $desc ); ?>
                       </p>
@@ -192,9 +194,9 @@ get_header();
                       : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
                     ?>
                     <article class="glossary__item">
-                      <h4 class="glossary__heading">
+                      <h3 class="glossary__heading">
                         <?php echo esc_html( $title ); ?>
-                      </h4>
+                      </h3>
                       <p class="glossary__desc">
                         <?php echo esc_html( $desc ); ?>
                       </p>
@@ -242,9 +244,11 @@ get_header();
             $has_terms = ! empty( $groups[ $L ] );
             $href      = $has_terms ? '#glossary-' . $L : '#';
             $cls       = 'glossary__letter' . ( $has_terms ? '' : ' is-empty' );
-            echo '<a class="' . esc_attr( $cls ) . '" href="' . esc_url( $href ) . '" aria-disabled="' . ( $has_terms ? 'false' : 'true' ) . '">';
-            echo esc_html( $L );
-            echo '</a>';
+            if ($has_terms) {
+                  echo '<a class="' . esc_attr($cls) . '" href="' . esc_url($href) . '">' . esc_html($L) . '</a>';
+                } else {
+                  echo '<span class="' . esc_attr($cls) . '">' . esc_html($L) . '<span class="screen-reader-text"> (no terms)</span></span>';
+                }
           }
           echo '</div>';
 
@@ -265,7 +269,7 @@ get_header();
                 : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
 
               echo '<article class="glossary__item">';
-              echo '<h4 class="glossary__heading">' . esc_html( $title ) . '</h4>';
+              echo '<h3 class="glossary__heading">' . esc_html( $title ) . '</h3>';
               echo '<p class="glossary__desc">' . esc_html( $desc ) . '</p>';
               echo '</article>';
             }
@@ -284,7 +288,7 @@ get_header();
                 ? get_the_excerpt( $p )
                 : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
               echo '<article class="glossary__item">';
-              echo '<h4 class="glossary__heading">' . esc_html( $title ) . '</h4>';
+              echo '<h3 class="glossary__heading">' . esc_html( $title ) . '</h3>';
               echo '<p class="glossary__desc">' . esc_html( $desc ) . '</p>';
               echo '</article>';
             }
@@ -400,7 +404,7 @@ get_header();
     ?>
 
     <aside class="downloads">
-      <h4 class="h4__heading">Resource Spotlight</h4>
+      <h2 class="h4__heading">Resource Spotlight</h2>
 
       <?php if ( ! empty( $spotlight_items ) ) : ?>
 

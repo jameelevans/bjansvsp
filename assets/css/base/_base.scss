@@ -12,16 +12,13 @@
 html {
   box-sizing: border-box;
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 
   /* Adjust the offset for all anchored sections */
   [id] {
     scroll-margin-top: 9rem; /* adjust to match your navbar height */
   }
 
-  a:focus:not(.screen-reader-shortcut):not(.nav__survey .nav__item) {
-    outline: 2px dashed var(--color-purple);
-    outline-offset: 1rem;
-  }
 }
 
 body.no-scroll {
@@ -62,3 +59,29 @@ body.no-scroll {
 
 body {
 }
+
+html.menu-open { overflow: hidden; }
+.screen-reader-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+body :is(a, button, input, textarea, select, summary) {
+  &:focus-visible { outline: 2px solid var(--color-purple); outline-offset: 3px; }
+}
+button, input, textarea, select { font-family: inherit; }
+.archive-content { max-width: 144rem; margin: 0 auto; padding: 5rem 2rem; }
+.archive-resource { margin-block-end: 4rem; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+.single-page__main a:hover, .single-page__main a:focus-visible { color: var(--color-dark-teal); }

@@ -15,21 +15,19 @@
     cursor: pointer;
     text-align: center;
     border-radius: 0.3rem;
-    transition: all 0.3s ease-in-out;
+    transition: background-color .18s ease, color .18s ease;
     padding: 1.4rem 2.4rem;
     text-decoration: none;
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 400;
     margin-top: 2rem;
     background-color: var(--color-purple);
     color: var(--color-white);
   }
 
   &:hover {
-    transform: translateY(-0.3rem);
-    box-shadow: 0 1rem 2rem rgba(var(--color-black-a), 0.2);
-    transition: all 0.3s ease-in-out;
-    background-color: var(--color-orange);
+    transition: background-color .18s ease, color .18s ease;
+    background-color: var(--color-orange-text);
 
     &::after {
       transform: scaleX(1.4) scaleY(1.6);
@@ -39,9 +37,6 @@
 
   &:active,
   &:focus {
-    outline: none;
-    transform: translateY(-0.1rem);
-    box-shadow: 0 0.5rem 1rem rgba(var(--color-black-a), 0.2);
   }
 
   &--orange {
