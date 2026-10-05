@@ -63,7 +63,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 				<li class="nav__li nav__survey">
 					<a class="nav__item<?php echo is_front_page() ? ' current-page' : ''; ?>"
 					href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">
-					Take Survey<span class="screen-reader-text"> (opens in a new tab)</span>
+					Log In<span class="screen-reader-text"> (opens in a new tab)</span>
 					</a>
 				</li>
 
@@ -284,8 +284,8 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 			</li>
 			<li class="mobile-navigation__item">
 				<a href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer"
-				class="mobile-navigation__link" title="Take the NSVSP survey (opens in a new tab)">
-				Take Survey<span class="screen-reader-text"> (opens in a new tab)</span>
+				class="mobile-navigation__link" title="Log in to the NSVSP survey (opens in a new tab)">
+				Log In<span class="screen-reader-text"> (opens in a new tab)</span>
 				</a>
 			</li>
 

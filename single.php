@@ -232,7 +232,7 @@ get_header();
 
     <?php endif; ?>
 
-    <a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Take Survey<span class="screen-reader-text"> (opens in a new tab)</span></a>
+    <a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a>
   </aside>
 
 <?php endwhile; endif; ?>

@@ -17,7 +17,7 @@ get_header();
 				$home_content = get_post_field('post_content', $home_id);
 				echo esc_html( wp_strip_all_tags( $home_content ) );
 				?></p>
-				<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Take Survey<span class="screen-reader-text"> (opens in a new tab)</span></a>
+				<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a>
 			</section>
 			<section id="resources">
 				<h2 class="h2__heading"><a class="h2__link" href="<?php echo esc_url( home_url( '/resources' ) ); ?>" title="View all resources">Resources<?php echo svg_icon('h2__icon', 'link');?></a></h2>
@@ -215,7 +215,7 @@ get_header();
 		<aside class="side-nav">
 			<h2 class="h4__heading">On this page</h2>
 			<ul class="side-nav__list">
-				<li class="side-nav__item"><a class="side-nav__link" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Take Survey<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
+				<li class="side-nav__item"><a class="side-nav__link" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#resources">Resources</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#glossary">Glossary</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#faqs">FAQs</a></li>
@@ -226,7 +226,7 @@ get_header();
 					<span class="screen-reader-text">Search</span>
 				</button>
 			</form>
-			<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Take Survey<span class="screen-reader-text"> (opens in a new tab)</span></a>
+			<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a>
 		</aside>
 	</main>
 <?php get_footer(); ?>
