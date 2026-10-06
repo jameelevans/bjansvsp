@@ -65,7 +65,7 @@ $contact_phone_number = $contact_details['phone_number'];
             <div class="footer__container">
                 <p class="external-links">
                   <?php
-                  $links = ['BJA.OJP.gov' => 'https://bja.ojp.gov/'];
+                  $links = ['BJS.OJP.gov' => 'https://bjs.ojp.gov/'];
                   foreach (bjansvsp_footer_policy_links() as $key => $link) {
                     $url = get_theme_mod('bjansvsp_policy_' . $key, $link['url']);
                     if ($key === 'privacy' && get_privacy_policy_url()) $url = get_privacy_policy_url();
