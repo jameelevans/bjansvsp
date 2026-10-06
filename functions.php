@@ -14,6 +14,17 @@ function bjansvsp_show_home_sections() {
   return false;
 }
 
+// Temporary navigation visibility: set to true after the initial checks.
+// Menu markup and all standalone content pages are preserved.
+function bjansvsp_show_content_navigation() {
+  return false;
+}
+
+function bjansvsp_contact_url() {
+  $page = get_page_by_path('contact-us') ?: get_page_by_path('contact');
+  return $page ? get_permalink($page) : home_url('/contact-us/');
+}
+
 // * * --------| Actions and filters in order |-------- *
 
   // Action to enque styles and scripts
@@ -138,6 +149,19 @@ function bjansvsp_footer_defaults() {
     'bjansvsp_contact_phone' => '(227) 248-9484',
     'bjansvsp_contact_address' => '1902 Reston Metro Plaza | Reston, VA 20190',
   ];
+}
+
+// Both the contact page and footer read the same sanitized Customizer settings.
+function bjansvsp_contact_details() {
+  $defaults = bjansvsp_footer_defaults();
+  $details = [
+    'email' => sanitize_email(get_theme_mod('bjansvsp_contact_email', $defaults['bjansvsp_contact_email'])),
+    'phone' => sanitize_text_field(get_theme_mod('bjansvsp_contact_phone', $defaults['bjansvsp_contact_phone'])),
+    'address' => sanitize_textarea_field(get_theme_mod('bjansvsp_contact_address', $defaults['bjansvsp_contact_address'])),
+  ];
+  $details['phone_number'] = preg_replace('/[^0-9]/', '', $details['phone']);
+  if (strpos($details['phone'], '+') === 0) $details['phone_number'] = '+' . $details['phone_number'];
+  return $details;
 }
 
 // Permit text formatting without allowing client-entered layout or scripts.

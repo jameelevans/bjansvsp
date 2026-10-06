@@ -54,6 +54,8 @@
 $is_resources = is_page( 'resources' ) || is_singular( 'post' ) || is_category();
 $is_glossary  = is_page( 'glossary' );
 $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
+$show_content_navigation = bjansvsp_show_content_navigation();
+$is_contact = is_page_template('template-contact.php');
 ?>
 
 <div class="navbar">
@@ -72,6 +74,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						href="<?php echo esc_url( home_url( '/' ) ); ?>"<?php echo is_front_page() ? ' aria-current="page"' : ''; ?>>Home</a>
 				</li>
 
+				<?php if ($show_content_navigation) : ?>
 				<li class="nav__li nav__has-dropdown">
 					<a
 						<?php
@@ -234,9 +237,10 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 					<?php endif; ?>
 				</li>
 
+				<?php endif; ?>
 				<li class="nav__li">
-					<a class="nav__item"
-					href="<?php echo is_front_page() ? '#contact-us' : esc_url( home_url( '/#contact-us' ) ); ?>">
+					<a class="nav__item<?php echo $is_contact ? ' is-active' : ''; ?>"
+					href="<?php echo esc_url(bjansvsp_contact_url()); ?>"<?php echo $is_contact ? ' aria-current="page"' : ''; ?>>
 					Contact Us
 					</a>
 				</li>
@@ -303,6 +307,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 			 */
 			?>
 
+			<?php if ($show_content_navigation) : ?>
 			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
 				<div class="mobile-navigation__row">
 					<a class="mobile-navigation__link"
@@ -351,9 +356,10 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 					</button>
 				</div>
 			</li>
+			<?php endif; ?>
 			<li class="mobile-navigation__item">
-				<a href="<?php echo is_front_page() ? '#contact-us' : esc_url( home_url( '/#contact-us' ) ); ?>"
-				class="mobile-navigation__link" title="Go to the Contact Us section">
+				<a href="<?php echo esc_url(bjansvsp_contact_url()); ?>"
+				class="mobile-navigation__link" title="Contact Us">
 				Contact Us
 				</a>
 			</li>
@@ -370,6 +376,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 			</ul>
 
 		<div class="mobile-navigation__submenus" aria-hidden="true">
+			<?php if ($show_content_navigation) : ?>
 			<?php
 			// Resources submenu items
 			$resources_page = get_page_by_path( 'resources' );
@@ -458,6 +465,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 					</li>
 				<?php endforeach; ?>
 				</ul>
+			<?php endif; ?>
 			<?php endif; ?>
 		</div>
 	</nav>

@@ -1,0 +1,96 @@
+@use 'base/typography' as typography;
+
+// Override the standard two-column page grid for this sidebar-free template.
+#single-page.contact-page {
+  display: block;
+  max-width: 100rem;
+  padding: clamp(3rem, 5vw, 6.5rem) 2rem;
+}
+
+.contact-page {
+  &__intro {
+    max-width: 76rem;
+    margin-bottom: 3.5rem;
+
+    .h1__heading { margin-bottom: 1.8rem; }
+    p { color: var(--color-dark-grey); line-height: 1.6; }
+  }
+}
+
+.contact-card {
+  padding: clamp(2rem, 4vw, 4rem);
+  border: 1px solid rgba(var(--color-pale-aqua-a), .9);
+  border-top: 4px solid var(--color-purple);
+  border-radius: 1.6rem;
+  background: linear-gradient(135deg, var(--color-white), rgba(var(--color-pale-aqua-a), .3));
+  box-shadow: 0 1rem 3rem rgba(var(--color-dark-blue-a), .06);
+  color: var(--color-dark-blue);
+
+  &__eyebrow {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--color-purple);
+    margin-bottom: .8rem;
+  }
+
+  .h2__heading { color: var(--color-dark-blue); margin-bottom: 1rem; }
+
+  &__detail {
+    position: relative;
+    padding: 2.2rem 0 2.2rem 6.6rem;
+
+    &:not(:last-child) { border-bottom: 1px solid rgba(var(--color-dark-blue-a), .12); }
+    &:last-child { padding-bottom: 0; }
+
+    dt {
+      margin-bottom: .5rem;
+      font-family: typography.$font-secondary;
+      font-size: 1.8rem;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    dd {
+      font-size: clamp(1.9rem, 2vw, 2.2rem);
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    a {
+      display: inline-block;
+      min-height: 44px;
+      padding-block: .7rem;
+      color: var(--color-dark-teal);
+      text-underline-offset: .2em;
+      text-decoration-thickness: 1px;
+
+      &:hover { color: var(--color-dark-blue); }
+    }
+  }
+
+  &__icon-wrap {
+    position: absolute;
+    left: 0;
+    top: 2.2rem;
+    display: grid;
+    place-items: center;
+    width: 4.8rem;
+    height: 4.8rem;
+    border-radius: 50%;
+    background: rgba(var(--color-purple-a), .1);
+    color: var(--color-purple);
+  }
+
+  &__icon { width: 2rem; height: 2rem; fill: currentColor; }
+
+  @media (forced-colors: active) {
+    background: Canvas;
+    color: CanvasText;
+    border-color: CanvasText;
+    box-shadow: none;
+    &__icon-wrap { color: CanvasText; }
+    &__detail a { color: LinkText; }
+  }
+}

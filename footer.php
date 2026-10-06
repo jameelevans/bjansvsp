@@ -7,11 +7,11 @@
 
 $footer_defaults = bjansvsp_footer_defaults();
 $footer_disclaimer = get_theme_mod('bjansvsp_footer_text', $footer_defaults['bjansvsp_footer_text']);
-$contact_email = sanitize_email(get_theme_mod('bjansvsp_contact_email', $footer_defaults['bjansvsp_contact_email']));
-$contact_phone = sanitize_text_field(get_theme_mod('bjansvsp_contact_phone', $footer_defaults['bjansvsp_contact_phone']));
-$contact_address = sanitize_textarea_field(get_theme_mod('bjansvsp_contact_address', $footer_defaults['bjansvsp_contact_address']));
-$contact_phone_number = preg_replace('/[^0-9]/', '', $contact_phone);
-if (strpos($contact_phone, '+') === 0) $contact_phone_number = '+' . $contact_phone_number;
+$contact_details = bjansvsp_contact_details();
+$contact_email = $contact_details['email'];
+$contact_phone = $contact_details['phone'];
+$contact_address = $contact_details['address'];
+$contact_phone_number = $contact_details['phone_number'];
 ?>
     <!--Footer-->
     <footer class="footer">
@@ -21,10 +21,12 @@ if (strpos($contact_phone, '+') === 0) $contact_phone_number = '+' . $contact_ph
                 <ul class="footer__list">
                     <li class="footer__item"><a href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer" class="footer__links">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/')); ?>" class="footer__links"<?php echo is_front_page() ? ' aria-current="page"' : ''; ?>>Home</a></li>
+                    <?php if (bjansvsp_show_content_navigation()) : ?>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/resources/')); ?>" class="footer__links">Resources</a></li>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/glossary/')); ?>" class="footer__links">Glossary</a></li>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/faqs/')); ?>" class="footer__links">FAQs</a></li>
-                    <li class="footer__item"><a href="<?php echo esc_url(home_url('/#contact-us')); ?>" class="footer__links">Contact Us</a></li>
+                    <?php endif; ?>
+                    <li class="footer__item"><a href="<?php echo esc_url(bjansvsp_contact_url()); ?>" class="footer__links"<?php echo is_page_template('template-contact.php') ? ' aria-current="page"' : ''; ?>>Contact Us</a></li>
                 </ul>
             </nav>
             </div>
