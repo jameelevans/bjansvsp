@@ -64,11 +64,11 @@ if (strpos($contact_phone, '+') === 0) $contact_phone_number = '+' . $contact_ph
                 <p class="external-links">
                   <?php
                   $links = ['BJA.OJP.gov' => 'https://bja.ojp.gov/'];
-                  foreach (['accessibility' => 'Accessibility', 'plain-language' => 'Plain Language', 'legal' => 'Legal Policies and Disclaimer', 'no-fear' => 'No FEAR Act', 'foia' => 'Freedom of Information Act'] as $key => $label) {
-                    $url = get_theme_mod('bjansvsp_policy_' . $key);
-                    if ($url) $links[$label] = $url;
+                  foreach (bjansvsp_footer_policy_links() as $key => $link) {
+                    $url = get_theme_mod('bjansvsp_policy_' . $key, $link['url']);
+                    if ($key === 'privacy' && get_privacy_policy_url()) $url = get_privacy_policy_url();
+                    if ($url) $links[$link['label']] = $url;
                   }
-                  if (get_privacy_policy_url()) $links['Privacy Policy'] = get_privacy_policy_url();
                   $links['USA.gov'] = 'https://www.usa.gov/';
                   $links['Justice.gov'] = 'https://www.justice.gov/';
                   $rendered = [];

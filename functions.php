@@ -361,11 +361,26 @@ add_action('init', function () {
   remove_action('wp_enqueue_scripts', 'wp_enqueue_emoji_styles');
 });
 
-// Policy links appear only once their approved destinations have been configured.
+// Agency policy links provide working defaults and remain editable by the client.
+function bjansvsp_footer_policy_links() {
+  return [
+    'accessibility' => ['label' => 'Accessibility', 'url' => 'https://www.justice.gov/accessibility/accessibility-statement'],
+    'plain-language' => ['label' => 'Plain Language', 'url' => 'https://www.justice.gov/open/plain-writing-act'],
+    'privacy' => ['label' => 'Privacy Policy', 'url' => 'https://www.justice.gov/doj/privacy-policy'],
+    'legal' => ['label' => 'Legal Policies and Disclaimer', 'url' => 'https://www.justice.gov/legalpolicies'],
+    'no-fear' => ['label' => 'No FEAR Act', 'url' => 'https://www.justice.gov/jmd/eeo-program-status-report'],
+    'foia' => ['label' => 'Freedom of Information Act', 'url' => 'https://www.ojp.gov/program/ojp-freedom-information-act/foia-overview'],
+  ];
+}
+
 add_action('customize_register', function ($wp_customize) {
-  foreach (['accessibility' => 'Accessibility', 'plain-language' => 'Plain Language', 'legal' => 'Legal Policies and Disclaimer', 'no-fear' => 'No FEAR Act', 'foia' => 'Freedom of Information Act'] as $key => $label) {
+  foreach (bjansvsp_footer_policy_links() as $key => $link) {
     $setting = 'bjansvsp_policy_' . $key;
-    $wp_customize->add_setting($setting, ['default' => '', 'sanitize_callback' => 'esc_url_raw']);
-    $wp_customize->add_control($setting, ['label' => $label . ' URL', 'section' => 'bjansvsp_footer_section', 'type' => 'url', 'priority' => 30]);
+    $wp_customize->add_setting($setting, ['default' => $link['url'], 'sanitize_callback' => 'esc_url_raw']);
+    $wp_customize->add_control($setting, [
+      'label' => $link['label'] . ' URL',
+      'description' => __('Defaults to the official agency page. Replace with your own URL, or leave empty to hide the link. A published WordPress privacy page takes priority over the Privacy Policy URL.', 'bjansvsp'),
+      'section' => 'bjansvsp_footer_section', 'type' => 'url', 'priority' => 30,
+    ]);
   }
 });
