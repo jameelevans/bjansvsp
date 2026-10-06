@@ -74,16 +74,21 @@ $contact_phone_number = $contact_details['phone_number'];
                   $links['USA.gov'] = 'https://www.usa.gov/';
                   $links['Justice.gov'] = 'https://www.justice.gov/';
                   $rendered = [];
-                  foreach ($links as $label => $url) $rendered[] = '<a href="' . esc_url($url) . '">' . esc_html($label) . '</a>';
+                  foreach ($links as $label => $url) {
+                    $external = bjansvsp_is_external_footer_url($url);
+                    $attributes = $external ? ' target="_blank" rel="noopener noreferrer"' : '';
+                    $notice = $external ? '<span class="screen-reader-text"> (opens in a new tab)</span>' : '';
+                    $rendered[] = '<a href="' . esc_url($url) . '"' . $attributes . '>' . esc_html($label) . $notice . '</a>';
+                  }
                   echo implode(' | ', $rendered);
                   ?>
                 </p>
                 <div class="footer__logos">
                     <a href="<?php echo esc_url(home_url('/')); ?>"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/DOJ-OJP-BJS-NSVSP-Logo-footer.webp'); ?>" alt="National Survey of Victim Service Providers" width="293" height="100" loading="lazy" decoding="async"></a>
-                    <a href="https://www.ojp.gov/"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/us-office-of-justice-programs-logo-footer.webp'); ?>" alt="Office of Justice Programs" width="100" height="100" loading="lazy" decoding="async"></a>
-                    <a href="https://bjs.ojp.gov/"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/bjs-bureau-of-justice-statistics-seeklogo-footer.webp'); ?>" alt="Bureau of Justice Statistics" width="337" height="100" loading="lazy" decoding="async"></a>
-                    <a href="https://ovc.ojp.gov/"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/ovc-logo-footer.webp'); ?>" alt="Office for Victims of Crime" width="280" height="100" loading="lazy" decoding="async"></a>
-                    <a href="https://www.icf.com/"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/icf-logo-footer.webp'); ?>" alt="ICF" width="123" height="100" loading="lazy" decoding="async"></a>
+                    <a href="https://www.ojp.gov/" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text">Opens in a new tab: </span><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/us-office-of-justice-programs-logo-footer.webp'); ?>" alt="Office of Justice Programs" width="100" height="100" loading="lazy" decoding="async"></a>
+                    <a href="https://bjs.ojp.gov/" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text">Opens in a new tab: </span><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/bjs-bureau-of-justice-statistics-seeklogo-footer.webp'); ?>" alt="Bureau of Justice Statistics" width="337" height="100" loading="lazy" decoding="async"></a>
+                    <a href="https://ovc.ojp.gov/" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text">Opens in a new tab: </span><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/ovc-logo-footer.webp'); ?>" alt="Office for Victims of Crime" width="280" height="100" loading="lazy" decoding="async"></a>
+                    <a href="https://www.icf.com/" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text">Opens in a new tab: </span><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/icf-logo-footer.webp'); ?>" alt="ICF" width="123" height="100" loading="lazy" decoding="async"></a>
                 </div>
             </div>
         </div>

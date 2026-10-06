@@ -172,9 +172,26 @@ function bjansvsp_sanitize_footer_disclaimer($value) {
   ]);
 }
 
+// Keep internal footer links in this tab; open other websites safely in a new tab.
+function bjansvsp_is_external_footer_url($url) {
+  $scheme = strtolower((string) wp_parse_url($url, PHP_URL_SCHEME));
+  $host = strtolower((string) wp_parse_url($url, PHP_URL_HOST));
+  $site_host = strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
+  return $host !== '' && ($scheme === '' || in_array($scheme, ['http', 'https'], true))
+    && preg_replace('/^www\./', '', $host) !== preg_replace('/^www\./', '', $site_host);
+}
+
 function bjansvsp_format_footer_disclaimer($value) {
   $html = wpautop(bjansvsp_sanitize_footer_disclaimer($value));
-  return str_replace('<p>', '<p class="footer__text">', $html);
+  $html = str_replace('<p>', '<p class="footer__text">', $html);
+  $processor = new WP_HTML_Tag_Processor($html);
+  while ($processor->next_tag('a')) {
+    if (bjansvsp_is_external_footer_url((string) $processor->get_attribute('href'))) {
+      $processor->set_attribute('target', '_blank');
+      $processor->set_attribute('rel', 'noopener noreferrer');
+    }
+  }
+  return $processor->get_updated_html();
 }
 
 function bjansvsp_validate_contact_email($validity, $value) {
