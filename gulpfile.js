@@ -58,6 +58,12 @@ function watch() {
     log('Starting BrowserSync...');
     browserSync.init({
         proxy: 'http://bja-nsvsp.local',
+        // Preserve JSON/JavaScript escaping before BrowserSync rewrites links.
+        // WordPress Customizer embeds URLs inside quoted translated strings.
+        rewriteRules: [{
+            match: /(?:https?:)?(?:\\?\/){2}bja-nsvsp\.local(?![\w.-])/g,
+            fn: (req, res, match) => match.replace('bja-nsvsp.local', req.headers.host)
+        }],
         https: false,
         open: 'local',      // open http://localhost:3000 (BrowserSync proxy)
         host: 'localhost',

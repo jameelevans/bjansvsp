@@ -124,29 +124,84 @@ function svg_icon($class, $icon) { ?>
 
  
 
-// Add Footer Text Setting to Customizer
+// Shared defaults keep the Customizer preview and the public footer in sync.
+function bjansvsp_footer_defaults() {
+  return [
+    'bjansvsp_footer_text' => "The <b>National Survey of Victim Service Providers</b> is a component of the Office for Victims of Crime, Office of Justice Programs, U.S. Department of Justice.\n\nThis website is funded through xxx. Neither the Bureau Justice Statistics nor any of its components operate, control, are responsible for, or necessarily endorse, this website (including, without limitation, its content, technical infrastructure, and policies, and any services or tools provided). Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit quisque faucibus ex.",
+    'bjansvsp_contact_email' => 'Support@NSVSP.org',
+    'bjansvsp_contact_phone' => '(227) 248-9484',
+    'bjansvsp_contact_address' => '1902 Reston Metro Plaza | Reston, VA 20190',
+  ];
+}
+
+// Permit text formatting without allowing client-entered layout or scripts.
+function bjansvsp_sanitize_footer_disclaimer($value) {
+  return wp_kses($value, [
+    'p' => [], 'br' => [], 'strong' => [], 'b' => [], 'em' => [], 'i' => [],
+    'a' => ['href' => [], 'title' => []],
+  ]);
+}
+
+function bjansvsp_format_footer_disclaimer($value) {
+  $html = wpautop(bjansvsp_sanitize_footer_disclaimer($value));
+  return str_replace('<p>', '<p class="footer__text">', $html);
+}
+
+function bjansvsp_validate_contact_email($validity, $value) {
+  if (trim($value) !== '' && !is_email($value)) {
+    $validity->add('invalid_email', __('Enter a valid email address, or leave this field empty.', 'bjansvsp'));
+  }
+  return $validity;
+}
+
 function bjansvsp_customize_register($wp_customize) {
-  // Add Footer Section
-  $wp_customize->add_section('bjansvsp_footer_section', array(
-      'title'       => __('Footer Settings', 'bjansvsp'),
-      'priority'    => 200,
-      'description' => 'Customize the footer text',
-  ));
+  $defaults = bjansvsp_footer_defaults();
+  $wp_customize->add_section('bjansvsp_footer_section', [
+    'title' => __('Footer Settings', 'bjansvsp'),
+    'priority' => 200,
+    'description' => __('Update the footer disclaimer and contact details. Preview your changes, then select Publish to save them.', 'bjansvsp'),
+  ]);
 
-  // Add Footer Text Setting
-  $wp_customize->add_setting('bjansvsp_footer_text', array(
-      'default'           => '', // Default is blank; admin must provide text
-      'sanitize_callback' => 'wp_kses_post', // Allows safe HTML for formatting
-      'transport'         => 'refresh',
-  ));
+  // Retain the existing setting ID so previously saved footer text still works.
+  $wp_customize->add_setting('bjansvsp_footer_text', [
+    'default' => $defaults['bjansvsp_footer_text'],
+    'sanitize_callback' => 'bjansvsp_sanitize_footer_disclaimer',
+    'transport' => 'refresh',
+  ]);
+  $wp_customize->add_control('bjansvsp_footer_text_control', [
+    'label' => __('Footer Disclaimer', 'bjansvsp'),
+    'description' => __('Separate paragraphs with a blank line. The footer keeps its current font, spacing and colors. Leave empty to remove the disclaimer.', 'bjansvsp'),
+    'section' => 'bjansvsp_footer_section',
+    'settings' => 'bjansvsp_footer_text',
+    'type' => 'textarea',
+    'input_attrs' => ['rows' => 10],
+    'priority' => 10,
+  ]);
 
-  // Add Footer Text Control
-  $wp_customize->add_control('bjansvsp_footer_text_control', array(
-      'label'       => __('Footer Text', 'bjansvsp'),
-      'section'     => 'bjansvsp_footer_section',
-      'settings'    => 'bjansvsp_footer_text',
-      'type'        => 'textarea', // Allows for longer text
-  ));
+  $fields = [
+    'email' => ['label' => __('Contact Email', 'bjansvsp'), 'type' => 'email', 'sanitize' => 'sanitize_email'],
+    'phone' => ['label' => __('Contact Phone', 'bjansvsp'), 'type' => 'tel', 'sanitize' => 'sanitize_text_field'],
+    'address' => ['label' => __('Contact Address', 'bjansvsp'), 'type' => 'textarea', 'sanitize' => 'sanitize_textarea_field'],
+  ];
+  foreach ($fields as $key => $field) {
+    $id = 'bjansvsp_contact_' . $key;
+    $args = [
+      'default' => $defaults[$id],
+      'sanitize_callback' => $field['sanitize'],
+      'transport' => 'refresh',
+    ];
+    if ($key === 'email') $args['validate_callback'] = 'bjansvsp_validate_contact_email';
+    $wp_customize->add_setting($id, $args);
+    $wp_customize->add_control($id, [
+      'label' => $field['label'],
+      'description' => $key === 'address'
+        ? __('Line breaks are preserved. Leave empty to hide the address.', 'bjansvsp')
+        : __('Leave empty to hide this contact detail.', 'bjansvsp'),
+      'section' => 'bjansvsp_footer_section',
+      'type' => $field['type'],
+      'priority' => 20,
+    ]);
+  }
 }
 add_action('customize_register', 'bjansvsp_customize_register');
 
@@ -311,6 +366,6 @@ add_action('customize_register', function ($wp_customize) {
   foreach (['accessibility' => 'Accessibility', 'plain-language' => 'Plain Language', 'legal' => 'Legal Policies and Disclaimer', 'no-fear' => 'No FEAR Act', 'foia' => 'Freedom of Information Act'] as $key => $label) {
     $setting = 'bjansvsp_policy_' . $key;
     $wp_customize->add_setting($setting, ['default' => '', 'sanitize_callback' => 'esc_url_raw']);
-    $wp_customize->add_control($setting, ['label' => $label . ' URL', 'section' => 'bjansvsp_footer_section', 'type' => 'url']);
+    $wp_customize->add_control($setting, ['label' => $label . ' URL', 'section' => 'bjansvsp_footer_section', 'type' => 'url', 'priority' => 30]);
   }
 });

@@ -61,10 +61,15 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 		<nav class="nav" role="navigation" aria-label="Primary">
 			<ul class="nav__menu">
 				<li class="nav__li nav__survey">
-					<a class="nav__item<?php echo is_front_page() ? ' current-page' : ''; ?>"
+					<a class="nav__item"
 					href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">
 					Log In<span class="screen-reader-text"> (opens in a new tab)</span>
 					</a>
+				</li>
+
+				<li class="nav__li">
+					<a class="nav__item<?php echo is_front_page() ? ' is-active' : ''; ?>"
+						href="<?php echo esc_url( home_url( '/' ) ); ?>"<?php echo is_front_page() ? ' aria-current="page"' : ''; ?>>Home</a>
 				</li>
 
 				<li class="nav__li nav__has-dropdown">
@@ -277,15 +282,16 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 		<nav aria-label="Mobile">
 		<ul class="mobile-navigation__list">
 			<li class="mobile-navigation__item">
-				<a href="<?php echo esc_url( home_url() ); ?>"
-				class="mobile-navigation__link" title="Home">
-				Home
-				</a>
-			</li>
-			<li class="mobile-navigation__item">
 				<a href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer"
 				class="mobile-navigation__link" title="Log in to the NSVSP survey (opens in a new tab)">
 				Log In<span class="screen-reader-text"> (opens in a new tab)</span>
+				</a>
+			</li>
+
+			<li class="mobile-navigation__item">
+				<a href="<?php echo esc_url( home_url( '/' ) ); ?>"
+				class="mobile-navigation__link" title="Home">
+				Home
 				</a>
 			</li>
 

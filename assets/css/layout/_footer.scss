@@ -91,6 +91,15 @@
     }
   }
 
+  &__disclaimer {
+    overflow-wrap: anywhere;
+
+    a {
+      color: inherit;
+      text-underline-offset: .15em;
+    }
+  }
+
   &__text {
     font-size: 1.9rem;
     font-weight: 300;
@@ -106,6 +115,8 @@
   }
 
   .contact {
+    min-width: 0;
+    overflow-wrap: anywhere;
     &__list {
       list-style: none;
       line-height: 1.3;
@@ -118,6 +129,18 @@
 
       @include mixins.respond(smlmd) {
         font-size: 1.5rem;
+      }
+    }
+
+    &__link {
+      color: inherit;
+      font: inherit;
+      text-decoration: none;
+
+      &:hover,
+      &:focus-visible {
+        text-decoration: underline;
+        text-underline-offset: .15em;
       }
     }
 

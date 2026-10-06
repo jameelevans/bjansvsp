@@ -216,6 +216,7 @@ get_header();
 			<h2 class="h4__heading">On this page</h2>
 			<ul class="side-nav__list">
 				<li class="side-nav__item"><a class="side-nav__link" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
+				<li class="side-nav__item"><a class="side-nav__link" href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#resources">Resources</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#glossary">Glossary</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#faqs">FAQs</a></li>

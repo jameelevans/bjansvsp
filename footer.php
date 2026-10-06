@@ -5,6 +5,13 @@
  * @package your-wp-project
  */
 
+$footer_defaults = bjansvsp_footer_defaults();
+$footer_disclaimer = get_theme_mod('bjansvsp_footer_text', $footer_defaults['bjansvsp_footer_text']);
+$contact_email = sanitize_email(get_theme_mod('bjansvsp_contact_email', $footer_defaults['bjansvsp_contact_email']));
+$contact_phone = sanitize_text_field(get_theme_mod('bjansvsp_contact_phone', $footer_defaults['bjansvsp_contact_phone']));
+$contact_address = sanitize_textarea_field(get_theme_mod('bjansvsp_contact_address', $footer_defaults['bjansvsp_contact_address']));
+$contact_phone_number = preg_replace('/[^0-9]/', '', $contact_phone);
+if (strpos($contact_phone, '+') === 0) $contact_phone_number = '+' . $contact_phone_number;
 ?>
     <!--Footer-->
     <footer class="footer">
@@ -13,6 +20,7 @@
                 <nav class="footer__nav" aria-label="Footer">
                 <ul class="footer__list">
                     <li class="footer__item"><a href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer" class="footer__links">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
+                    <li class="footer__item"><a href="<?php echo esc_url(home_url('/')); ?>" class="footer__links"<?php echo is_front_page() ? ' aria-current="page"' : ''; ?>>Home</a></li>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/resources/')); ?>" class="footer__links">Resources</a></li>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/glossary/')); ?>" class="footer__links">Glossary</a></li>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/faqs/')); ?>" class="footer__links">FAQs</a></li>
@@ -25,19 +33,27 @@
             <div class="footer__container">
                 <div class="footer__content">
                     <div class="footer__disclaimer">
-                        <p class="footer__text">The <b>National Survey of Victim Service Providers</b> is a component of the Office for Victims of Crime, Office of Justice Programs, U.S. Department of Justice.</p>
-                        <p class="footer__text">This website is funded through xxx. Neither the Bureau Justice Statistics nor any of its components operate, control,
-                        are responsible for, or necessarily endorse, this website (including, without limitation, its content, technical
-                        infrastructure, and policies, and any services or tools provided). Lorem ipsum dolor sit amet consectetur adipiscing
-                        elit. Sit amet consectetur adipiscing elit quisque faucibus ex.</p>
+                        <?php echo bjansvsp_format_footer_disclaimer($footer_disclaimer); ?>
                     </div>
                 
                     <div id="contact-us" class="contact" tabindex="-1">
                         <h2 class="footer__h4">Contact Us</h2>
                         <ul class="contact__list">
-                            <li class="contact__item"><?php echo svg_icon('contact__icon', 'envelope');?> our-email@EMAIL.COM</li>
-                            <li class="contact__item"><?php echo svg_icon('contact__icon', 'phone');?> (444)444-4444</li>
-                            <li class="contact__item"><?php echo svg_icon('contact__icon', 'map');?> 123 N Best Street, City, ST 22222</li>
+                            <?php if ($contact_email !== '') : ?>
+                                <li class="contact__item"><?php echo svg_icon('contact__icon', 'envelope');?> <a class="contact__link" href="<?php echo esc_url('mailto:' . $contact_email); ?>"><?php echo esc_html($contact_email); ?></a></li>
+                            <?php endif; ?>
+                            <?php if ($contact_phone !== '') : ?>
+                                <li class="contact__item"><?php echo svg_icon('contact__icon', 'phone');?>
+                                    <?php if ($contact_phone_number !== '' && $contact_phone_number !== '+') : ?>
+                                        <a class="contact__link" href="<?php echo esc_url('tel:' . $contact_phone_number); ?>"><?php echo esc_html($contact_phone); ?></a>
+                                    <?php else : ?>
+                                        <?php echo esc_html($contact_phone); ?>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endif; ?>
+                            <?php if ($contact_address !== '') : ?>
+                                <li class="contact__item"><?php echo svg_icon('contact__icon', 'map');?> <?php echo nl2br(esc_html($contact_address)); ?></li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>
