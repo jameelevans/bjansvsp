@@ -8,6 +8,12 @@
  *      
  */
 
+// Temporary homepage visibility: set this to true to restore all three sections.
+// Their standalone pages and navigation links remain available.
+function bjansvsp_show_home_sections() {
+  return false;
+}
+
 // * * --------| Actions and filters in order |-------- *
 
   // Action to enque styles and scripts

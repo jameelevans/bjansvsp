@@ -81,7 +81,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						?>
 						class="nav__item<?php echo $is_resources ? ' is-active' : ''; ?>"
 						id="nav-resources"
-						href="<?php echo is_front_page() ? '#resources' : esc_url( home_url( '/resources' ) ); ?>"
+						href="<?php echo (is_front_page() && bjansvsp_show_home_sections()) ? '#resources' : esc_url( home_url( '/resources' ) ); ?>"
 						<?php echo $is_resources ? ' aria-current="page"' : ''; ?>
 						aria-haspopup="true"
 						aria-expanded="false"
@@ -135,7 +135,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						?>
 						class="nav__item<?php echo $is_glossary ? ' is-active' : ''; ?>"
 						id="nav-glossary"
-						href="<?php echo is_front_page() ? '#glossary' : esc_url( home_url( '/glossary' ) ); ?>"
+						href="<?php echo (is_front_page() && bjansvsp_show_home_sections()) ? '#glossary' : esc_url( home_url( '/glossary' ) ); ?>"
 						<?php echo $is_glossary ? ' aria-current="page"' : ''; ?>
 						aria-haspopup="true"
 						aria-expanded="false"
@@ -188,7 +188,7 @@ $is_faqs      = is_page( 'faqs' ) || is_singular( 'faq' );
 						?>
 						class="nav__item<?php echo $is_faqs ? ' is-active' : ''; ?>"
 						id="nav-faqs"
-						href="<?php echo is_front_page() ? '#faqs' : esc_url( home_url( '/faqs' ) ); ?>"
+						href="<?php echo (is_front_page() && bjansvsp_show_home_sections()) ? '#faqs' : esc_url( home_url( '/faqs' ) ); ?>"
 						<?php echo $is_faqs ? ' aria-current="page"' : ''; ?>
 						aria-haspopup="true"
 						aria-expanded="false"

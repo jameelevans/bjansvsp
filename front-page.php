@@ -5,6 +5,7 @@
  * @package your-wp-project
  */
 
+$show_home_sections = bjansvsp_show_home_sections();
 get_header();
 
 ?>
@@ -19,6 +20,7 @@ get_header();
 				?></p>
 				<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a>
 			</section>
+			<?php if ($show_home_sections) : ?>
 			<section id="resources">
 				<h2 class="h2__heading"><a class="h2__link" href="<?php echo esc_url( home_url( '/resources' ) ); ?>" title="View all resources">Resources<?php echo svg_icon('h2__icon', 'link');?></a></h2>
 				<p class="sub__heading"><?php echo esc_html( get_field('resource_subheading', get_queried_object_id()) ); ?></p>
@@ -211,15 +213,18 @@ get_header();
 
 			</section>
 
+			<?php endif; ?>
 		</div>
 		<aside class="side-nav">
 			<h2 class="h4__heading">On this page</h2>
 			<ul class="side-nav__list">
 				<li class="side-nav__item"><a class="side-nav__link" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
+				<?php if ($show_home_sections) : ?>
 				<li class="side-nav__item"><a class="side-nav__link" href="#resources">Resources</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#glossary">Glossary</a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="#faqs">FAQs</a></li>
+				<?php endif; ?>
 			</ul>
 			<form class="aside-search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 				<input type="search" name="s" placeholder="Search" aria-label="Search">
