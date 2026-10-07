@@ -13,11 +13,11 @@ get_header();
 		<div class="main-content">
 			<section id="take-survey">
 				<h1 class="h1__heading"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h1>
-				<p class="sub__heading"><?php
-				$home_id = get_option('page_on_front');
-				$home_content = get_post_field('post_content', $home_id);
-				echo esc_html( wp_strip_all_tags( $home_content ) );
-				?></p>
+				<div class="home-content single-page__content">
+					<?php while (have_posts()) : the_post(); ?>
+						<?php the_content(); ?>
+					<?php endwhile; ?>
+				</div>
 				<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a>
 			</section>
 			<?php if ($show_home_sections) : ?>
