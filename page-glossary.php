@@ -6,10 +6,11 @@
  * @package bja-nsvsp
  */
 
+$show_resource_spotlight = bjansvsp_show_content_navigation('resources');
 get_header();
 ?>
 
-<main id="single-page" class="site-main single-page" tabindex="-1">
+<main id="single-page" class="site-main single-page<?php echo $show_resource_spotlight ? '' : ' glossary-page--no-sidebar'; ?>" tabindex="-1">
   <div class="single-page__container">
 
     <?php
@@ -395,6 +396,7 @@ get_header();
     }
     ?>
 
+    <?php if ($show_resource_spotlight) : ?>
     <aside class="downloads">
       <h2 class="h4__heading">Resource Spotlight</h2>
 
@@ -418,6 +420,7 @@ get_header();
 
       <?php endif; ?>
     </aside>
+    <?php endif; ?>
 
 </main>
 
