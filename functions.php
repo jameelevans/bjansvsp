@@ -8,16 +8,40 @@
  *      
  */
 
-// Temporary homepage visibility: set this to true to restore all three sections.
-// Their standalone pages and navigation links remain available.
-function bjansvsp_show_home_sections() {
+// Enable sections individually after client review; keep unfinished content available.
+function bjansvsp_show_home_sections($section = null) {
+  $visible = ['glossary'];
+  return $section === null ? !empty($visible) : in_array($section, $visible, true);
+}
+
+function bjansvsp_show_content_navigation($section = null) {
+  $visible = ['glossary'];
+  return $section === null ? !empty($visible) : in_array($section, $visible, true);
+}
+
+// Temporary during frame verification. Set to true to restore all search forms.
+function bjansvsp_show_search() {
   return false;
 }
 
-// Temporary navigation visibility: set to true after the initial checks.
-// Menu markup and all standalone content pages are preserved.
-function bjansvsp_show_content_navigation() {
-  return false;
+// Glossary definitions are complete content, rather than shortened excerpts.
+function bjansvsp_glossary_definition($term) {
+  $term = get_post($term);
+  return $term ? wp_kses_post(apply_filters('the_content', $term->post_content)) : '';
+}
+
+// Shared categories must contain published glossary entries to appear in its menus.
+function bjansvsp_glossary_categories() {
+  $ids = get_posts([
+    'post_type' => 'glossary', 'post_status' => 'publish',
+    'posts_per_page' => -1, 'fields' => 'ids', 'no_found_rows' => true,
+  ]);
+  if (!$ids) return [];
+  $terms = get_terms([
+    'taxonomy' => taxonomy_exists('glossary_category') ? 'glossary_category' : 'category',
+    'object_ids' => $ids, 'hide_empty' => true, 'orderby' => 'name', 'order' => 'ASC',
+  ]);
+  return is_wp_error($terms) ? [] : $terms;
 }
 
 function bjansvsp_contact_url() {
@@ -144,7 +168,7 @@ function svg_icon($class, $icon) { ?>
 // Shared defaults keep the Customizer preview and the public footer in sync.
 function bjansvsp_footer_defaults() {
   return [
-    'bjansvsp_footer_text' => "The <b>National Survey of Victim Service Providers</b> is a component of the Office for Victims of Crime, Office of Justice Programs, U.S. Department of Justice.\n\nThis website is funded through xxx. Neither the Bureau Justice Statistics nor any of its components operate, control, are responsible for, or necessarily endorse, this website (including, without limitation, its content, technical infrastructure, and policies, and any services or tools provided). Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit quisque faucibus ex.",
+    'bjansvsp_footer_text' => 'This website is funded through award 15PBJS-24-GK-02863-BJSB.',
     'bjansvsp_contact_email' => 'Support@NSVSP.org',
     'bjansvsp_contact_phone' => '(227) 248-9484',
     'bjansvsp_contact_address' => '1902 Reston Metro Plaza | Reston, VA 20190',

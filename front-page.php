@@ -20,7 +20,7 @@ get_header();
 				</div>
 				<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a>
 			</section>
-			<?php if ($show_home_sections) : ?>
+			<?php if (bjansvsp_show_home_sections('resources')) : ?>
 			<section id="resources">
 				<h2 class="h2__heading"><a class="h2__link" href="<?php echo esc_url( home_url( '/resources' ) ); ?>" title="View all resources">Resources<?php echo svg_icon('h2__icon', 'link');?></a></h2>
 				<p class="sub__heading"><?php echo esc_html( get_field('resource_subheading', get_queried_object_id()) ); ?></p>
@@ -91,6 +91,8 @@ get_header();
 					<?php endif; ?>
 				</div>
 			</section>
+			<?php endif; ?>
+			<?php if (bjansvsp_show_home_sections('glossary')) : ?>
 			<section id="glossary">
 				<h2 class="h2__heading"><a class="h2__link" href="<?php echo esc_url( home_url( '/glossary' ) ); ?>" title="View the full glossary">Glossary<?php echo svg_icon('h2__icon', 'link');?></a></h2>
 				<p class="sub__heading"><?php echo esc_html( get_field('glossary_subheading', get_queried_object_id()) ); ?></p>
@@ -142,7 +144,7 @@ get_header();
 
 					foreach ($items as $p) {
 						$title = get_the_title($p);
-						$desc  = has_excerpt($p) ? get_the_excerpt($p) : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
+						$desc = bjansvsp_glossary_definition($p);
 
 						echo '<article class="glossary__item">';
 						echo   '<h4 class="glossary__heading">'. esc_html($title) .'</h4>';
@@ -160,7 +162,7 @@ get_header();
 					echo '<h3 class="glossary__group-title">#</h3>';
 					foreach ($items as $p) {
 						$title = get_the_title($p);
-						$desc  = has_excerpt($p) ? get_the_excerpt($p) : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
+						$desc = bjansvsp_glossary_definition($p);
 						echo '<article class="glossary__item">';
 						echo   '<h4 class="glossary__term"><span class="glossary__chip">'. esc_html($title) .'</span></h4>';
 						echo   '<p class="glossary__desc">'. esc_html($desc) .'</p>';
@@ -170,6 +172,8 @@ get_header();
 					}
 					?>
 			</section>
+			<?php endif; ?>
+			<?php if (bjansvsp_show_home_sections('faqs')) : ?>
 			<section id="faqs">
 				<h2 class="h2__heading"><a class="h2__link" href="<?php echo esc_url( home_url( '/faqs' ) ); ?>" title="View all the FAQs">FAQs<?php echo svg_icon('h2__icon', 'link');?></a></h2>
 				<p class="sub__heading"><?php echo esc_html( get_field('faqs_subheading', get_queried_object_id()) ); ?></p>
@@ -221,17 +225,25 @@ get_header();
 				<li class="side-nav__item"><a class="side-nav__link" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
 				<li class="side-nav__item"><a class="side-nav__link" href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
 				<?php if ($show_home_sections && bjansvsp_show_content_navigation()) : ?>
+				<?php if (bjansvsp_show_home_sections('resources') && bjansvsp_show_content_navigation('resources')) : ?>
 				<li class="side-nav__item"><a class="side-nav__link" href="#resources">Resources</a></li>
+				<?php endif; ?>
+				<?php if (bjansvsp_show_home_sections('glossary') && bjansvsp_show_content_navigation('glossary')) : ?>
 				<li class="side-nav__item"><a class="side-nav__link" href="#glossary">Glossary</a></li>
+				<?php endif; ?>
+				<?php if (bjansvsp_show_home_sections('faqs') && bjansvsp_show_content_navigation('faqs')) : ?>
 				<li class="side-nav__item"><a class="side-nav__link" href="#faqs">FAQs</a></li>
 				<?php endif; ?>
+				<?php endif; ?>
 			</ul>
+			<?php if (bjansvsp_show_search()) : ?>
 			<form class="aside-search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 				<input type="search" name="s" placeholder="Search" aria-label="Search">
 				<button type="submit" aria-label="Submit search">
 					<span class="screen-reader-text">Search</span>
 				</button>
 			</form>
+			<?php endif; ?>
 			<a class="btn" href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a>
 		</aside>
 	</main>

@@ -60,5 +60,9 @@
     @include mixins.respond(smlmd) {
       font-size: 1.6rem;
     }
+
+    p + p { margin-block-start: 1rem; }
+    ul, ol { margin-block: 1rem; padding-inline-start: 2.4rem; }
+    li + li { margin-block-start: 0.6rem; }
   }
 }

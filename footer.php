@@ -22,9 +22,15 @@ $contact_phone_number = $contact_details['phone_number'];
                     <li class="footer__item"><a href="https://www.icfsurvey2.com/NSVSP" target="_blank" rel="noopener noreferrer" class="footer__links">Log In<span class="screen-reader-text"> (opens in a new tab)</span></a></li>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/')); ?>" class="footer__links"<?php echo is_front_page() ? ' aria-current="page"' : ''; ?>>Home</a></li>
                     <?php if (bjansvsp_show_content_navigation()) : ?>
+                    <?php if (bjansvsp_show_content_navigation('resources')) : ?>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/resources/')); ?>" class="footer__links">Resources</a></li>
+                    <?php endif; ?>
+                    <?php if (bjansvsp_show_content_navigation('glossary')) : ?>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/glossary/')); ?>" class="footer__links">Glossary</a></li>
+                    <?php endif; ?>
+                    <?php if (bjansvsp_show_content_navigation('faqs')) : ?>
                     <li class="footer__item"><a href="<?php echo esc_url(home_url('/faqs/')); ?>" class="footer__links">FAQs</a></li>
+                    <?php endif; ?>
                     <?php endif; ?>
                     <li class="footer__item"><a href="<?php echo esc_url(bjansvsp_contact_url()); ?>" class="footer__links"<?php echo is_page_template('template-contact.php') ? ' aria-current="page"' : ''; ?>>Contact Us</a></li>
                 </ul>
@@ -86,7 +92,7 @@ $contact_phone_number = $contact_details['phone_number'];
                 <div class="footer__logos">
                     <a href="<?php echo esc_url(home_url('/')); ?>"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/DOJ-OJP-BJS-NSVSP-Logo-footer.webp'); ?>" alt="National Survey of Victim Service Providers" width="293" height="100" loading="lazy" decoding="async"></a>
                     <a href="https://www.ojp.gov/" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text">Opens in a new tab: </span><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/us-office-of-justice-programs-logo-footer.webp'); ?>" alt="Office of Justice Programs" width="100" height="100" loading="lazy" decoding="async"></a>
-                    <a href="https://bjs.ojp.gov/" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text">Opens in a new tab: </span><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/bjs-logo-footer.webp'); ?>" alt="Bureau of Justice Statistics" width="337" height="100" loading="lazy" decoding="async"></a>
+                    <a href="https://bjs.ojp.gov/" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text">Opens in a new tab: </span><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/bjs-logo-footer-transparent.webp'); ?>" alt="Bureau of Justice Statistics" width="337" height="100" loading="lazy" decoding="async"></a>
                     <a href="https://ovc.ojp.gov/" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text">Opens in a new tab: </span><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/ovc-logo-footer.webp'); ?>" alt="Office for Victims of Crime" width="280" height="100" loading="lazy" decoding="async"></a>
                     <a href="https://www.icf.com/" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text">Opens in a new tab: </span><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/icf-logo-footer.webp'); ?>" alt="ICF" width="123" height="100" loading="lazy" decoding="async"></a>
                 </div>

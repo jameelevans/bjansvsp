@@ -158,17 +158,15 @@ get_header();
                   <?php
                   foreach ( $items as $p ) {
                     $title = get_the_title( $p );
-                    $desc  = has_excerpt( $p )
-                      ? get_the_excerpt( $p )
-                      : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
+                    $desc = bjansvsp_glossary_definition($p);
                     ?>
                     <article class="glossary__item">
-                      <h3 class="glossary__heading">
+                      <h4 class="glossary__heading">
                         <?php echo esc_html( $title ); ?>
-                      </h3>
-                      <p class="glossary__desc">
-                        <?php echo esc_html( $desc ); ?>
-                      </p>
+                      </h4>
+                      <div class="glossary__desc">
+                        <?php echo $desc; ?>
+                      </div>
                     </article>
                     <?php
                   }
@@ -189,17 +187,15 @@ get_header();
                   <?php
                   foreach ( $items as $p ) {
                     $title = get_the_title( $p );
-                    $desc  = has_excerpt( $p )
-                      ? get_the_excerpt( $p )
-                      : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
+                    $desc = bjansvsp_glossary_definition($p);
                     ?>
                     <article class="glossary__item">
-                      <h3 class="glossary__heading">
+                      <h4 class="glossary__heading">
                         <?php echo esc_html( $title ); ?>
-                      </h3>
-                      <p class="glossary__desc">
-                        <?php echo esc_html( $desc ); ?>
-                      </p>
+                      </h4>
+                      <div class="glossary__desc">
+                        <?php echo $desc; ?>
+                      </div>
                     </article>
                     <?php
                   }
@@ -264,13 +260,11 @@ get_header();
 
             foreach ( $items as $p ) {
               $title = get_the_title( $p );
-              $desc  = has_excerpt( $p )
-                ? get_the_excerpt( $p )
-                : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
+              $desc = bjansvsp_glossary_definition($p);
 
               echo '<article class="glossary__item">';
-              echo '<h3 class="glossary__heading">' . esc_html( $title ) . '</h3>';
-              echo '<p class="glossary__desc">' . esc_html( $desc ) . '</p>';
+              echo '<h4 class="glossary__heading">' . esc_html( $title ) . '</h4>';
+              echo '<div class="glossary__desc">' . $desc . '</div>';
               echo '</article>';
             }
 
@@ -284,12 +278,10 @@ get_header();
             echo '<h3 class="h3__heading--orange mt-xl"># (<span class="glossary__total">' . count( $items ) . '</span> Total)</h3>';
             foreach ( $items as $p ) {
               $title = get_the_title( $p );
-              $desc  = has_excerpt( $p )
-                ? get_the_excerpt( $p )
-                : wp_trim_words( wp_strip_all_tags( $p->post_content ), 60, '…' );
+              $desc = bjansvsp_glossary_definition($p);
               echo '<article class="glossary__item">';
-              echo '<h3 class="glossary__heading">' . esc_html( $title ) . '</h3>';
-              echo '<p class="glossary__desc">' . esc_html( $desc ) . '</p>';
+              echo '<h4 class="glossary__heading">' . esc_html( $title ) . '</h4>';
+              echo '<div class="glossary__desc">' . $desc . '</div>';
               echo '</article>';
             }
             echo '</section>';

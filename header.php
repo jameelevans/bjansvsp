@@ -75,6 +75,7 @@ $is_contact = is_page_template('template-contact.php');
 				</li>
 
 				<?php if ($show_content_navigation) : ?>
+				<?php if (bjansvsp_show_content_navigation('resources')) : ?>
 				<li class="nav__li nav__has-dropdown">
 					<a
 						<?php
@@ -84,7 +85,7 @@ $is_contact = is_page_template('template-contact.php');
 						?>
 						class="nav__item<?php echo $is_resources ? ' is-active' : ''; ?>"
 						id="nav-resources"
-						href="<?php echo (is_front_page() && bjansvsp_show_home_sections()) ? '#resources' : esc_url( home_url( '/resources' ) ); ?>"
+						href="<?php echo (is_front_page() && bjansvsp_show_home_sections('resources')) ? '#resources' : esc_url( home_url( '/resources' ) ); ?>"
 						<?php echo $is_resources ? ' aria-current="page"' : ''; ?>
 						aria-haspopup="true"
 						aria-expanded="false"
@@ -129,6 +130,9 @@ $is_contact = is_page_template('template-contact.php');
 					<?php endif; ?>
 					</li>
 
+				<?php endif; ?>
+
+				<?php if (bjansvsp_show_content_navigation('glossary')) : ?>
 				<li class="nav__li nav__has-dropdown">
 					<a
 						<?php
@@ -138,7 +142,7 @@ $is_contact = is_page_template('template-contact.php');
 						?>
 						class="nav__item<?php echo $is_glossary ? ' is-active' : ''; ?>"
 						id="nav-glossary"
-						href="<?php echo (is_front_page() && bjansvsp_show_home_sections()) ? '#glossary' : esc_url( home_url( '/glossary' ) ); ?>"
+						href="<?php echo (is_front_page() && bjansvsp_show_home_sections('glossary')) ? '#glossary' : esc_url( home_url( '/glossary' ) ); ?>"
 						<?php echo $is_glossary ? ' aria-current="page"' : ''; ?>
 						aria-haspopup="true"
 						aria-expanded="false"
@@ -150,12 +154,7 @@ $is_contact = is_page_template('template-contact.php');
 					<?php
 					// Prefer a dedicated glossary taxonomy if available; otherwise use default categories.
 					$glossary_tax = taxonomy_exists('glossary_category') ? 'glossary_category' : 'category';
-					$glossary_terms = get_terms([
-						'taxonomy'   => $glossary_tax,
-						'hide_empty' => true,
-						'orderby'    => 'name',
-						'order'      => 'ASC',
-					]);
+					$glossary_terms = bjansvsp_glossary_categories();
 
 					if ( ! is_wp_error( $glossary_terms ) && ! empty( $glossary_terms ) ) :
 
@@ -181,7 +180,9 @@ $is_contact = is_page_template('template-contact.php');
 						</ul>
 					<?php endif; ?>
 				</li>
+				<?php endif; ?>
 
+				<?php if (bjansvsp_show_content_navigation('faqs')) : ?>
 				<li class="nav__li nav__has-dropdown">
 					<a
 						<?php
@@ -191,7 +192,7 @@ $is_contact = is_page_template('template-contact.php');
 						?>
 						class="nav__item<?php echo $is_faqs ? ' is-active' : ''; ?>"
 						id="nav-faqs"
-						href="<?php echo (is_front_page() && bjansvsp_show_home_sections()) ? '#faqs' : esc_url( home_url( '/faqs' ) ); ?>"
+						href="<?php echo (is_front_page() && bjansvsp_show_home_sections('faqs')) ? '#faqs' : esc_url( home_url( '/faqs' ) ); ?>"
 						<?php echo $is_faqs ? ' aria-current="page"' : ''; ?>
 						aria-haspopup="true"
 						aria-expanded="false"
@@ -236,6 +237,7 @@ $is_contact = is_page_template('template-contact.php');
 						</ul>
 					<?php endif; ?>
 				</li>
+				<?php endif; ?>
 
 				<?php endif; ?>
 				<li class="nav__li">
@@ -247,6 +249,7 @@ $is_contact = is_page_template('template-contact.php');
 				</ul>
 		</nav>
 
+		<?php if (bjansvsp_show_search()) : ?>
 		<form class="search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 
 			<input type="search" name="s" placeholder="Search" aria-label="Search">
@@ -254,6 +257,7 @@ $is_contact = is_page_template('template-contact.php');
 				<?php echo svg_icon('search__icon', 'search'); ?><span class="screen-reader-text">Search</span>
 			</button>
 		</form>
+		<?php endif; ?>
 	</div>
 </div>
 
@@ -308,6 +312,7 @@ $is_contact = is_page_template('template-contact.php');
 			?>
 
 			<?php if ($show_content_navigation) : ?>
+			<?php if (bjansvsp_show_content_navigation('resources')) : ?>
 			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
 				<div class="mobile-navigation__row">
 					<a class="mobile-navigation__link"
@@ -324,6 +329,8 @@ $is_contact = is_page_template('template-contact.php');
 					</button>
 				</div>
 			</li>
+			<?php endif; ?>
+			<?php if (bjansvsp_show_content_navigation('glossary')) : ?>
 			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
 				<div class="mobile-navigation__row">
 					<a class="mobile-navigation__link"
@@ -340,6 +347,8 @@ $is_contact = is_page_template('template-contact.php');
 					</button>
 				</div>
 			</li>
+			<?php endif; ?>
+			<?php if (bjansvsp_show_content_navigation('faqs')) : ?>
 			<li class="mobile-navigation__item mobile-navigation__item--has-submenu">
 				<div class="mobile-navigation__row">
 					<a class="mobile-navigation__link"
@@ -357,6 +366,7 @@ $is_contact = is_page_template('template-contact.php');
 				</div>
 			</li>
 			<?php endif; ?>
+			<?php endif; ?>
 			<li class="mobile-navigation__item">
 				<a href="<?php echo esc_url(bjansvsp_contact_url()); ?>"
 				class="mobile-navigation__link" title="Contact Us">
@@ -364,6 +374,7 @@ $is_contact = is_page_template('template-contact.php');
 				</a>
 			</li>
 
+			<?php if (bjansvsp_show_search()) : ?>
 			<li class="mobile-navigation__item">
 				<form class="mobile-navigation__search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 
@@ -373,6 +384,7 @@ $is_contact = is_page_template('template-contact.php');
 				</button>
 				</form>
 			</li>
+			<?php endif; ?>
 			</ul>
 
 		<div class="mobile-navigation__submenus" aria-hidden="true">
@@ -392,12 +404,7 @@ $is_contact = is_page_template('template-contact.php');
 
 			// Glossary submenu items
 			$glossary_tax   = taxonomy_exists('glossary_category') ? 'glossary_category' : 'category';
-			$glossary_terms = get_terms([
-				'taxonomy'   => $glossary_tax,
-				'hide_empty' => true,
-				'orderby'    => 'name',
-				'order'      => 'ASC',
-			]);
+			$glossary_terms = bjansvsp_glossary_categories();
 			$glossary_page = get_page_by_path( 'glossary' );
 			$glossary_url  = $glossary_page ? get_permalink( $glossary_page ) : home_url( '/glossary/' );
 			$glossary_url  = rtrim( $glossary_url, '/' );
@@ -415,6 +422,7 @@ $is_contact = is_page_template('template-contact.php');
 			$faqs_url  = rtrim( $faqs_url, '/' );
 			?>
 
+			<?php if (bjansvsp_show_content_navigation('resources')) : ?>
 			<!-- Resources submenu -->
 			<ul class="mobile-navigation__submenu" id="mobile-submenu-resources" aria-hidden="true">
 				<li class="mobile-navigation__submenu-item">
@@ -430,7 +438,9 @@ $is_contact = is_page_template('template-contact.php');
 				</li>
 				<?php endforeach; ?>
 			</ul>
+			<?php endif; ?>
 
+			<?php if (bjansvsp_show_content_navigation('glossary')) : ?>
 			<!-- Glossary submenu -->
 			<?php if ( ! is_wp_error( $glossary_terms ) ) : ?>
 				<ul class="mobile-navigation__submenu" id="mobile-submenu-glossary" aria-hidden="true">
@@ -448,7 +458,9 @@ $is_contact = is_page_template('template-contact.php');
 				<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>
+			<?php endif; ?>
 
+			<?php if (bjansvsp_show_content_navigation('faqs')) : ?>
 			<!-- FAQs submenu -->
 			<?php if ( ! is_wp_error( $faqs_terms ) ) : ?>
 				<ul class="mobile-navigation__submenu" id="mobile-submenu-faqs" aria-hidden="true">
@@ -465,6 +477,7 @@ $is_contact = is_page_template('template-contact.php');
 					</li>
 				<?php endforeach; ?>
 				</ul>
+			<?php endif; ?>
 			<?php endif; ?>
 			<?php endif; ?>
 		</div>
