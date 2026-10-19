@@ -148,7 +148,7 @@ get_header();
 
 						echo '<article class="glossary__item">';
 						echo   '<h4 class="glossary__heading">'. esc_html($title) .'</h4>';
-						echo   '<p class="glossary__desc">'. esc_html($desc) .'</p>';
+						echo '<div class="glossary__desc">' . $desc . '</div>';
 						echo '</article>';
 					}
 
@@ -165,7 +165,7 @@ get_header();
 						$desc = bjansvsp_glossary_definition($p);
 						echo '<article class="glossary__item">';
 						echo   '<h4 class="glossary__term"><span class="glossary__chip">'. esc_html($title) .'</span></h4>';
-						echo   '<p class="glossary__desc">'. esc_html($desc) .'</p>';
+						echo '<div class="glossary__desc">' . $desc . '</div>';
 						echo '</article>';
 					}
 					echo '</section>';
